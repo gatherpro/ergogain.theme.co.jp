@@ -18,14 +18,14 @@
             "image": "shopify://shop_images/Gemini_Generated_Image_hs8pb4hs8pb4hs8p.png",
             "image_alt": "",
             "heading": "<p>ErgoGain</p>",
-            "description": "<p>業界初！完全オーダーメイドキーボード<br/>人間工学に基づいた設計とこだわりの素材が織りなす極上の打鍵感。<br/>あなたの手元に、唯一無二の相棒を</p>",
+            "description": "<p>業界初！完全オーダーメイドキーボード</p><p>人間工学に基づいた設計と、こだわりの素材が<br/>織りなす極上の打鍵感。<br/>あなたの手元に、唯一無二の相棒を。</p>",
             "price": "",
             "cta_text": "buy now",
             "cta_link": "shopify://products/エルゴゲイン-分割エルゴノミクス-メカニカルキーボード-有線-2-4ghzレシーバー対応",
             "text_position": "left",
             "color_scheme": "dark",
             "text_color": "#f4f5ea",
-            "button_bg_color": "#b97e8d",
+            "button_bg_color": "#3b0c0b",
             "button_text_color": ""
           }
         }
