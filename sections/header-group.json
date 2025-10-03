@@ -1,1 +1,66 @@
-{"name":"t:sections.header.name","type":"header","sections":{"header":{"type":"header","custom_css":["\/* デスクトップ時にメニュー文字サイズを小さくする *\/@media (min-width: 1024px){\/* Dawn\/Canyon系でよく使われる *\/ .header__inline-menu .list-menu a, .header .list-menu a, nav[aria-label=\"Primary\"] .list-menu a {font-size: 0.9rem !important; \/* 14.4px相当（お好みで 0.85rem=約13.6px など） *\/ line-height: 1.2; \/* 行間を少し詰める *\/ }}"],"settings":{"logo_position":"top-left","mobile_logo_position":"left","menu":"link-list-1","menu_type_desktop":"dropdown","sticky_header_type":"reduce-logo-size","show_line_separator":true,"color_scheme":"background-1","menu_color_scheme":"","enable_country_selector":true,"enable_language_selector":false,"enable_customer_avatar":true,"margin_bottom":0,"padding_top":4,"padding_bottom":4}}},"order":["header"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "header": {
+      "type": "header",
+      "custom_css": [
+        "/* デスクトップ時にメニュー文字サイズを小さくする */@media (min-width: 1024px) {/* Dawn/Canyon系でよく使われる */ .header__inline-menu .list-menu a, .header .list-menu a, nav[aria-label=\"Primary\"] .list-menu a {font-size: 0.9rem !important; /* 14.4px相当（お好みで 0.85rem=約13.6px など） */ line-height: 1.2; /* 行間を少し詰める */ }}"
+      ],
+      "settings": {
+        "logo_position": "top-left",
+        "mobile_logo_position": "left",
+        "menu": "link-list-1",
+        "menu_type_desktop": "dropdown",
+        "sticky_header_type": "reduce-logo-size",
+        "show_line_separator": true,
+        "color_scheme": "background-1",
+        "menu_color_scheme": "",
+        "enable_country_selector": true,
+        "enable_language_selector": false,
+        "enable_customer_avatar": true,
+        "margin_bottom": 0,
+        "padding_top": 4,
+        "padding_bottom": 4
+      }
+    },
+    "announcement_bar_Mdhfrf": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement_Fy8yMT": {
+          "type": "announcement",
+          "settings": {
+            "text": "Welcome to our store",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "announcement_Fy8yMT"
+      ],
+      "name": "t:sections.announcement-bar.presets.name",
+      "settings": {
+        "auto_rotate": false,
+        "change_slides_speed": 5,
+        "color_scheme": "",
+        "show_line_separator": true,
+        "show_social": false,
+        "enable_country_selector": false,
+        "enable_language_selector": false
+      }
+    }
+  },
+  "order": [
+    "header",
+    "announcement_bar_Mdhfrf"
+  ]
+}
