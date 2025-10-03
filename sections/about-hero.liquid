@@ -1,3 +1,18 @@
+{% comment %}
+  About Hero - Apple風ミニマルセクション
+
+  使い方：
+  1. 管理画面 > オンラインストア > テーマ > カスタマイズ
+  2. 「セクションを追加」> 「About Hero」を選択
+  3. テキスト、メディア、CTAを設定
+
+  機能：
+  - 2カラムレイアウト（左：テキスト｜右：メディア）
+  - 画像/動画切り替え対応
+  - レスポンシブ対応
+  - アクセシビリティ対応
+{% endcomment %}
+
 <style>
   /* About Hero - Apple-style Minimal Section */
   .eg-about {
@@ -231,6 +246,8 @@
 {% schema %}
 {
   "name": "About Hero",
+  "tag": "section",
+  "class": "section",
   "settings": [
     {
       "type": "header",
