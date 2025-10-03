@@ -1,0 +1,401 @@
+{{ 'brand-footer.css' | asset_url | stylesheet_tag }}
+
+<footer class="brand-footer" style="
+  --brand-footer-bg: {{ section.settings.background_color }};
+  --brand-footer-text: {{ section.settings.text_color }};
+  --brand-footer-link: {{ section.settings.link_color }};
+  --brand-footer-border: {{ section.settings.border_color }};
+  --brand-footer-padding-top: {{ section.settings.padding_top }}px;
+  --brand-footer-padding-bottom: {{ section.settings.padding_bottom }}px;
+  --brand-footer-font-size: {{ section.settings.font_size }}px;
+">
+  <div class="brand-footer__container">
+
+    {%- if section.settings.show_brand_section -%}
+    <div class="brand-footer__brand-section">
+      <div class="brand-footer__brand-content">
+        {%- if section.settings.logo != blank -%}
+          <img src="{{ section.settings.logo | image_url: width: 200 }}"
+               alt="{{ shop.name }}"
+               class="brand-footer__logo"
+               loading="lazy"
+               width="120">
+        {%- endif -%}
+
+        {%- if section.settings.brand_description != blank -%}
+          <p class="brand-footer__description">{{ section.settings.brand_description }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.show_newsletter -%}
+      <div class="brand-footer__newsletter">
+        <h3 class="brand-footer__newsletter-title">{{ section.settings.newsletter_title | default: 'Stay in the loop' }}</h3>
+        <p class="brand-footer__newsletter-text">{{ section.settings.newsletter_text }}</p>
+        <form method="post" action="/contact#newsletter-footer" id="newsletter-footer" class="brand-footer__newsletter-form">
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <div class="brand-footer__newsletter-input-wrapper">
+            <input
+              type="email"
+              name="contact[email]"
+              id="newsletter-email"
+              placeholder="{{ section.settings.newsletter_placeholder | default: 'Enter your email' }}"
+              class="brand-footer__newsletter-input"
+              autocomplete="email"
+              required>
+            <button type="submit" class="brand-footer__newsletter-button" aria-label="Subscribe">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+      {%- endif -%}
+    </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+    <div class="brand-footer__columns" data-columns="{{ section.blocks.size }}">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'link_list' -%}
+            <div class="brand-footer__column" {{ block.shopify_attributes }}>
+              <h4 class="brand-footer__column-title">
+                {{ block.settings.title }}
+                <span class="brand-footer__toggle" aria-hidden="true">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </h4>
+              {%- if block.settings.menu != blank -%}
+                <ul class="brand-footer__list">
+                  {%- for link in linklists[block.settings.menu].links -%}
+                    <li class="brand-footer__list-item">
+                      <a href="{{ link.url }}" class="brand-footer__link">{{ link.title }}</a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+    {%- endif -%}
+
+    <div class="brand-footer__subbar">
+      <div class="brand-footer__subbar-left">
+        {%- if section.settings.show_locale_selector and shop.published_locales.size > 1 -%}
+          {%- form 'localization', class: 'brand-footer__locale-form' -%}
+            <select name="locale_code" class="brand-footer__locale-select" aria-label="Language">
+              {%- for locale in shop.published_locales -%}
+                <option value="{{ locale.iso_code }}" {%- if locale.iso_code == request.locale.iso_code %} selected{% endif %}>
+                  {{ locale.endonym_name | capitalize }}
+                </option>
+              {%- endfor -%}
+            </select>
+          {%- endform -%}
+        {%- endif -%}
+
+        {%- if section.settings.show_country_selector and shop.enabled_currencies.size > 1 -%}
+          {%- form 'localization', class: 'brand-footer__locale-form' -%}
+            <select name="country_code" class="brand-footer__locale-select" aria-label="Country/Region">
+              {%- for country in localization.available_countries -%}
+                <option value="{{ country.iso_code }}" {%- if country.iso_code == localization.country.iso_code %} selected{% endif %}>
+                  {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+                </option>
+              {%- endfor -%}
+            </select>
+          {%- endform -%}
+        {%- endif -%}
+      </div>
+
+      <div class="brand-footer__subbar-right">
+        {%- if section.settings.show_social_icons -%}
+          <ul class="brand-footer__social-list">
+            {%- if section.settings.social_x_url != blank -%}
+              <li class="brand-footer__social-item">
+                <a href="{{ section.settings.social_x_url }}" class="brand-footer__social-link" aria-label="X (Twitter)" target="_blank" rel="noopener">
+                  {%- render 'icon-x' -%}
+                </a>
+              </li>
+            {%- endif -%}
+            {%- if section.settings.social_youtube_url != blank -%}
+              <li class="brand-footer__social-item">
+                <a href="{{ section.settings.social_youtube_url }}" class="brand-footer__social-link" aria-label="YouTube" target="_blank" rel="noopener">
+                  {%- render 'icon-youtube' -%}
+                </a>
+              </li>
+            {%- endif -%}
+            {%- if section.settings.social_instagram_url != blank -%}
+              <li class="brand-footer__social-item">
+                <a href="{{ section.settings.social_instagram_url }}" class="brand-footer__social-link" aria-label="Instagram" target="_blank" rel="noopener">
+                  {%- render 'icon-instagram' -%}
+                </a>
+              </li>
+            {%- endif -%}
+            {%- if section.settings.social_facebook_url != blank -%}
+              <li class="brand-footer__social-item">
+                <a href="{{ section.settings.social_facebook_url }}" class="brand-footer__social-link" aria-label="Facebook" target="_blank" rel="noopener">
+                  {%- render 'icon-facebook' -%}
+                </a>
+              </li>
+            {%- endif -%}
+          </ul>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="brand-footer__legal">
+      <div class="brand-footer__legal-left">
+        <span class="brand-footer__copyright">
+          &copy; {{ 'now' | date: '%Y' }} {{ section.settings.copyright_text | default: shop.name }}
+        </span>
+        {%- if section.settings.legal_links != blank -%}
+          {%- for link in linklists[section.settings.legal_links].links -%}
+            <a href="{{ link.url }}" class="brand-footer__legal-link">{{ link.title }}</a>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.show_payment_icons -%}
+        <div class="brand-footer__payment-icons">
+          {%- for type in shop.enabled_payment_types -%}
+            {{ type | payment_type_svg_tag: class: 'brand-footer__payment-icon' }}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+  </div>
+</footer>
+
+<script src="{{ 'brand-footer.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Brand Footer",
+  "tag": "section",
+  "class": "section-brand-footer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors & Spacing"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#fafafa"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link Color",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#d2d2d7"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Font Size",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Brand Section"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand_section",
+      "label": "Show Brand Section",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "textarea",
+      "id": "brand_description",
+      "label": "Brand Description",
+      "default": "Exceptional quality. Designed with care."
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show Newsletter Signup",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "newsletter_title",
+      "label": "Newsletter Title",
+      "default": "Stay in the loop"
+    },
+    {
+      "type": "textarea",
+      "id": "newsletter_text",
+      "label": "Newsletter Text",
+      "default": "Subscribe to get special offers and updates."
+    },
+    {
+      "type": "text",
+      "id": "newsletter_placeholder",
+      "label": "Email Placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "header",
+      "content": "Locale & Country"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_locale_selector",
+      "label": "Show Language Selector",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_country_selector",
+      "label": "Show Country Selector",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Social Media"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_icons",
+      "label": "Show Social Icons",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "social_x_url",
+      "label": "X (Twitter) URL"
+    },
+    {
+      "type": "url",
+      "id": "social_youtube_url",
+      "label": "YouTube URL"
+    },
+    {
+      "type": "url",
+      "id": "social_instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "social_facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "header",
+      "content": "Legal & Payment"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright Text",
+      "info": "Leave blank to use shop name"
+    },
+    {
+      "type": "link_list",
+      "id": "legal_links",
+      "label": "Legal Links Menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show Payment Icons",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link_list",
+      "name": "Link Column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Column Title",
+          "default": "Quick Links"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Footer",
+      "blocks": [
+        {
+          "type": "link_list",
+          "settings": {
+            "title": "Shop"
+          }
+        },
+        {
+          "type": "link_list",
+          "settings": {
+            "title": "Support"
+          }
+        },
+        {
+          "type": "link_list",
+          "settings": {
+            "title": "Company"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
