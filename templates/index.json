@@ -82,7 +82,7 @@
       "settings": {
         "aspect_ratio": "21-9",
         "autoplay": true,
-        "interval": 5,
+        "interval": 3,
         "loop": true,
         "show_arrows": true,
         "show_dots": true,
