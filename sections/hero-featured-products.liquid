@@ -93,11 +93,18 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 4rem 2rem;
-    color: #fff;
+  }
+
+  .eg-hero-slider__slide .eg-hero-slider__content {
+    color: var(--text-color, inherit);
   }
 
   .eg-hero-slider__slide[data-color-scheme="light"] .eg-hero-slider__content {
-    color: #000;
+    color: var(--text-color, #000);
+  }
+
+  .eg-hero-slider__slide[data-color-scheme="dark"] .eg-hero-slider__content {
+    color: var(--text-color, #fff);
   }
 
   .eg-hero-slider__content--left {
@@ -163,36 +170,34 @@
   }
 
   .eg-hero-slider__cta--filled {
-    background: #0071e3;
-    color: #fff;
-    border: 2px solid #0071e3;
+    background: var(--button-bg-color, #0071e3);
+    color: var(--button-text-color, #fff);
+    border: 2px solid var(--button-bg-color, #0071e3);
   }
 
   .eg-hero-slider__cta--filled:hover {
-    background: #0077ed;
-    border-color: #0077ed;
+    opacity: 0.9;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 
   .eg-hero-slider__cta--outline {
     background: transparent;
-    color: #fff;
-    border: 2px solid #fff;
+    color: var(--button-text-color, #fff);
+    border: 2px solid var(--button-text-color, #fff);
   }
 
   .eg-hero-slider__slide[data-color-scheme="light"] .eg-hero-slider__cta--outline {
-    color: #000;
-    border-color: #000;
+    --button-text-color: #000;
+  }
+
+  .eg-hero-slider__slide[data-color-scheme="dark"] .eg-hero-slider__cta--outline {
+    --button-text-color: #fff;
   }
 
   .eg-hero-slider__cta--outline:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(var(--button-hover-rgb, 255, 255, 255), 0.1);
     transform: translateY(-2px);
-  }
-
-  .eg-hero-slider__slide[data-color-scheme="light"] .eg-hero-slider__cta--outline:hover {
-    background: rgba(0, 0, 0, 0.05);
   }
 
   .eg-hero-slider__nav {
@@ -332,6 +337,17 @@
         role="listitem"
         aria-roledescription="slide"
         aria-label="Slide {{ forloop.index }} of {{ section.blocks.size }}"
+        style="
+          {%- if block.settings.text_color != blank -%}
+            --text-color: {{ block.settings.text_color }};
+          {%- endif -%}
+          {%- if block.settings.button_bg_color != blank -%}
+            --button-bg-color: {{ block.settings.button_bg_color }};
+          {%- endif -%}
+          {%- if block.settings.button_text_color != blank -%}
+            --button-text-color: {{ block.settings.button_text_color }};
+          {%- endif -%}
+        "
         {{ block.shopify_attributes }}
       >
         {%- if block.settings.image != blank -%}
@@ -822,6 +838,27 @@
             }
           ],
           "default": "dark"
+        },
+        {
+          "type": "header",
+          "content": "カスタムカラー設定"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "テキスト色",
+          "info": "空欄の場合は配色設定が使用されます"
+        },
+        {
+          "type": "color",
+          "id": "button_bg_color",
+          "label": "ボタン背景色",
+          "info": "塗りつぶしスタイルのみ有効"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "ボタンテキスト色"
         }
       ]
     }
