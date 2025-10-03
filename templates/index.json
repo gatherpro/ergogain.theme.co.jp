@@ -31,10 +31,51 @@
             "button_bg_color": "#3b0c0b",
             "button_text_color": ""
           }
+        },
+        "slide_AkWjke": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Gemini_Generated_Image_udfui1udfui1udfu.png",
+            "image_alt": "オリジナルキーキャップ",
+            "heading": "<p>オリジナルキーキャップ</p>",
+            "description": "<p>「キーボードに、新たな息吹を。」<br/>あなたのキーボードは、まだ進化できる。<br/>機能と美しさを兼ね備えたオリジナルキーキャップで、<br/>タイピング体験を劇的にアップデート。</p>",
+            "price": "",
+            "cta_text": "buy now",
+            "cta_link": "",
+            "text_position": "left",
+            "color_scheme": "light",
+            "heading_color": "",
+            "heading_font": "",
+            "heading_font_weight": "",
+            "text_color": "",
+            "button_bg_color": "#580e0c",
+            "button_text_color": "#ffffff"
+          }
+        },
+        "slide_NFMhFc": {
+          "type": "slide",
+          "settings": {
+            "image_alt": "",
+            "heading": "<p>新製品登場</p>",
+            "description": "<p>最新テクノロジーで、あなたの生活を変える</p>",
+            "price": "",
+            "cta_text": "今すぐ購入",
+            "cta_link": "",
+            "text_position": "left",
+            "color_scheme": "dark",
+            "heading_color": "",
+            "heading_font": "",
+            "heading_font_weight": "",
+            "text_color": "",
+            "button_bg_color": "",
+            "button_text_color": ""
+          }
         }
       },
       "block_order": [
-        "slide_trFLFt"
+        "slide_trFLFt",
+        "slide_AkWjke",
+        "slide_NFMhFc"
       ],
       "name": "Hero Featured Products",
       "settings": {
