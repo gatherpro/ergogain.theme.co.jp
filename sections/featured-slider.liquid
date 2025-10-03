@@ -1,0 +1,252 @@
+{{ 'featured-slider.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  #Featured-Slider-{{ section.id }} {
+    --featured-slider-padding-top: {{ section.settings.padding_top }}px;
+    --featured-slider-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --featured-slider-bg-color: {{ section.settings.background_color }};
+    --featured-slider-text-color: {{ section.settings.text_color }};
+    --featured-slider-card-gap: {{ section.settings.card_gap }}px;
+    --featured-slider-card-width: {{ section.settings.card_width }}px;
+    --featured-slider-heading-size: {{ section.settings.heading_size }}px;
+    --featured-slider-heading-line-height: {{ section.settings.heading_line_height }};
+  }
+{%- endstyle -%}
+
+<section
+  id="Featured-Slider-{{ section.id }}"
+  class="featured-slider"
+  role="region"
+  aria-label="{{ section.settings.heading | default: 'Featured Products' }}"
+>
+  <div class="featured-slider__container">
+    {%- if section.settings.heading != blank or section.settings.subtext != blank -%}
+      <div class="featured-slider__header">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="featured-slider__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subtext != blank -%}
+          <p class="featured-slider__subtext">{{ section.settings.subtext }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="featured-slider__wrapper">
+      <button
+        type="button"
+        class="featured-slider__nav featured-slider__nav--prev"
+        aria-label="Previous products"
+        aria-controls="featured-slider-track-{{ section.id }}"
+      >
+        {% render 'icon-chevron-left' %}
+      </button>
+
+      <div
+        id="featured-slider-track-{{ section.id }}"
+        class="featured-slider__track"
+        role="list"
+      >
+        {%- liquid
+          assign collection = collections[section.settings.collection]
+          assign products_to_display = section.settings.products_to_show | default: 8
+        -%}
+
+        {%- if collection != blank and collection.products.size > 0 -%}
+          {%- for product in collection.products limit: products_to_display -%}
+            <div class="featured-slider__card" role="listitem">
+              <a href="{{ product.url }}" class="featured-slider__card-link">
+                <div class="featured-slider__card-image">
+                  {%- if product.featured_media -%}
+                    <img
+                      src="{{ product.featured_media | image_url: width: 600 }}"
+                      alt="{{ product.featured_media.alt | escape }}"
+                      loading="lazy"
+                      width="600"
+                      height="{{ 600 | divided_by: product.featured_media.aspect_ratio | ceil }}"
+                    >
+                  {%- else -%}
+                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {%- endif -%}
+                </div>
+
+                <div class="featured-slider__card-content">
+                  <h3 class="featured-slider__card-title">{{ product.title }}</h3>
+
+                  <div class="featured-slider__card-price">
+                    {%- if product.compare_at_price > product.price -%}
+                      <span class="featured-slider__card-price--compare">
+                        {{ product.compare_at_price | money }}
+                      </span>
+                      <span class="featured-slider__card-price--sale">
+                        {{ product.price | money }}
+                      </span>
+                    {%- else -%}
+                      <span class="featured-slider__card-price--regular">
+                        {{ product.price | money }}
+                      </span>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </a>
+            </div>
+          {%- endfor -%}
+        {%- else -%}
+          {%- for i in (1..products_to_display) -%}
+            <div class="featured-slider__card" role="listitem">
+              <div class="featured-slider__card-link">
+                <div class="featured-slider__card-image">
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                </div>
+                <div class="featured-slider__card-content">
+                  <h3 class="featured-slider__card-title">Product {{ i }}</h3>
+                  <div class="featured-slider__card-price">
+                    <span class="featured-slider__card-price--regular">$99.00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+
+      <button
+        type="button"
+        class="featured-slider__nav featured-slider__nav--next"
+        aria-label="Next products"
+        aria-controls="featured-slider-track-{{ section.id }}"
+      >
+        {% render 'icon-chevron-right' %}
+      </button>
+    </div>
+  </div>
+</section>
+
+<script src="{{ 'featured-slider.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Featured Slider",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Featured Products"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Discover our curated selection"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "default": 8,
+      "label": "Products to show"
+    },
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "range",
+      "id": "card_width",
+      "min": 200,
+      "max": 400,
+      "step": 10,
+      "default": 280,
+      "unit": "px",
+      "label": "Card width"
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24,
+      "unit": "px",
+      "label": "Card spacing"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 24,
+      "max": 64,
+      "step": 2,
+      "default": 40,
+      "unit": "px",
+      "label": "Heading size"
+    },
+    {
+      "type": "range",
+      "id": "heading_line_height",
+      "min": 1.0,
+      "max": 2.0,
+      "step": 0.1,
+      "default": 1.2,
+      "label": "Heading line height"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 64,
+      "unit": "px",
+      "label": "Padding top"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 64,
+      "unit": "px",
+      "label": "Padding bottom"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Slider"
+    }
+  ]
+}
+{% endschema %}
