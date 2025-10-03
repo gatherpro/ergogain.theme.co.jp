@@ -16,6 +16,10 @@
   - 外部ライブラリ不使用
 {% endcomment %}
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&family=Noto+Serif+JP:wght@300;400;500;600;700;800;900&family=M+PLUS+Rounded+1c:wght@300;400;500;700;800;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
 <style>
   .eg-hero-slider {
     position: relative;
@@ -121,10 +125,12 @@
 
   .eg-hero-slider__heading {
     font-size: clamp(2.5rem, 5vw, 4.5rem);
-    font-weight: 700;
+    font-weight: var(--heading-font-weight, 700);
+    font-family: var(--heading-font-family, inherit);
     line-height: 1.1;
     margin: 0 0 1.5rem;
     max-width: 600px;
+    color: var(--heading-color, inherit);
   }
 
   .eg-hero-slider__content--center .eg-hero-slider__heading {
@@ -338,6 +344,15 @@
         aria-roledescription="slide"
         aria-label="Slide {{ forloop.index }} of {{ section.blocks.size }}"
         style="
+          {%- if block.settings.heading_color != blank -%}
+            --heading-color: {{ block.settings.heading_color }};
+          {%- endif -%}
+          {%- if block.settings.heading_font != blank -%}
+            --heading-font-family: {{ block.settings.heading_font }};
+          {%- endif -%}
+          {%- if block.settings.heading_font_weight != blank -%}
+            --heading-font-weight: {{ block.settings.heading_font_weight }};
+          {%- endif -%}
           {%- if block.settings.text_color != blank -%}
             --text-color: {{ block.settings.text_color }};
           {%- endif -%}
@@ -841,12 +856,110 @@
         },
         {
           "type": "header",
-          "content": "カスタムカラー設定"
+          "content": "見出しカスタマイズ"
+        },
+        {
+          "type": "color",
+          "id": "heading_color",
+          "label": "見出しの色",
+          "info": "空欄の場合はテキスト色が使用されます"
+        },
+        {
+          "type": "select",
+          "id": "heading_font",
+          "label": "見出しのフォント",
+          "options": [
+            {
+              "value": "",
+              "label": "デフォルト"
+            },
+            {
+              "value": "Arial, sans-serif",
+              "label": "Arial"
+            },
+            {
+              "value": "Georgia, serif",
+              "label": "Georgia"
+            },
+            {
+              "value": "Times New Roman, serif",
+              "label": "Times New Roman"
+            },
+            {
+              "value": "Helvetica, sans-serif",
+              "label": "Helvetica"
+            },
+            {
+              "value": "Courier New, monospace",
+              "label": "Courier New"
+            },
+            {
+              "value": "'Noto Sans JP', sans-serif",
+              "label": "Noto Sans JP"
+            },
+            {
+              "value": "'Noto Serif JP', serif",
+              "label": "Noto Serif JP"
+            },
+            {
+              "value": "'M PLUS Rounded 1c', sans-serif",
+              "label": "M PLUS Rounded 1c"
+            },
+            {
+              "value": "'Zen Kaku Gothic New', sans-serif",
+              "label": "Zen Kaku Gothic New"
+            }
+          ],
+          "default": ""
+        },
+        {
+          "type": "select",
+          "id": "heading_font_weight",
+          "label": "見出しの太さ",
+          "options": [
+            {
+              "value": "",
+              "label": "デフォルト"
+            },
+            {
+              "value": "300",
+              "label": "細め (300)"
+            },
+            {
+              "value": "400",
+              "label": "標準 (400)"
+            },
+            {
+              "value": "500",
+              "label": "中間 (500)"
+            },
+            {
+              "value": "600",
+              "label": "セミボールド (600)"
+            },
+            {
+              "value": "700",
+              "label": "ボールド (700)"
+            },
+            {
+              "value": "800",
+              "label": "エクストラボールド (800)"
+            },
+            {
+              "value": "900",
+              "label": "極太 (900)"
+            }
+          ],
+          "default": ""
+        },
+        {
+          "type": "header",
+          "content": "その他のカラー設定"
         },
         {
           "type": "color",
           "id": "text_color",
-          "label": "テキスト色",
+          "label": "説明文・価格の色",
           "info": "空欄の場合は配色設定が使用されます"
         },
         {
