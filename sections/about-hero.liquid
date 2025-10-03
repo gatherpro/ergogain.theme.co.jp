@@ -1,6 +1,146 @@
-{{ 'about-hero.css' | asset_url | stylesheet_tag }}
+<style>
+  /* About Hero - Apple-style Minimal Section */
+  .eg-about {
+    background-color: var(--bg, #ffffff);
+    color: var(--fg, #1d1d1f);
+    padding-top: var(--py, 80px);
+    padding-bottom: var(--py, 80px);
+  }
 
-{%- style -%}
+  .eg-about__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .eg-about__inner {
+      grid-template-columns: 1.1fr 1fr;
+      gap: 48px;
+      padding: 0 48px;
+    }
+  }
+
+  .eg-about__text {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .eg-about__kicker {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted, #6e6e73);
+    margin: 0;
+  }
+
+  .eg-about__heading {
+    font-size: var(--title, 48px);
+    line-height: var(--title-lh, 1.1);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0;
+    color: var(--fg, #1d1d1f);
+  }
+
+  @media (max-width: 768px) {
+    .eg-about__heading {
+      font-size: calc(var(--title, 48px) * 0.7);
+    }
+  }
+
+  .eg-about__subtext {
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--muted, #6e6e73);
+    max-width: var(--sub-max, 560px);
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .eg-about__subtext {
+      font-size: 16px;
+    }
+  }
+
+  .eg-about__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .eg-about__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 980px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    outline: none;
+  }
+
+  .eg-about__btn:focus-visible {
+    outline: 2px solid var(--fg, #1d1d1f);
+    outline-offset: 4px;
+  }
+
+  .eg-about__btn--primary {
+    background-color: var(--fg, #1d1d1f);
+    color: #ffffff;
+  }
+
+  .eg-about__btn--primary:hover {
+    background-color: #424245;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+
+  .eg-about__btn--secondary {
+    background-color: transparent;
+    color: var(--fg, #1d1d1f);
+    border: 1px solid var(--fg, #1d1d1f);
+  }
+
+  .eg-about__btn--secondary:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+
+  .eg-about__media {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 16px;
+  }
+
+  .eg-about__image,
+  .eg-about__video {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 16px;
+    object-fit: cover;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eg-about__btn {
+      transition: none;
+    }
+  }
+
   #eg-about-{{ section.id }} {
     --py: {{ section.settings.padding_y }}px;
     --title: {{ section.settings.title_size }}px;
@@ -10,7 +150,7 @@
     --muted: {{ section.settings.muted }};
     --bg: {{ section.settings.bg }};
   }
-{%- endstyle -%}
+</style>
 
 <section
   id="eg-about-{{ section.id }}"
