@@ -132,10 +132,29 @@
         "padding_top": 40,
         "padding_bottom": 52
       }
+    },
+    "featured_slider_dfkkjd": {
+      "type": "featured-slider",
+      "name": "Featured Slider",
+      "settings": {
+        "heading": "Featured Products",
+        "subtext": "Discover our curated selection",
+        "collection": "",
+        "products_to_show": 8,
+        "card_width": 280,
+        "card_gap": 24,
+        "heading_size": 40,
+        "heading_line_height": 1.2,
+        "text_color": "#000000",
+        "background_color": "#FFFFFF",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
     }
   },
   "order": [
     "hero_featured_products_qYaGfw",
-    "rich_text_4YebQp"
+    "rich_text_4YebQp",
+    "featured_slider_dfkkjd"
   ]
 }

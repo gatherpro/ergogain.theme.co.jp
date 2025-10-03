@@ -1,1 +1,95 @@
-{"name":"t:sections.footer.name","type":"footer","sections":{"footer":{"type":"footer","custom_css":[],"settings":{"color_scheme":"background-2","newsletter_enable":true,"newsletter_heading":"Sign up for updates","enable_follow_on_shop":true,"show_social":true,"enable_country_selector":true,"enable_language_selector":true,"payment_enable":true,"show_policy":true,"margin_top":0,"padding_top":44,"padding_bottom":32}}},"order":["footer"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "brand_footer_jgQYX7": {
+      "type": "brand-footer",
+      "blocks": {
+        "link_list_BX3n3L": {
+          "type": "link_list",
+          "settings": {
+            "title": "Shop",
+            "menu": ""
+          }
+        },
+        "link_list_JiYWzn": {
+          "type": "link_list",
+          "settings": {
+            "title": "Support",
+            "menu": ""
+          }
+        },
+        "link_list_e8m8kG": {
+          "type": "link_list",
+          "settings": {
+            "title": "Company",
+            "menu": ""
+          }
+        }
+      },
+      "block_order": [
+        "link_list_BX3n3L",
+        "link_list_JiYWzn",
+        "link_list_e8m8kG"
+      ],
+      "name": "Brand Footer",
+      "settings": {
+        "background_color": "#fafafa",
+        "text_color": "#1d1d1f",
+        "link_color": "#1d1d1f",
+        "border_color": "#d2d2d7",
+        "padding_top": 64,
+        "padding_bottom": 40,
+        "font_size": 14,
+        "show_brand_section": true,
+        "brand_description": "Exceptional quality. Designed with care.",
+        "show_newsletter": true,
+        "newsletter_title": "Stay in the loop",
+        "newsletter_text": "Subscribe to get special offers and updates.",
+        "newsletter_placeholder": "Enter your email",
+        "show_locale_selector": true,
+        "show_country_selector": true,
+        "show_social_icons": true,
+        "social_x_url": "",
+        "social_youtube_url": "",
+        "social_instagram_url": "",
+        "social_facebook_url": "",
+        "copyright_text": "",
+        "legal_links": "",
+        "show_payment_icons": true
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "disabled": true,
+      "custom_css": [],
+      "settings": {
+        "color_scheme": "background-2",
+        "newsletter_enable": true,
+        "newsletter_heading": "Sign up for updates",
+        "enable_follow_on_shop": true,
+        "show_social": true,
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "payment_enable": true,
+        "show_policy": true,
+        "margin_top": 0,
+        "padding_top": 44,
+        "padding_bottom": 32
+      }
+    }
+  },
+  "order": [
+    "brand_footer_jgQYX7",
+    "footer"
+  ]
+}
