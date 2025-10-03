@@ -1,1 +1,268 @@
-{"sections":{"rich_text_TEVXgm":{"type":"rich-text","blocks":{"heading_PeaWcN":{"type":"heading","settings":{"heading":"ものづくりで世界を変える","heading_size":"h1"}},"text_hmEr9V":{"type":"text","settings":{"text":"<h2>私たちのブランドは、進化するデザインと機能性の調和を提供し、あなたの生活を豊かにします。<\/h2>"}}},"block_order":["heading_PeaWcN","text_hmEr9V"],"settings":{"desktop_content_position":"center","content_alignment":"center","color_scheme":"","full_width":true,"padding_top":80,"padding_bottom":28}},"collage_Ji34he":{"type":"collage","blocks":{"video_x97Qak":{"type":"video","settings":{"cover_image":"shopify:\/\/shop_images\/electronics-and-accessories-natural-6-middle.jpg","video_url":"https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc","description":"Describe the video"}},"image_npPA7A":{"type":"image","settings":{"image":"shopify:\/\/shop_images\/electronics-and-accessories-natural-3-middle.jpg"}},"image_Ur8hUb":{"type":"image","settings":{"image":"shopify:\/\/shop_images\/electronics-and-accessories-natural-5-bottom.jpg"}}},"block_order":["video_x97Qak","image_npPA7A","image_Ur8hUb"],"settings":{"heading":"","heading_size":"h0","desktop_layout":"left","mobile_layout":"column","card_styles":"none","color_scheme":"","padding_top":32,"padding_bottom":60}},"image_with_text_DYDtwA":{"type":"image-with-text","blocks":{"heading_c6fF64":{"type":"heading","settings":{"heading":"Our shop","heading_size":"h2"}},"text_PLAK8A":{"type":"text","settings":{"text":"<h3>私たちは、洗練されたデザインと最新の技術を融合させ、日常をスタイリッシュに変革します。<\/h3>","text_style":"body"}},"button_L7GN3F":{"type":"button","settings":{"button_label":"Shop all","button_link":"shopify:\/\/collections\/all","button_style_secondary":false}}},"block_order":["heading_c6fF64","text_PLAK8A","button_L7GN3F"],"settings":{"image":"shopify:\/\/shop_images\/electronics-and-accessories-natural-4-middle.jpg","height":"medium","desktop_image_width":"large","layout":"image_first","desktop_content_position":"middle","desktop_content_alignment":"left","content_layout":"no-overlap","section_color_scheme":"","color_scheme":"accent-1","image_behavior":"none","mobile_content_alignment":"center","padding_top":56,"padding_bottom":60}},"image_with_text_tz9Af9":{"type":"image-with-text","blocks":{"heading_hKWUGD":{"type":"heading","settings":{"heading":"シンプルな美","heading_size":"h2"}},"text_Fka4eU":{"type":"text","settings":{"text":"<h3>私たちの商品は、洗練されたオレンジの彩りで、シンプルさを追求しています。<\/h3>","text_style":"body"}},"button_nbyXaA":{"type":"button","settings":{"button_label":"シンプルな美","button_link":"shopify:\/\/pages\/contact","button_style_secondary":false}}},"block_order":["heading_hKWUGD","text_Fka4eU","button_nbyXaA"],"settings":{"image":"shopify:\/\/shop_images\/electronics-and-accessories-natural-1-middle.jpg","height":"medium","desktop_image_width":"large","layout":"text_first","desktop_content_position":"middle","desktop_content_alignment":"left","content_layout":"no-overlap","section_color_scheme":"","color_scheme":"accent-1","image_behavior":"none","mobile_content_alignment":"center","padding_top":60,"padding_bottom":56}},"featured_collection":{"type":"featured-collection","custom_css":[],"settings":{"title":"Featured products","heading_size":"h1","description":"","show_description":false,"description_style":"body","collection":"all","products_to_show":6,"columns_desktop":4,"full_width":false,"show_view_all":true,"view_all_style":"solid","enable_desktop_slider":false,"color_scheme":"background-1","image_ratio":"portrait","image_shape":"default","show_secondary_image":false,"show_vendor":false,"show_rating":false,"quick_add":"none","columns_mobile":"2","swipe_on_mobile":false,"padding_top":56,"padding_bottom":84}}},"order":["rich_text_TEVXgm","collage_Ji34he","image_with_text_DYDtwA","image_with_text_tz9Af9","featured_collection"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "rich_text_TEVXgm": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_PeaWcN": {
+          "type": "heading",
+          "settings": {
+            "heading": "ものづくりで世界を変える",
+            "heading_size": "h1"
+          }
+        },
+        "text_hmEr9V": {
+          "type": "text",
+          "settings": {
+            "text": "<h2>私たちのブランドは、進化するデザインと機能性の調和を提供し、あなたの生活を豊かにします。</h2>"
+          }
+        }
+      },
+      "block_order": [
+        "heading_PeaWcN",
+        "text_hmEr9V"
+      ],
+      "settings": {
+        "desktop_content_position": "left",
+        "content_alignment": "left",
+        "color_scheme": "background-1",
+        "full_width": true,
+        "padding_top": 80,
+        "padding_bottom": 28
+      }
+    },
+    "slideshow_LGjeLM": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_gDnDKr": {
+          "type": "slide",
+          "settings": {
+            "image_overlay_opacity": 0,
+            "heading": "Image slide",
+            "heading_size": "h1",
+            "subheading": "Tell your brand's story through images",
+            "button_label": "Button label",
+            "link": "",
+            "button_style_secondary": false,
+            "show_text_box": false,
+            "box_align": "middle-center",
+            "text_alignment": "center",
+            "text_alignment_mobile": "center",
+            "color_scheme": ""
+          }
+        },
+        "slide_KEhhmP": {
+          "type": "slide",
+          "settings": {
+            "image_overlay_opacity": 0,
+            "heading": "Image slide",
+            "heading_size": "h1",
+            "subheading": "Tell your brand's story through images",
+            "button_label": "Button label",
+            "link": "",
+            "button_style_secondary": false,
+            "show_text_box": true,
+            "box_align": "middle-center",
+            "text_alignment": "center",
+            "text_alignment_mobile": "center",
+            "color_scheme": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_gDnDKr",
+        "slide_KEhhmP"
+      ],
+      "name": "t:sections.slideshow.presets.name",
+      "settings": {
+        "layout": "full_bleed",
+        "slide_height": "medium",
+        "slider_visual": "counter",
+        "auto_rotate": false,
+        "change_slides_speed": 5,
+        "image_behavior": "none",
+        "show_text_below": true,
+        "accessibility_info": "Slideshow about our brand"
+      }
+    },
+    "collage_Ji34he": {
+      "type": "collage",
+      "blocks": {
+        "video_x97Qak": {
+          "type": "video",
+          "settings": {
+            "cover_image": "shopify://shop_images/electronics-and-accessories-natural-6-middle.jpg",
+            "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+            "description": "Describe the video"
+          }
+        },
+        "image_npPA7A": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/electronics-and-accessories-natural-3-middle.jpg"
+          }
+        },
+        "image_Ur8hUb": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/electronics-and-accessories-natural-5-bottom.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "video_x97Qak",
+        "image_npPA7A",
+        "image_Ur8hUb"
+      ],
+      "settings": {
+        "heading": "",
+        "heading_size": "h0",
+        "desktop_layout": "left",
+        "mobile_layout": "column",
+        "card_styles": "none",
+        "color_scheme": "",
+        "padding_top": 32,
+        "padding_bottom": 60
+      }
+    },
+    "image_with_text_DYDtwA": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_c6fF64": {
+          "type": "heading",
+          "settings": {
+            "heading": "Our shop",
+            "heading_size": "h2"
+          }
+        },
+        "text_PLAK8A": {
+          "type": "text",
+          "settings": {
+            "text": "<h3>私たちは、洗練されたデザインと最新の技術を融合させ、日常をスタイリッシュに変革します。</h3>",
+            "text_style": "body"
+          }
+        },
+        "button_L7GN3F": {
+          "type": "button",
+          "settings": {
+            "button_label": "Shop all",
+            "button_link": "shopify://collections/all",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_c6fF64",
+        "text_PLAK8A",
+        "button_L7GN3F"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/electronics-and-accessories-natural-4-middle.jpg",
+        "height": "medium",
+        "desktop_image_width": "large",
+        "layout": "image_first",
+        "image_behavior": "none",
+        "content_layout": "no-overlap",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "center",
+        "section_color_scheme": "",
+        "color_scheme": "accent-1",
+        "padding_top": 56,
+        "padding_bottom": 60
+      }
+    },
+    "image_with_text_tz9Af9": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_hKWUGD": {
+          "type": "heading",
+          "settings": {
+            "heading": "シンプルな美",
+            "heading_size": "h2"
+          }
+        },
+        "text_Fka4eU": {
+          "type": "text",
+          "settings": {
+            "text": "<h3>私たちの商品は、洗練されたオレンジの彩りで、シンプルさを追求しています。</h3>",
+            "text_style": "body"
+          }
+        },
+        "button_nbyXaA": {
+          "type": "button",
+          "settings": {
+            "button_label": "シンプルな美",
+            "button_link": "shopify://pages/contact",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_hKWUGD",
+        "text_Fka4eU",
+        "button_nbyXaA"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/electronics-and-accessories-natural-1-middle.jpg",
+        "height": "medium",
+        "desktop_image_width": "large",
+        "layout": "text_first",
+        "image_behavior": "none",
+        "content_layout": "no-overlap",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "center",
+        "section_color_scheme": "",
+        "color_scheme": "accent-1",
+        "padding_top": 60,
+        "padding_bottom": 56
+      }
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "custom_css": [],
+      "settings": {
+        "collection": "all",
+        "products_to_show": 6,
+        "title": "Featured products",
+        "heading_size": "h1",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "columns_desktop": 4,
+        "enable_desktop_slider": false,
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "solid",
+        "color_scheme": "background-1",
+        "image_ratio": "portrait",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 56,
+        "padding_bottom": 84
+      }
+    }
+  },
+  "order": [
+    "rich_text_TEVXgm",
+    "slideshow_LGjeLM",
+    "collage_Ji34he",
+    "image_with_text_DYDtwA",
+    "image_with_text_tz9Af9",
+    "featured_collection"
+  ]
+}
