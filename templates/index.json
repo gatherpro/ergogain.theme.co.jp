@@ -37,37 +37,38 @@
           "settings": {
             "image": "shopify://shop_images/Gemini_Generated_Image_udfui1udfui1udfu.png",
             "image_alt": "オリジナルキーキャップ",
-            "heading": "<p>オリジナルキーキャップ</p>",
+            "heading": "<p><em>オリジナルキーキャップ</em></p>",
             "description": "<p>「キーボードに、新たな息吹を。」<br/>あなたのキーボードは、まだ進化できる。<br/>機能と美しさを兼ね備えたオリジナルキーキャップで、<br/>タイピング体験を劇的にアップデート。</p>",
             "price": "",
             "cta_text": "buy now",
-            "cta_link": "",
+            "cta_link": "shopify://products/エルゴゲイン-分割エルゴノミクス-メカニカルキーボード-有線-2-4ghzレシーバー対応",
             "text_position": "left",
             "color_scheme": "light",
             "heading_color": "",
-            "heading_font": "",
+            "heading_font": "'Noto Sans JP', sans-serif",
             "heading_font_weight": "",
             "text_color": "",
-            "button_bg_color": "#580e0c",
+            "button_bg_color": "#efcdcc",
             "button_text_color": "#ffffff"
           }
         },
         "slide_NFMhFc": {
           "type": "slide",
           "settings": {
+            "image": "shopify://shop_images/Gemini_Generated_Image_gkzwg1gkzwg1gkzw.png",
             "image_alt": "",
-            "heading": "<p>新製品登場</p>",
-            "description": "<p>最新テクノロジーで、あなたの生活を変える</p>",
+            "heading": "<p>オリジナルキーホルダー</p>",
+            "description": "<p>日常に、カチッと心地よさを</p><p>キーボード愛好家へ贈る、ユニークな逸品。<br/>お気に入りのキースイッチが、いつでもあなたのそばに。<br/>デスクを離れても、その感触を。</p>",
             "price": "",
-            "cta_text": "今すぐ購入",
-            "cta_link": "",
+            "cta_text": "buy now",
+            "cta_link": "shopify://products/エルゴゲイン-分割エルゴノミクス-メカニカルキーボード-有線-2-4ghzレシーバー対応",
             "text_position": "left",
-            "color_scheme": "dark",
+            "color_scheme": "light",
             "heading_color": "",
             "heading_font": "",
             "heading_font_weight": "",
             "text_color": "",
-            "button_bg_color": "",
+            "button_bg_color": "#bacde9",
             "button_text_color": ""
           }
         }
