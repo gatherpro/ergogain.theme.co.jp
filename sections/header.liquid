@@ -207,10 +207,10 @@
   -%}
   <header class="header header--{{ section.settings.logo_position }} header--mobile-{{ section.settings.mobile_logo_position }} page-width{% if section.settings.menu_type_desktop == 'drawer' %} drawer-menu{% endif %}{% if section.settings.menu != blank %} header--has-menu{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if shop.customer_accounts_enabled %} header--has-account{% endif %}{% if localization_forms %} header--has-localizations{% endif %}">
   {%- liquid
-  if section.settings.menu != blank
-    render 'header-drawer'    # ← モバイルのハンバーガーは残します
-  endif
--%}
+    if section.settings.menu != blank
+      render 'header-drawer'
+    endif
+  -%}
 
 <div class="eg-header">
   {%- comment -%} ========== Logo ========== {%- endcomment -%}
@@ -260,7 +260,7 @@
         type="search"
         name="q"
         placeholder="Search..."
-        value=""          <!-- ← “最初から空欄” を担保 -->
+        value=""
         aria-label="Search"
       >
     </form>
@@ -295,15 +295,16 @@
       {%- endcase -%}
     {%- endfor -%}
 
-    {#-- Cart：アイコン + (数量) を常時表示 --#}
+    {%- comment -%} Cart：アイコン + 数量バッジ（0件は非表示） {%- endcomment -%}
     <a href="{{ routes.cart_url }}" class="header__icon header__icon--cart link focus-inset eg-cart" id="cart-icon-bubble" aria-label="Cart">
-      {% if cart == empty %}
-        <span class="svg-wrapper">{{ 'icon-cart-empty.svg' | inline_asset_content }}</span>
-      {% else %}
-        <span class="svg-wrapper">{{ 'icon-cart.svg' | inline_asset_content }}</span>
-      {% endif %}
-      <span class="eg-cart-count">({{ cart.item_count }})</span>
-      <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
+      {%- if cart == empty -%}
+        <span class="svg-wrapper" aria-hidden="true">{{ 'icon-cart-empty.svg' | inline_asset_content }}</span>
+      {%- else -%}
+        <span class="svg-wrapper" aria-hidden="true">{{ 'icon-cart.svg' | inline_asset_content }}</span>
+      {%- endif -%}
+      {%- if cart.item_count > 0 -%}
+        <span class="eg-cart-count" aria-live="polite">({{ cart.item_count }})</span>
+      {%- endif -%}
     </a>
   </div>
 </div>
