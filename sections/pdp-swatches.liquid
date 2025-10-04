@@ -1,0 +1,222 @@
+{{ 'pdp-swatches.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  #PDP-Swatches-{{ section.id }} {
+    --pdp-swatches-swatch-size: {{ section.settings.swatch_size }}px;
+    --pdp-swatches-gap: {{ section.settings.swatch_gap }}px;
+  }
+{%- endstyle -%}
+
+<section
+  id="PDP-Swatches-{{ section.id }}"
+  class="pdp-swatches"
+  role="region"
+  aria-label="{{ section.settings.heading | default: 'Product Options' }}"
+  data-reflect-to-url="{{ section.settings.reflect_to_url }}"
+  data-target-selector="{{ section.settings.target_selector }}"
+>
+  <div class="pdp-swatches__container">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="pdp-swatches__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'swatch_group' -%}
+        <div class="pdp-swatches__group" {{ block.shopify_attributes }}>
+          {%- if block.settings.group_title != blank -%}
+            <h3 class="pdp-swatches__group-title">{{ block.settings.group_title }}</h3>
+          {%- endif -%}
+
+          <div
+            class="pdp-swatches__list-wrapper"
+            role="radiogroup"
+            aria-label="{{ block.settings.group_title | default: 'Options' }}"
+            data-attribute="{{ block.settings.attribute_code }}"
+          >
+            <div class="pdp-swatches__list">
+              {%- assign items = block.settings.items -%}
+              {%- if items != blank -%}
+                {%- assign items_array = items | split: '||' -%}
+                {%- for item_str in items_array -%}
+                  {%- assign item_parts = item_str | split: '::' -%}
+                  {%- if item_parts.size >= 5 -%}
+                    {%- assign item_label = item_parts[0] -%}
+                    {%- assign item_value = item_parts[1] -%}
+                    {%- assign swatch_type = item_parts[2] -%}
+                    {%- assign swatch_data = item_parts[3] -%}
+                    {%- assign media_id = item_parts[4] -%}
+                    {%- assign in_stock = item_parts[5] | default: 'true' -%}
+                    {%- assign is_first = forloop.first -%}
+
+                    <button
+                      type="button"
+                      class="pdp-swatches__swatch{% if is_first %} is-selected{% endif %}"
+                      role="radio"
+                      aria-checked="{% if is_first %}true{% else %}false{% endif %}"
+                      aria-label="{{ item_label }}"
+                      data-value="{{ item_value }}"
+                      data-media-id="{{ media_id }}"
+                      data-swatch-type="{{ swatch_type }}"
+                      {% if in_stock == 'false' %}disabled aria-disabled="true"{% endif %}
+                    >
+                      <span class="pdp-swatches__swatch-visual">
+                        {%- if swatch_type == 'color' -%}
+                          <span
+                            class="pdp-swatches__swatch-color"
+                            style="background-color: {{ swatch_data }};"
+                          ></span>
+                        {%- elsif swatch_type == 'image' -%}
+                          <img
+                            src="{{ swatch_data | image_url: width: 100 }}"
+                            alt="{{ item_label }}"
+                            class="pdp-swatches__swatch-image"
+                            loading="lazy"
+                            width="100"
+                            height="100"
+                          >
+                        {%- endif -%}
+                      </span>
+                      <span class="pdp-swatches__swatch-label">{{ item_label }}</span>
+                    </button>
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- else -%}
+                {%- comment -%} Placeholder swatches for theme editor {%- endcomment -%}
+                {%- for i in (1..4) -%}
+                  <button
+                    type="button"
+                    class="pdp-swatches__swatch{% if forloop.first %} is-selected{% endif %}"
+                    role="radio"
+                    aria-checked="{% if forloop.first %}true{% else %}false{% endif %}"
+                    aria-label="Option {{ i }}"
+                    data-value="option-{{ i }}"
+                    data-media-id=""
+                    data-swatch-type="color"
+                  >
+                    <span class="pdp-swatches__swatch-visual">
+                      <span
+                        class="pdp-swatches__swatch-color"
+                        style="background-color: {% cycle '#000000', '#FFFFFF', '#CCCCCC', '#888888' %};"
+                      ></span>
+                    </span>
+                    <span class="pdp-swatches__swatch-label">Option {{ i }}</span>
+                  </button>
+                {%- endfor -%}
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- if section.blocks.size == 0 -%}
+      <div class="pdp-swatches__placeholder">
+        <p>Add swatch groups in the theme editor</p>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<script src="{{ 'pdp-swatches.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "PDP Swatches",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Customize Your Build"
+    },
+    {
+      "type": "checkbox",
+      "id": "reflect_to_url",
+      "label": "Reflect selections to URL",
+      "default": true,
+      "info": "Update URL query parameters when options are selected"
+    },
+    {
+      "type": "text",
+      "id": "target_selector",
+      "label": "Target selector",
+      "default": "#pdp-hero-media",
+      "info": "CSS selector for preview element (e.g., #pdp-hero-media)"
+    },
+    {
+      "type": "header",
+      "content": "Swatch Settings"
+    },
+    {
+      "type": "range",
+      "id": "swatch_size",
+      "min": 40,
+      "max": 80,
+      "step": 4,
+      "default": 60,
+      "unit": "px",
+      "label": "Swatch size"
+    },
+    {
+      "type": "range",
+      "id": "swatch_gap",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "default": 12,
+      "unit": "px",
+      "label": "Swatch spacing"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "swatch_group",
+      "name": "Swatch Group",
+      "settings": [
+        {
+          "type": "text",
+          "id": "group_title",
+          "label": "Group title",
+          "default": "Color",
+          "info": "e.g., Case, Plate, Keycaps"
+        },
+        {
+          "type": "text",
+          "id": "attribute_code",
+          "label": "Attribute code",
+          "default": "color",
+          "info": "Used for URL params (e.g., caseColor, keycaps)"
+        },
+        {
+          "type": "textarea",
+          "id": "items",
+          "label": "Swatch items",
+          "info": "Format: label::value::type::data::mediaId::inStock||next_item. Example: Ivory::ivory::color::#F5F5DC::media-001::true||Black::black::color::#000000::media-002::true",
+          "placeholder": "Ivory::ivory::color::#F5F5DC::media-001::true||Black::black::color::#000000::media-002::false"
+        },
+        {
+          "type": "paragraph",
+          "content": "Each item format: Label::value::type(color|image)::colorHex or imageUrl::mediaId::inStock(true|false). Separate items with ||"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDP Swatches",
+      "blocks": [
+        {
+          "type": "swatch_group",
+          "settings": {
+            "group_title": "Case Color",
+            "attribute_code": "caseColor",
+            "items": "Ivory::ivory::color::#F5F5DC::media-001::true||Charcoal::charcoal::color::#36454F::media-002::true||Silver::silver::color::#C0C0C0::media-003::true"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,171 @@
+{{ 'pdp-switches.css' | asset_url | stylesheet_tag }}
+
+<section class="pdp-switches">
+  <div class="pdp-switches__container">
+
+    {%- if section.settings.heading != blank -%}
+      <h2 class="pdp-switches__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    {%- if section.settings.subtext != blank -%}
+      <p class="pdp-switches__subtext">{{ section.settings.subtext }}</p>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="pdp-switches__grid" data-card-count="{{ section.blocks.size }}">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'switch_card' -%}
+              <div class="pdp-switches__card" {{ block.shopify_attributes }}>
+
+                {%- if block.settings.name != blank -%}
+                  <h3 class="pdp-switches__card-title">{{ block.settings.name }}</h3>
+                {%- endif -%}
+
+                {%- if block.settings.description != blank -%}
+                  <p class="pdp-switches__card-description">{{ block.settings.description }}</p>
+                {%- endif -%}
+
+                {%- if block.settings.curve_image != blank -%}
+                  <div class="pdp-switches__image-wrapper">
+                    <img
+                      src="{{ block.settings.curve_image | image_url: width: 600 }}"
+                      alt="{{ block.settings.name }} force curve"
+                      class="pdp-switches__force-curve"
+                      loading="lazy"
+                      width="300"
+                      height="200">
+                  </div>
+                {%- endif -%}
+
+                {%- if block.settings.audio != blank -%}
+                  <button
+                    type="button"
+                    class="pdp-switches__play"
+                    data-audio-id="audio-{{ block.id }}"
+                    aria-pressed="false"
+                    aria-label="Play {{ block.settings.name }} sound">
+                    <span class="pdp-switches__play-icon">
+                      <svg class="pdp-switches__play-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 5v14l11-7L8 5z" fill="currentColor"/>
+                      </svg>
+                      <svg class="pdp-switches__pause-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" fill="currentColor"/>
+                      </svg>
+                    </span>
+                    <span class="pdp-switches__play-text">Listen</span>
+                  </button>
+
+                  <audio
+                    id="audio-{{ block.id }}"
+                    class="pdp-switches__audio"
+                    preload="none"
+                    data-src="{{ block.settings.audio }}"
+                    aria-hidden="true">
+                    <source src="{{ block.settings.audio }}" type="audio/mpeg">
+                  </audio>
+                {%- endif -%}
+
+              </div>
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.note != blank -%}
+      <p class="pdp-switches__note">{{ section.settings.note }}</p>
+    {%- endif -%}
+
+    <div class="pdp-switches__status" aria-live="polite" aria-atomic="true"></div>
+
+  </div>
+</section>
+
+<script src="{{ 'pdp-switches.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "PDP Switches",
+  "tag": "section",
+  "class": "section-pdp-switches",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Choose Your Switch"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Experience the sound and feel of each switch type."
+    },
+    {
+      "type": "textarea",
+      "id": "note",
+      "label": "Note",
+      "info": "Optional note displayed below the cards"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "switch_card",
+      "name": "Switch Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Switch Name",
+          "default": "Linear Switch"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Smooth and consistent keystroke from top to bottom."
+        },
+        {
+          "type": "image_picker",
+          "id": "curve_image",
+          "label": "Force Curve Image"
+        },
+        {
+          "type": "url",
+          "id": "audio",
+          "label": "Audio File URL",
+          "info": "Upload audio file to Files and paste URL here"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDP Switches",
+      "blocks": [
+        {
+          "type": "switch_card",
+          "settings": {
+            "name": "Linear",
+            "description": "Smooth and consistent keystroke."
+          }
+        },
+        {
+          "type": "switch_card",
+          "settings": {
+            "name": "Tactile",
+            "description": "Noticeable bump for tactile feedback."
+          }
+        },
+        {
+          "type": "switch_card",
+          "settings": {
+            "name": "Clicky",
+            "description": "Audible click with tactile bump."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
