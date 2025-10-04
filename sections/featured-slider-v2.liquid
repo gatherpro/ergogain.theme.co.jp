@@ -1,343 +1,86 @@
-{% comment %}
-  Featured Slider v2 - 手動で商品カードを編集可能
-  - 各商品カードをブロックで個別編集（画像・商品名・価格）
-  - Show Moreボタンで他ページへ遷移
-  - 並列安全: schema ID接頭辞 fs_v2_
-{% endcomment %}
-
-{{ 'featured-slider.css' | asset_url | stylesheet_tag }}
-{{ 'featured-slider-v2.css' | asset_url | stylesheet_tag }}
-
+<link rel="stylesheet" href="{{ 'featured-slider-v2.css' | asset_url }}">
+<script src="{{ 'featured-slider-v2.js' | asset_url }}" defer></script>
 {%- style -%}
-  #Featured-Slider-v2-{{ section.id }} {
-    --featured-slider-padding-top: {{ section.settings.fs_v2_padding_top }}px;
-    --featured-slider-padding-bottom: {{ section.settings.fs_v2_padding_bottom }}px;
-    --featured-slider-bg-color: {{ section.settings.fs_v2_background_color }};
-    --featured-slider-text-color: {{ section.settings.fs_v2_text_color }};
-    --featured-slider-card-gap: {{ section.settings.fs_v2_card_gap }}px;
-    --featured-slider-card-width: {{ section.settings.fs_v2_card_width }}px;
-    --featured-slider-heading-size: {{ section.settings.fs_v2_heading_size }}px;
-    --featured-slider-heading-line-height: {{ section.settings.fs_v2_heading_line_height }};
-  }
+.fs-v2-{{section.id}}{
+--fs-v2-bg:{{section.settings.fs_v2_background_color}};
+--fs-v2-text:{{section.settings.fs_v2_text_color}};
+--fs-v2-card-width:{{section.settings.fs_v2_card_width}}px;
+--fs-v2-gap:{{section.settings.fs_v2_card_gap}}px;
+--fs-v2-heading-size:{{section.settings.fs_v2_heading_size}}px;
+--fs-v2-heading-lh:{{section.settings.fs_v2_heading_line_height}};
+--fs-v2-pt:{{section.settings.fs_v2_padding_top}}px;
+--fs-v2-pb:{{section.settings.fs_v2_padding_bottom}}px;
+}
 {%- endstyle -%}
-
-<section
-  id="Featured-Slider-v2-{{ section.id }}"
-  class="featured-slider"
-  role="region"
-  aria-label="{{ section.settings.fs_v2_heading | default: 'Featured Products' }}"
->
-  <div class="featured-slider__container">
-
-    {%- comment -%} ヘッダー {%- endcomment -%}
-    {%- if section.settings.fs_v2_heading != blank or section.settings.fs_v2_subtext != blank -%}
-      <div class="featured-slider__header">
-        {%- if section.settings.fs_v2_heading != blank -%}
-          <h2 class="featured-slider__heading">{{ section.settings.fs_v2_heading }}</h2>
-        {%- endif -%}
-        {%- if section.settings.fs_v2_subtext != blank -%}
-          <p class="featured-slider__subtext">{{ section.settings.fs_v2_subtext }}</p>
-        {%- endif -%}
-      </div>
-    {%- endif -%}
-
-    <div class="featured-slider__wrapper">
-
-      {%- comment -%} 前へボタン {%- endcomment -%}
-      <button
-        type="button"
-        class="featured-slider__nav featured-slider__nav--prev"
-        aria-label="Previous products"
-        aria-controls="featured-slider-track-{{ section.id }}"
-      >
-        {% render 'icon-chevron-left' %}
-      </button>
-
-      {%- comment -%} 商品カードトラック {%- endcomment -%}
-      <div
-        id="featured-slider-track-{{ section.id }}"
-        class="featured-slider__track"
-        role="list"
-      >
-        {%- if section.blocks.size > 0 -%}
-          {%- for block in section.blocks -%}
-            <div class="featured-slider__card" role="listitem" {{ block.shopify_attributes }}>
-              <a href="{{ block.settings.fs_v2_product_link | default: '#' }}" class="featured-slider__card-link">
-
-                {%- comment -%} 商品画像 {%- endcomment -%}
-                <div class="featured-slider__card-image">
-                  {%- if block.settings.fs_v2_product_image != blank -%}
-                    {%- assign image = block.settings.fs_v2_product_image -%}
-                    {%- assign image_width = 600 -%}
-                    {%- assign image_height = image_width | divided_by: image.aspect_ratio | ceil -%}
-                    <img
-                      src="{{ image | image_url: width: image_width }}"
-                      srcset="{{ image | image_url: width: 300 }} 300w,
-                              {{ image | image_url: width: 600 }} 600w"
-                      sizes="(min-width: 750px) {{ section.settings.fs_v2_card_width }}px, 50vw"
-                      alt="{{ block.settings.fs_v2_product_name | escape }}"
-                      loading="lazy"
-                      width="{{ image_width }}"
-                      height="{{ image_height }}"
-                    >
-                  {%- else -%}
-                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
-                  {%- endif -%}
-                </div>
-
-                {%- comment -%} 商品情報 {%- endcomment -%}
-                <div class="featured-slider__card-content">
-                  <h3 class="featured-slider__card-title">
-                    {{ block.settings.fs_v2_product_name | default: 'Product Name' }}
-                  </h3>
-
-                  <div class="featured-slider__card-price">
-                    {%- if block.settings.fs_v2_compare_price != blank -%}
-                      <span class="featured-slider__card-price--compare">
-                        {{ block.settings.fs_v2_compare_price }}
-                      </span>
-                      <span class="featured-slider__card-price--sale">
-                        {{ block.settings.fs_v2_price }}
-                      </span>
-                    {%- else -%}
-                      <span class="featured-slider__card-price--regular">
-                        {{ block.settings.fs_v2_price }}
-                      </span>
-                    {%- endif -%}
-                  </div>
-
-                  {%- comment -%} Show More ボタン（カードごと） {%- endcomment -%}
-                  {%- if block.settings.fs_v2_show_more_enable -%}
-                    <div class="featured-slider__card-show-more">
-                      <span class="featured-slider__card-show-more-link">
-                        {{ block.settings.fs_v2_show_more_text | default: 'もっと見る' }}
-                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                          <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                      </span>
-                    </div>
-                  {%- endif -%}
-                </div>
-              </a>
-            </div>
-          {%- endfor -%}
-        {%- else -%}
-          {%- comment -%} プレースホルダー（ブロックがない場合） {%- endcomment -%}
-          {%- for i in (1..4) -%}
-            <div class="featured-slider__card" role="listitem">
-              <div class="featured-slider__card-link">
-                <div class="featured-slider__card-image">
-                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
-                </div>
-                <div class="featured-slider__card-content">
-                  <h3 class="featured-slider__card-title">商品 {{ i }}</h3>
-                  <div class="featured-slider__card-price">
-                    <span class="featured-slider__card-price--regular">¥0</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          {%- endfor -%}
-        {%- endif -%}
-      </div>
-
-      {%- comment -%} 次へボタン {%- endcomment -%}
-      <button
-        type="button"
-        class="featured-slider__nav featured-slider__nav--next"
-        aria-label="Next products"
-        aria-controls="featured-slider-track-{{ section.id }}"
-      >
-        {% render 'icon-chevron-right' %}
-      </button>
-    </div>
-
-  </div>
+<section class="fs-v2 fs-v2-{{section.id}}" data-fs-v2>
+<div class="fs-v2__container page-width">
+{%- if section.settings.fs_v2_heading != blank -%}
+<div class="fs-v2__header">
+<h2 class="fs-v2__heading">{{section.settings.fs_v2_heading}}</h2>
+{%- if section.settings.fs_v2_subtext != blank -%}
+<p class="fs-v2__subtext">{{section.settings.fs_v2_subtext}}</p>
+{%- endif -%}
+</div>
+{%- endif -%}
+<div class="fs-v2__rail" data-rail>
+{%- for block in section.blocks -%}
+<div class="fs-v2__card" {{block.shopify_attributes}}>
+{%- if block.settings.fs_v2_product_image != blank -%}
+<div class="fs-v2__card-img-wrap">
+<img src="{{block.settings.fs_v2_product_image | image_url: width: 600}}" alt="{{block.settings.fs_v2_product_name | escape}}" class="fs-v2__card-img" loading="lazy">
+</div>
+{%- endif -%}
+<div class="fs-v2__card-content">
+<h3 class="fs-v2__card-name">{{block.settings.fs_v2_product_name}}</h3>
+<div class="fs-v2__card-price-wrap">
+{%- if block.settings.fs_v2_compare_price != blank -%}
+<span class="fs-v2__card-price-compare">{{block.settings.fs_v2_compare_price}}</span>
+{%- endif -%}
+<span class="fs-v2__card-price">{{block.settings.fs_v2_price}}</span>
+</div>
+{%- if block.settings.fs_v2_show_more_enable and block.settings.fs_v2_product_link != blank -%}
+<a href="{{block.settings.fs_v2_product_link}}" class="fs-v2__card-link">{{block.settings.fs_v2_show_more_text}}</a>
+{%- endif -%}
+</div>
+</div>
+{%- endfor -%}
+</div>
+<div class="fs-v2__nav">
+<button type="button" class="fs-v2__nav-btn fs-v2__nav-btn--prev" data-prev aria-label="Previous">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+</button>
+<button type="button" class="fs-v2__nav-btn fs-v2__nav-btn--next" data-next aria-label="Next">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+</button>
+</div>
+</div>
 </section>
-
-<script src="{{ 'featured-slider.js' | asset_url }}" defer></script>
-
 {% schema %}
 {
-  "name": "Featured Slider v2",
-  "tag": "section",
-  "class": "section",
-  "settings": [
-    {
-      "type": "header",
-      "content": "見出し"
-    },
-    {
-      "type": "text",
-      "id": "fs_v2_heading",
-      "label": "見出し",
-      "default": "人気の商品"
-    },
-    {
-      "type": "textarea",
-      "id": "fs_v2_subtext",
-      "label": "サブテキスト"
-    },
-    {
-      "type": "header",
-      "content": "レイアウト設定"
-    },
-    {
-      "type": "range",
-      "id": "fs_v2_card_width",
-      "min": 200,
-      "max": 400,
-      "step": 10,
-      "default": 280,
-      "unit": "px",
-      "label": "カード幅"
-    },
-    {
-      "type": "range",
-      "id": "fs_v2_card_gap",
-      "min": 8,
-      "max": 48,
-      "step": 4,
-      "default": 24,
-      "unit": "px",
-      "label": "カード間隔"
-    },
-    {
-      "type": "header",
-      "content": "タイポグラフィ"
-    },
-    {
-      "type": "range",
-      "id": "fs_v2_heading_size",
-      "min": 24,
-      "max": 64,
-      "step": 2,
-      "default": 40,
-      "unit": "px",
-      "label": "見出しサイズ"
-    },
-    {
-      "type": "range",
-      "id": "fs_v2_heading_line_height",
-      "min": 1.0,
-      "max": 2.0,
-      "step": 0.1,
-      "default": 1.2,
-      "label": "見出し行間"
-    },
-    {
-      "type": "header",
-      "content": "カラー"
-    },
-    {
-      "type": "color",
-      "id": "fs_v2_text_color",
-      "label": "テキストカラー",
-      "default": "#000000"
-    },
-    {
-      "type": "color",
-      "id": "fs_v2_background_color",
-      "label": "背景カラー",
-      "default": "#FFFFFF"
-    },
-    {
-      "type": "header",
-      "content": "スペーシング"
-    },
-    {
-      "type": "range",
-      "id": "fs_v2_padding_top",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "default": 64,
-      "unit": "px",
-      "label": "上部パディング"
-    },
-    {
-      "type": "range",
-      "id": "fs_v2_padding_bottom",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "default": 64,
-      "unit": "px",
-      "label": "下部パディング"
-    }
-  ],
-  "blocks": [
-    {
-      "type": "product_card",
-      "name": "商品カード",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "fs_v2_product_image",
-          "label": "商品画像"
-        },
-        {
-          "type": "text",
-          "id": "fs_v2_product_name",
-          "label": "商品名",
-          "default": "商品名"
-        },
-        {
-          "type": "text",
-          "id": "fs_v2_price",
-          "label": "価格",
-          "default": "¥0",
-          "info": "任意のテキストを入力可能（例: ¥9,800 / $99.00 / 無料）"
-        },
-        {
-          "type": "text",
-          "id": "fs_v2_compare_price",
-          "label": "比較価格",
-          "info": "セール表示したい場合のみ入力（例: ¥12,800）"
-        },
-        {
-          "type": "url",
-          "id": "fs_v2_product_link",
-          "label": "リンク先URL",
-          "info": "商品詳細ページまたは任意のURL"
-        },
-        {
-          "type": "header",
-          "content": "Show More ボタン"
-        },
-        {
-          "type": "checkbox",
-          "id": "fs_v2_show_more_enable",
-          "label": "Show Moreボタンを表示",
-          "default": false
-        },
-        {
-          "type": "text",
-          "id": "fs_v2_show_more_text",
-          "label": "ボタンテキスト",
-          "default": "もっと見る"
-        }
-      ]
-    }
-  ],
-  "presets": [
-    {
-      "name": "Featured Slider v2",
-      "blocks": [
-        {
-          "type": "product_card"
-        },
-        {
-          "type": "product_card"
-        },
-        {
-          "type": "product_card"
-        },
-        {
-          "type": "product_card"
-        }
-      ]
-    }
-  ]
+"name":"Featured Slider v2",
+"settings":[
+{"type":"text","id":"fs_v2_heading","label":"見出し","default":"人気の商品"},
+{"type":"textarea","id":"fs_v2_subtext","label":"サブテキスト"},
+{"type":"range","id":"fs_v2_card_width","min":180,"max":360,"step":10,"unit":"px","label":"カード幅","default":280},
+{"type":"range","id":"fs_v2_card_gap","min":12,"max":48,"step":4,"unit":"px","label":"カード間隔","default":24},
+{"type":"range","id":"fs_v2_heading_size","min":24,"max":56,"step":2,"unit":"px","label":"見出しサイズ","default":40},
+{"type":"range","id":"fs_v2_heading_line_height","min":1,"max":1.5,"step":0.05,"label":"見出し行間","default":1.2},
+{"type":"color","id":"fs_v2_text_color","label":"テキスト色","default":"#000000"},
+{"type":"color","id":"fs_v2_background_color","label":"背景色","default":"#ffffff"},
+{"type":"range","id":"fs_v2_padding_top","min":0,"max":120,"step":8,"unit":"px","label":"上余白","default":64},
+{"type":"range","id":"fs_v2_padding_bottom","min":0,"max":120,"step":8,"unit":"px","label":"下余白","default":64}
+],
+"blocks":[
+{"type":"product_card","name":"商品カード","settings":[
+{"type":"image_picker","id":"fs_v2_product_image","label":"商品画像"},
+{"type":"text","id":"fs_v2_product_name","label":"商品名","default":"商品名"},
+{"type":"text","id":"fs_v2_price","label":"価格","default":"0"},
+{"type":"text","id":"fs_v2_compare_price","label":"比較価格"},
+{"type":"url","id":"fs_v2_product_link","label":"商品リンク"},
+{"type":"checkbox","id":"fs_v2_show_more_enable","label":"もっと見るボタン表示","default":false},
+{"type":"text","id":"fs_v2_show_more_text","label":"ボタンテキスト","default":"もっと見る"}
+]}
+],
+"presets":[{"name":"Featured Slider v2"}]
 }
 {% endschema %}
