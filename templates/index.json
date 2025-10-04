@@ -90,30 +90,13 @@
         "cta_style": "filled"
       }
     },
-    "featured_slider_dfkkjd": {
-      "type": "featured-slider",
-      "name": "Featured Slider",
-      "settings": {
-        "heading": "人気の商品をチェックしよう",
-        "subtext": "",
-        "collection": "",
-        "products_to_show": 5,
-        "card_width": 200,
-        "card_gap": 16,
-        "heading_size": 32,
-        "heading_line_height": 1.5,
-        "text_color": "#000000",
-        "background_color": "#fae6bb",
-        "padding_top": 76,
-        "padding_bottom": 24
-      }
-    },
     "featured_slider_v2_zidXgf": {
       "type": "featured-slider-v2",
       "blocks": {
         "product_card_6AdgCF": {
           "type": "product_card",
           "settings": {
+            "fs_v2_product_image": "shopify://shop_images/Gemini_Generated_Image_l6viacl6viacl6vi.png",
             "fs_v2_product_name": "フルオーダーメイドキーボード「ErgoGain」",
             "fs_v2_price": "3980000",
             "fs_v2_compare_price": "",
@@ -203,7 +186,6 @@
   },
   "order": [
     "hero_featured_products_qYaGfw",
-    "featured_slider_dfkkjd",
     "featured_slider_v2_zidXgf",
     "about_hero_CiKwmC"
   ]
