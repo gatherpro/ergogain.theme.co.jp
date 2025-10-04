@@ -1,27 +1,29 @@
 {% comment %}
-  PDP Layout Compare - キーボードレイアウト比較セクション
+  PDP Layout Compare - 手の計測データに基づくキーボードレイアウト最適化比較
 
   使い方：
   1. 管理画面 > オンラインストア > テーマ > カスタマイズ
   2. 「セクションを追加」> 「PDP Layout Compare」を選択
   3. ブロックを追加してレイアウトカードを作成
+  4. 各レイアウトに最適化スコアと計測データを設定
 
   機能：
-  - 横スクロールカルーセル（scroll-snap対応）
-  - PC: 3-4枚同時表示、SP: 1.2枚見切れ表示
-  - キーボード操作対応（矢印キー）
-  - アクセシビリティ対応
+  - 手の計測データに基づく最適化スコア表示
+  - 適合度の視覚化（プログレスバー、スコア表示）
+  - 推奨順での自動ソート機能
+  - インタラクティブな比較UI
+  - レスポンシブ対応
 {% endcomment %}
 
 <style>
   .pdp-layout {
     padding: 6rem 0;
-    background: #fafafa;
+    background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
   }
 
   .pdp-layout__header {
     max-width: 1280px;
-    margin: 0 auto 4rem;
+    margin: 0 auto 3rem;
     padding: 0 2rem;
     text-align: center;
   }
@@ -44,97 +46,103 @@
     font-size: 1.8rem;
     line-height: 1.5;
     color: #6e6e73;
-    margin: 0;
+    margin: 0 0 2rem;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+  }
+
+  .pdp-layout__measurement-summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1rem 2rem;
+    background: #fff;
+    border: 1px solid #e5e5e7;
+    border-radius: 2rem;
+    font-size: 1.4rem;
+    color: #6e6e73;
+    margin-top: 1rem;
+  }
+
+  .pdp-layout__measurement-icon {
+    width: 2rem;
+    height: 2rem;
+    color: #0071e3;
   }
 
   .pdp-layout__container {
     position: relative;
     max-width: 1440px;
     margin: 0 auto;
+    padding: 0 2rem;
   }
 
-  .pdp-layout__rail {
-    display: flex;
+  .pdp-layout__grid {
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 2rem;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    padding: 0 2rem 2rem;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color: #d1d1d6 transparent;
+    margin-bottom: 2rem;
   }
 
-  .pdp-layout__rail::-webkit-scrollbar {
-    height: 8px;
-  }
-
-  .pdp-layout__rail::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .pdp-layout__rail::-webkit-scrollbar-thumb {
-    background: #d1d1d6;
-    border-radius: 4px;
-  }
-
-  .pdp-layout__rail::-webkit-scrollbar-thumb:hover {
-    background: #b0b0b6;
-  }
-
-  .pdp-layout__rail:focus {
-    outline: 2px solid #0071e3;
-    outline-offset: 4px;
+  @media screen and (min-width: 768px) {
+    .pdp-layout__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
   @media screen and (min-width: 1024px) {
-    .pdp-layout__rail {
+    .pdp-layout__grid {
+      grid-template-columns: repeat(3, 1fr);
       gap: 2.4rem;
-      padding: 0 4rem 2rem;
-    }
-  }
-
-  .pdp-layout__card {
-    flex: 0 0 calc(100% - 4rem);
-    scroll-snap-align: start;
-    background: #fff;
-    border-radius: 1.6rem;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .pdp-layout__card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  }
-
-  @media screen and (min-width: 640px) {
-    .pdp-layout__card {
-      flex: 0 0 calc(50% - 1rem);
-    }
-  }
-
-  @media screen and (min-width: 1024px) {
-    .pdp-layout__card {
-      flex: 0 0 calc(33.333% - 1.6rem);
     }
   }
 
   @media screen and (min-width: 1280px) {
-    .pdp-layout__card {
-      flex: 0 0 calc(25% - 1.8rem);
+    .pdp-layout__grid {
+      grid-template-columns: repeat(4, 1fr);
     }
+  }
+
+  .pdp-layout__card {
+    background: #fff;
+    border-radius: 1.6rem;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+  }
+
+  .pdp-layout__card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  }
+
+  .pdp-layout__card--recommended {
+    border: 2px solid #0071e3;
+  }
+
+  .pdp-layout__badge {
+    position: absolute;
+    top: 1.6rem;
+    right: 1.6rem;
+    z-index: 2;
+    padding: 0.6rem 1.2rem;
+    background: #0071e3;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 0.6rem;
+    box-shadow: 0 2px 8px rgba(0, 113, 227, 0.3);
   }
 
   .pdp-layout__image-wrapper {
     position: relative;
     width: 100%;
-    padding-top: 75%; /* 4:3 aspect ratio */
-    background: #f5f5f7;
+    padding-top: 75%;
+    background: linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%);
     overflow: hidden;
   }
 
@@ -145,6 +153,11 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .pdp-layout__card:hover .pdp-layout__image {
+    transform: scale(1.05);
   }
 
   .pdp-layout__content {
@@ -155,106 +168,178 @@
     font-size: 2rem;
     font-weight: 600;
     line-height: 1.3;
-    margin: 0 0 1rem;
+    margin: 0 0 0.8rem;
     color: #1d1d1f;
   }
 
   .pdp-layout__one-liner {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     line-height: 1.5;
     color: #6e6e73;
     margin: 0 0 1.6rem;
+    min-height: 4.2rem;
+  }
+
+  .pdp-layout__score-section {
+    margin-bottom: 1.6rem;
+    padding: 1.6rem;
+    background: #f5f5f7;
+    border-radius: 1.2rem;
+  }
+
+  .pdp-layout__score-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .pdp-layout__score-label {
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #6e6e73;
+  }
+
+  .pdp-layout__score-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1d1d1f;
+  }
+
+  .pdp-layout__score-value--high {
+    color: #34c759;
+  }
+
+  .pdp-layout__score-value--medium {
+    color: #ff9500;
+  }
+
+  .pdp-layout__score-value--low {
+    color: #ff3b30;
+  }
+
+  .pdp-layout__progress-bar {
+    width: 100%;
+    height: 0.8rem;
+    background: #e5e5e7;
+    border-radius: 0.4rem;
+    overflow: hidden;
+  }
+
+  .pdp-layout__progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #34c759 0%, #30d158 100%);
+    transition: width 0.6s ease;
+  }
+
+  .pdp-layout__progress-fill--medium {
+    background: linear-gradient(90deg, #ff9500 0%, #ffb340 100%);
+  }
+
+  .pdp-layout__progress-fill--low {
+    background: linear-gradient(90deg, #ff3b30 0%, #ff6961 100%);
+  }
+
+  .pdp-layout__metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.6rem;
+  }
+
+  .pdp-layout__metric {
+    text-align: center;
+    padding: 1rem;
+    background: #f9f9fb;
+    border-radius: 0.8rem;
+  }
+
+  .pdp-layout__metric-label {
+    font-size: 1.2rem;
+    color: #86868b;
+    margin-bottom: 0.4rem;
+  }
+
+  .pdp-layout__metric-value {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #1d1d1f;
   }
 
   .pdp-layout__link {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 1.2rem 2rem;
     font-size: 1.5rem;
-    font-weight: 500;
+    font-weight: 600;
     color: #0071e3;
+    background: transparent;
+    border: 2px solid #0071e3;
+    border-radius: 0.8rem;
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
   }
 
   .pdp-layout__link:hover {
-    color: #0051a8;
-    text-decoration: underline;
+    background: #0071e3;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
   }
 
   .pdp-layout__link:focus-visible {
     outline: 2px solid #0071e3;
     outline-offset: 4px;
-    border-radius: 4px;
   }
 
-  .pdp-layout__nav {
-    display: none;
+  .pdp-layout__card--recommended .pdp-layout__link {
+    background: #0071e3;
+    color: #fff;
   }
 
-  @media screen and (min-width: 1024px) {
-    .pdp-layout__nav {
-      display: block;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 10;
-      width: 100%;
-      pointer-events: none;
-      padding: 0 1rem;
-    }
+  .pdp-layout__card--recommended .pdp-layout__link:hover {
+    background: #0051a8;
+    border-color: #0051a8;
+  }
 
-    .pdp-layout__nav-inner {
-      display: flex;
-      justify-content: space-between;
-      max-width: 1440px;
-      margin: 0 auto;
-    }
+  .pdp-layout__sort-controls {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
 
-    .pdp-layout__arrow {
-      pointer-events: auto;
-      width: 4.8rem;
-      height: 4.8rem;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.95);
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      color: #1d1d1f;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
+  .pdp-layout__sort-btn {
+    padding: 1rem 2rem;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #6e6e73;
+    background: #fff;
+    border: 1px solid #d1d1d6;
+    border-radius: 2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
 
-    .pdp-layout__arrow:hover {
-      background: #fff;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-      transform: scale(1.05);
-    }
+  .pdp-layout__sort-btn:hover {
+    color: #0071e3;
+    border-color: #0071e3;
+  }
 
-    .pdp-layout__arrow:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-
-    .pdp-layout__arrow:focus-visible {
-      outline: 2px solid #0071e3;
-      outline-offset: 4px;
-    }
-
-    .pdp-layout__arrow svg {
-      width: 2rem;
-      height: 2rem;
-    }
+  .pdp-layout__sort-btn--active {
+    color: #fff;
+    background: #0071e3;
+    border-color: #0071e3;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .pdp-layout__rail {
-      scroll-behavior: auto;
-    }
-
-    .pdp-layout__card {
+    .pdp-layout__card,
+    .pdp-layout__image,
+    .pdp-layout__link,
+    .pdp-layout__progress-fill {
       transition: none;
     }
   }
@@ -263,29 +348,54 @@
 <section
   class="pdp-layout"
   role="region"
-  aria-roledescription="carousel"
   aria-label="{{ section.settings.heading | escape }}"
 >
-  {%- if section.settings.heading != blank or section.settings.subtext != blank -%}
-    <div class="pdp-layout__header">
-      {%- if section.settings.heading != blank -%}
-        <h2 class="pdp-layout__heading">{{ section.settings.heading }}</h2>
-      {%- endif -%}
-      {%- if section.settings.subtext != blank -%}
-        <p class="pdp-layout__subtext">{{ section.settings.subtext }}</p>
-      {%- endif -%}
-    </div>
-  {%- endif -%}
+  <div class="pdp-layout__header">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="pdp-layout__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.subtext != blank -%}
+      <p class="pdp-layout__subtext">{{ section.settings.subtext }}</p>
+    {%- endif -%}
+    {%- if section.settings.show_measurement_summary -%}
+      <div class="pdp-layout__measurement-summary">
+        <svg class="pdp-layout__measurement-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>あなたの手のサイズに基づいて最適化されています</span>
+      </div>
+    {%- endif -%}
+  </div>
 
   <div class="pdp-layout__container">
-    <div
-      class="pdp-layout__rail"
-      tabindex="0"
-      role="list"
-      data-default-index="{{ section.settings.default_index }}"
-    >
+    {%- if section.settings.show_sort_controls -%}
+      <div class="pdp-layout__sort-controls">
+        <button class="pdp-layout__sort-btn pdp-layout__sort-btn--active" data-sort="recommended">
+          推奨順
+        </button>
+        <button class="pdp-layout__sort-btn" data-sort="score">
+          スコア順
+        </button>
+        <button class="pdp-layout__sort-btn" data-sort="name">
+          名前順
+        </button>
+      </div>
+    {%- endif -%}
+
+    <div class="pdp-layout__grid" data-layout-grid>
       {%- for block in section.blocks -%}
-        <div class="pdp-layout__card" role="listitem" {{ block.shopify_attributes }}>
+        <div
+          class="pdp-layout__card{% if block.settings.is_recommended %} pdp-layout__card--recommended{% endif %}"
+          data-score="{{ block.settings.optimization_score }}"
+          data-name="{{ block.settings.title }}"
+          data-recommended="{{ block.settings.is_recommended }}"
+          {{ block.shopify_attributes }}
+        >
+          {%- if block.settings.is_recommended -%}
+            <div class="pdp-layout__badge">推奨</div>
+          {%- endif -%}
+
           {%- if block.settings.image != blank -%}
             <div class="pdp-layout__image-wrapper">
               {%- assign image_height = block.settings.image.width | divided_by: 1.333 | round -%}
@@ -298,7 +408,7 @@
                   {%- if block.settings.image.width >= 1100 -%}{{ block.settings.image | image_url: width: 1100 }} 1100w{%- endif -%}
                 "
                 src="{{ block.settings.image | image_url: width: 750 }}"
-                sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                 alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
                 loading="lazy"
                 width="{{ block.settings.image.width }}"
@@ -316,37 +426,44 @@
               <p class="pdp-layout__one-liner">{{ block.settings.one_liner }}</p>
             {%- endif -%}
 
+            {%- if block.settings.optimization_score > 0 -%}
+              <div class="pdp-layout__score-section">
+                <div class="pdp-layout__score-header">
+                  <span class="pdp-layout__score-label">最適化スコア</span>
+                  <span class="pdp-layout__score-value {% if block.settings.optimization_score >= 80 %}pdp-layout__score-value--high{% elsif block.settings.optimization_score >= 60 %}pdp-layout__score-value--medium{% else %}pdp-layout__score-value--low{% endif %}">
+                    {{ block.settings.optimization_score }}%
+                  </span>
+                </div>
+                <div class="pdp-layout__progress-bar">
+                  <div
+                    class="pdp-layout__progress-fill {% if block.settings.optimization_score >= 80 %}{% elsif block.settings.optimization_score >= 60 %}pdp-layout__progress-fill--medium{% else %}pdp-layout__progress-fill--low{% endif %}"
+                    style="width: {{ block.settings.optimization_score }}%"
+                  ></div>
+                </div>
+              </div>
+            {%- endif -%}
+
+            {%- if block.settings.show_metrics -%}
+              <div class="pdp-layout__metrics">
+                <div class="pdp-layout__metric">
+                  <div class="pdp-layout__metric-label">快適性</div>
+                  <div class="pdp-layout__metric-value">{{ block.settings.comfort_score }}%</div>
+                </div>
+                <div class="pdp-layout__metric">
+                  <div class="pdp-layout__metric-label">効率性</div>
+                  <div class="pdp-layout__metric-value">{{ block.settings.efficiency_score }}%</div>
+                </div>
+              </div>
+            {%- endif -%}
+
             {%- if block.settings.link_label != blank and block.settings.link_url != blank -%}
               <a href="{{ block.settings.link_url }}" class="pdp-layout__link">
-                {{ block.settings.link_label }} →
+                {{ block.settings.link_label }}
               </a>
             {%- endif -%}
           </div>
         </div>
       {%- endfor -%}
-    </div>
-
-    <div class="pdp-layout__nav">
-      <div class="pdp-layout__nav-inner">
-        <button
-          class="pdp-layout__arrow pdp-layout__arrow--prev"
-          aria-label="前のレイアウトを表示"
-          type="button"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="15 18 9 12 15 6"></polyline>
-          </svg>
-        </button>
-        <button
-          class="pdp-layout__arrow pdp-layout__arrow--next"
-          aria-label="次のレイアウトを表示"
-          type="button"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </button>
-      </div>
     </div>
   </div>
 </section>
@@ -356,97 +473,78 @@
   class PDPLayoutCompare {
     constructor(element) {
       this.section = element;
-      this.rail = this.section.querySelector('.pdp-layout__rail');
+      this.grid = this.section.querySelector('[data-layout-grid]');
       this.cards = Array.from(this.section.querySelectorAll('.pdp-layout__card'));
-      this.prevBtn = this.section.querySelector('.pdp-layout__arrow--prev');
-      this.nextBtn = this.section.querySelector('.pdp-layout__arrow--next');
+      this.sortButtons = Array.from(this.section.querySelectorAll('.pdp-layout__sort-btn'));
 
-      if (!this.rail || this.cards.length === 0) return;
+      if (!this.grid || this.cards.length === 0) return;
 
       this.init();
     }
 
     init() {
-      // Scroll to default index
-      const defaultIndex = parseInt(this.rail.dataset.defaultIndex) || 0;
-      if (defaultIndex > 0 && defaultIndex < this.cards.length) {
+      // Sort button handlers
+      this.sortButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const sortType = btn.dataset.sort;
+          this.sortCards(sortType);
+
+          // Update active state
+          this.sortButtons.forEach(b => b.classList.remove('pdp-layout__sort-btn--active'));
+          btn.classList.add('pdp-layout__sort-btn--active');
+        });
+      });
+
+      // Initial sort by recommended
+      this.sortCards('recommended');
+
+      // Animate progress bars on load
+      setTimeout(() => {
+        this.animateProgressBars();
+      }, 300);
+    }
+
+    sortCards(sortType) {
+      let sortedCards = [...this.cards];
+
+      switch(sortType) {
+        case 'recommended':
+          sortedCards.sort((a, b) => {
+            const aRec = a.dataset.recommended === 'true' ? 1 : 0;
+            const bRec = b.dataset.recommended === 'true' ? 1 : 0;
+            if (bRec !== aRec) return bRec - aRec;
+            return parseFloat(b.dataset.score) - parseFloat(a.dataset.score);
+          });
+          break;
+
+        case 'score':
+          sortedCards.sort((a, b) => {
+            return parseFloat(b.dataset.score) - parseFloat(a.dataset.score);
+          });
+          break;
+
+        case 'name':
+          sortedCards.sort((a, b) => {
+            return a.dataset.name.localeCompare(b.dataset.name);
+          });
+          break;
+      }
+
+      // Re-append cards in sorted order
+      sortedCards.forEach(card => {
+        this.grid.appendChild(card);
+      });
+    }
+
+    animateProgressBars() {
+      const progressBars = this.section.querySelectorAll('.pdp-layout__progress-fill');
+      progressBars.forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0%';
         setTimeout(() => {
-          this.scrollToCard(defaultIndex);
+          bar.style.width = width;
         }, 100);
-      }
-
-      // Arrow navigation
-      if (this.prevBtn) {
-        this.prevBtn.addEventListener('click', () => this.scrollPrev());
-      }
-      if (this.nextBtn) {
-        this.nextBtn.addEventListener('click', () => this.scrollNext());
-      }
-
-      // Keyboard navigation
-      this.rail.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft') {
-          e.preventDefault();
-          this.scrollPrev();
-        } else if (e.key === 'ArrowRight') {
-          e.preventDefault();
-          this.scrollNext();
-        }
       });
-
-      // Update button states on scroll
-      this.rail.addEventListener('scroll', () => {
-        this.updateButtonStates();
-      });
-
-      this.updateButtonStates();
-    }
-
-    scrollToCard(index) {
-      if (index < 0 || index >= this.cards.length) return;
-
-      const card = this.cards[index];
-      const cardWidth = card.offsetWidth;
-      const gap = parseFloat(getComputedStyle(this.rail).gap) || 0;
-      const scrollPosition = (cardWidth + gap) * index;
-
-      this.rail.scrollTo({
-        left: scrollPosition,
-        behavior: 'smooth'
-      });
-    }
-
-    scrollPrev() {
-      const scrollAmount = this.getScrollAmount();
-      this.rail.scrollBy({
-        left: -scrollAmount,
-        behavior: 'smooth'
-      });
-    }
-
-    scrollNext() {
-      const scrollAmount = this.getScrollAmount();
-      this.rail.scrollBy({
-        left: scrollAmount,
-        behavior: 'smooth'
-      });
-    }
-
-    getScrollAmount() {
-      if (this.cards.length === 0) return 0;
-      const cardWidth = this.cards[0].offsetWidth;
-      const gap = parseFloat(getComputedStyle(this.rail).gap) || 0;
-      return cardWidth + gap;
-    }
-
-    updateButtonStates() {
-      if (!this.prevBtn || !this.nextBtn) return;
-
-      const scrollLeft = this.rail.scrollLeft;
-      const maxScroll = this.rail.scrollWidth - this.rail.clientWidth;
-
-      this.prevBtn.disabled = scrollLeft <= 0;
-      this.nextBtn.disabled = scrollLeft >= maxScroll - 1;
     }
   }
 
@@ -480,27 +578,29 @@
       "type": "text",
       "id": "heading",
       "label": "見出し",
-      "default": "レイアウトを比較"
+      "default": "あなたに最適なレイアウト"
     },
     {
       "type": "textarea",
       "id": "subtext",
       "label": "説明文",
-      "default": "60%、75%、TKL、分割など、あなたに最適なレイアウトを見つけましょう。"
+      "default": "手を実際に計測して、最適化プログラムで作成したレイアウトから選択できます。"
     },
     {
       "type": "header",
-      "content": "カルーセル設定"
+      "content": "表示設定"
     },
     {
-      "type": "range",
-      "id": "default_index",
-      "min": 0,
-      "max": 10,
-      "step": 1,
-      "label": "初期表示位置",
-      "default": 0,
-      "info": "カルーセルの初期スクロール位置（0 = 最初のカード）"
+      "type": "checkbox",
+      "id": "show_measurement_summary",
+      "label": "計測データサマリーを表示",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort_controls",
+      "label": "ソートコントロールを表示",
+      "default": true
     }
   ],
   "blocks": [
@@ -508,6 +608,10 @@
       "type": "layout_card",
       "name": "レイアウトカード",
       "settings": [
+        {
+          "type": "header",
+          "content": "基本情報"
+        },
         {
           "type": "image_picker",
           "id": "image",
@@ -522,8 +626,59 @@
         {
           "type": "textarea",
           "id": "one_liner",
-          "label": "説明（1行）",
-          "default": "省スペースで持ち運びやすい、ミニマリスト向け。"
+          "label": "説明（1-2行）",
+          "default": "省スペースで持ち運びやすい、ミニマリスト向けレイアウト。"
+        },
+        {
+          "type": "header",
+          "content": "最適化データ"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_recommended",
+          "label": "推奨レイアウトとして表示",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "optimization_score",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "最適化スコア",
+          "default": 85,
+          "info": "手の計測データに基づく総合スコア"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_metrics",
+          "label": "詳細メトリクスを表示",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "comfort_score",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "快適性スコア",
+          "default": 90
+        },
+        {
+          "type": "range",
+          "id": "efficiency_score",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "効率性スコア",
+          "default": 80
+        },
+        {
+          "type": "header",
+          "content": "リンク"
         },
         {
           "type": "text",
@@ -544,16 +699,41 @@
       "name": "PDP Layout Compare",
       "blocks": [
         {
-          "type": "layout_card"
+          "type": "layout_card",
+          "settings": {
+            "title": "60% コンパクト",
+            "optimization_score": 92,
+            "is_recommended": true,
+            "comfort_score": 95,
+            "efficiency_score": 88
+          }
         },
         {
-          "type": "layout_card"
+          "type": "layout_card",
+          "settings": {
+            "title": "75% バランス",
+            "optimization_score": 88,
+            "comfort_score": 90,
+            "efficiency_score": 86
+          }
         },
         {
-          "type": "layout_card"
+          "type": "layout_card",
+          "settings": {
+            "title": "TKL テンキーレス",
+            "optimization_score": 75,
+            "comfort_score": 80,
+            "efficiency_score": 70
+          }
         },
         {
-          "type": "layout_card"
+          "type": "layout_card",
+          "settings": {
+            "title": "分割型",
+            "optimization_score": 85,
+            "comfort_score": 92,
+            "efficiency_score": 78
+          }
         }
       ]
     }
