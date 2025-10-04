@@ -1,0 +1,305 @@
+{% comment %}
+  PDP Hero Section
+  - LCP optimized full-width hero
+  - Value proposition + 2 CTAs (Purchase / Custom Start)
+  - Desktop: Left text + Right media, Mobile: Stacked
+  - Supports image or video media
+{% endcomment %}
+
+<link rel="stylesheet" href="{{ 'pdp-shared.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ 'pdp-shared.css' | asset_url }}"></noscript>
+
+{%- style -%}
+  .pdp-hero-{{ section.id }} {
+    --pdp-hero-bg: {{ section.settings.bg_color }};
+    --pdp-hero-fg: {{ section.settings.fg_color }};
+    --pdp-hero-title-size: {{ section.settings.title_size }}px;
+    --pdp-hero-title-lh: {{ section.settings.title_lh }};
+    --pdp-hero-padding-y: {{ section.settings.padding_y }}px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .pdp-hero-{{ section.id }} {
+      --pdp-hero-title-size: {{ section.settings.title_size | times: 0.7 | round }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section
+  class="pdp-hero pdp-hero-{{ section.id }}"
+  role="region"
+  aria-label="{{ section.settings.heading | escape }}"
+>
+  <div class="pdp-hero__inner">
+
+    {%- comment -%} ========== Left: Text Content ========== {%- endcomment -%}
+    <div class="pdp-hero__copy">
+      {%- if section.settings.kicker != blank -%}
+        <p class="pdp-hero__kicker">{{ section.settings.kicker }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h1 class="pdp-hero__heading">{{ section.settings.heading }}</h1>
+      {%- endif -%}
+
+      {%- if section.settings.subtext != blank -%}
+        <div class="pdp-hero__subtext">{{ section.settings.subtext | newline_to_br }}</div>
+      {%- endif -%}
+
+      {%- comment -%} CTAs {%- endcomment -%}
+      <div class="pdp-hero__ctas">
+        {%- if section.settings.primary_label != blank and section.settings.primary_link != blank -%}
+          <a
+            href="{{ section.settings.primary_link }}"
+            class="pdp-hero__cta pdp-hero__cta--primary"
+            aria-label="{{ section.settings.primary_label | escape }}"
+          >
+            {{ section.settings.primary_label }}
+          </a>
+        {%- endif -%}
+
+        {%- if section.settings.secondary_label != blank and section.settings.secondary_link != blank -%}
+          <a
+            href="{{ section.settings.secondary_link }}"
+            class="pdp-hero__cta pdp-hero__cta--ghost"
+            aria-label="{{ section.settings.secondary_label | escape }}"
+          >
+            {{ section.settings.secondary_label }}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- comment -%} ========== Right: Media (Image or Video) ========== {%- endcomment -%}
+    <div class="pdp-hero__media">
+      {%- liquid
+        assign media_type = section.settings.media_type
+        assign image = section.settings.image
+        assign video = section.settings.video
+        assign poster = section.settings.poster
+        assign object_fit = section.settings.object_fit
+      -%}
+
+      {%- if media_type == 'video' and video != blank -%}
+        {%- comment -%} Video Media {%- endcomment -%}
+        <div class="pdp-hero__video-wrapper" style="--object-fit: {{ object_fit }};">
+          <video
+            class="pdp-hero__video"
+            playsinline
+            autoplay
+            muted
+            loop
+            {%- if poster != blank %}
+              poster="{{ poster | image_url: width: 1600 }}"
+            {%- endif -%}
+            aria-label="Product video"
+          >
+            <source src="{{ video }}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+
+      {%- elsif image != blank -%}
+        {%- comment -%} Image Media with LCP optimization {%- endcomment -%}
+        <div class="pdp-hero__image-wrapper" style="--object-fit: {{ object_fit }};">
+          {%- liquid
+            assign image_alt = image.alt | default: section.settings.heading | escape
+            assign image_width = image.width
+            assign image_height = image.height
+          -%}
+
+          {%- comment -%} Generate srcset for responsive images {%- endcomment -%}
+          {%- capture srcset -%}
+            {{ image | image_url: width: 600 }} 600w,
+            {{ image | image_url: width: 900 }} 900w,
+            {{ image | image_url: width: 1200 }} 1200w,
+            {{ image | image_url: width: 1600 }} 1600w
+          {%- endcapture -%}
+
+          <img
+            src="{{ image | image_url: width: 1200 }}"
+            srcset="{{ srcset }}"
+            sizes="(min-width: 990px) 50vw, 100vw"
+            alt="{{ image_alt }}"
+            width="{{ image_width }}"
+            height="{{ image_height }}"
+            class="pdp-hero__image"
+            fetchpriority="high"
+            loading="eager"
+          >
+        </div>
+
+      {%- else -%}
+        {%- comment -%} Placeholder if no media {%- endcomment -%}
+        <div class="pdp-hero__placeholder">
+          {{ 'product-1' | placeholder_svg_tag: 'pdp-hero__placeholder-svg' }}
+        </div>
+      {%- endif -%}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "PDP Hero",
+  "class": "pdp-hero-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker text",
+      "info": "Optional small text above heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Premium Quality. Designed for You.",
+      "info": "Main heading - keep it short and impactful"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Experience the perfect blend of comfort and performance. Designed with precision, crafted for excellence.",
+      "info": "80-140 characters recommended"
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "select",
+      "id": "media_type",
+      "label": "Media type",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "video",
+          "label": "Video"
+        }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Recommended: 1600x1200px or larger"
+    },
+    {
+      "type": "text",
+      "id": "video",
+      "label": "Video URL",
+      "info": "MP4 file URL for video media type"
+    },
+    {
+      "type": "image_picker",
+      "id": "poster",
+      "label": "Video poster image",
+      "info": "Thumbnail shown before video loads"
+    },
+    {
+      "type": "select",
+      "id": "object_fit",
+      "label": "Media fit",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover (fill space)"
+        },
+        {
+          "value": "contain",
+          "label": "Contain (fit within)"
+        }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "header",
+      "content": "Call to Actions"
+    },
+    {
+      "type": "text",
+      "id": "primary_label",
+      "label": "Primary button label",
+      "default": "購入"
+    },
+    {
+      "type": "url",
+      "id": "primary_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Secondary button label",
+      "default": "カスタム開始"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "header",
+      "content": "Layout & Style"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 40,
+      "max": 160,
+      "step": 10,
+      "unit": "px",
+      "default": 80,
+      "label": "Vertical padding"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#f5f5f7"
+    },
+    {
+      "type": "color",
+      "id": "fg_color",
+      "label": "Text color",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 22,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 40,
+      "label": "Title size"
+    },
+    {
+      "type": "range",
+      "id": "title_lh",
+      "min": 1.1,
+      "max": 1.4,
+      "step": 0.05,
+      "default": 1.2,
+      "label": "Title line height"
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDP Hero",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

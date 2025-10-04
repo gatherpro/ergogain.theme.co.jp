@@ -1,0 +1,562 @@
+{% comment %}
+  PDP Layout Compare - キーボードレイアウト比較セクション
+
+  使い方：
+  1. 管理画面 > オンラインストア > テーマ > カスタマイズ
+  2. 「セクションを追加」> 「PDP Layout Compare」を選択
+  3. ブロックを追加してレイアウトカードを作成
+
+  機能：
+  - 横スクロールカルーセル（scroll-snap対応）
+  - PC: 3-4枚同時表示、SP: 1.2枚見切れ表示
+  - キーボード操作対応（矢印キー）
+  - アクセシビリティ対応
+{% endcomment %}
+
+<style>
+  .pdp-layout {
+    padding: 6rem 0;
+    background: #fafafa;
+  }
+
+  .pdp-layout__header {
+    max-width: 1280px;
+    margin: 0 auto 4rem;
+    padding: 0 2rem;
+    text-align: center;
+  }
+
+  .pdp-layout__heading {
+    font-size: 3.6rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 1.6rem;
+    color: #1d1d1f;
+  }
+
+  @media screen and (max-width: 768px) {
+    .pdp-layout__heading {
+      font-size: 2.8rem;
+    }
+  }
+
+  .pdp-layout__subtext {
+    font-size: 1.8rem;
+    line-height: 1.5;
+    color: #6e6e73;
+    margin: 0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .pdp-layout__container {
+    position: relative;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .pdp-layout__rail {
+    display: flex;
+    gap: 2rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding: 0 2rem 2rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #d1d1d6 transparent;
+  }
+
+  .pdp-layout__rail::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .pdp-layout__rail::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .pdp-layout__rail::-webkit-scrollbar-thumb {
+    background: #d1d1d6;
+    border-radius: 4px;
+  }
+
+  .pdp-layout__rail::-webkit-scrollbar-thumb:hover {
+    background: #b0b0b6;
+  }
+
+  .pdp-layout__rail:focus {
+    outline: 2px solid #0071e3;
+    outline-offset: 4px;
+  }
+
+  @media screen and (min-width: 1024px) {
+    .pdp-layout__rail {
+      gap: 2.4rem;
+      padding: 0 4rem 2rem;
+    }
+  }
+
+  .pdp-layout__card {
+    flex: 0 0 calc(100% - 4rem);
+    scroll-snap-align: start;
+    background: #fff;
+    border-radius: 1.6rem;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .pdp-layout__card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  @media screen and (min-width: 640px) {
+    .pdp-layout__card {
+      flex: 0 0 calc(50% - 1rem);
+    }
+  }
+
+  @media screen and (min-width: 1024px) {
+    .pdp-layout__card {
+      flex: 0 0 calc(33.333% - 1.6rem);
+    }
+  }
+
+  @media screen and (min-width: 1280px) {
+    .pdp-layout__card {
+      flex: 0 0 calc(25% - 1.8rem);
+    }
+  }
+
+  .pdp-layout__image-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 75%; /* 4:3 aspect ratio */
+    background: #f5f5f7;
+    overflow: hidden;
+  }
+
+  .pdp-layout__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .pdp-layout__content {
+    padding: 2rem;
+  }
+
+  .pdp-layout__title {
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0 0 1rem;
+    color: #1d1d1f;
+  }
+
+  .pdp-layout__one-liner {
+    font-size: 1.5rem;
+    line-height: 1.5;
+    color: #6e6e73;
+    margin: 0 0 1.6rem;
+  }
+
+  .pdp-layout__link {
+    display: inline-block;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #0071e3;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .pdp-layout__link:hover {
+    color: #0051a8;
+    text-decoration: underline;
+  }
+
+  .pdp-layout__link:focus-visible {
+    outline: 2px solid #0071e3;
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  .pdp-layout__nav {
+    display: none;
+  }
+
+  @media screen and (min-width: 1024px) {
+    .pdp-layout__nav {
+      display: block;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      width: 100%;
+      pointer-events: none;
+      padding: 0 1rem;
+    }
+
+    .pdp-layout__nav-inner {
+      display: flex;
+      justify-content: space-between;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .pdp-layout__arrow {
+      pointer-events: auto;
+      width: 4.8rem;
+      height: 4.8rem;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      color: #1d1d1f;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .pdp-layout__arrow:hover {
+      background: #fff;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      transform: scale(1.05);
+    }
+
+    .pdp-layout__arrow:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .pdp-layout__arrow:focus-visible {
+      outline: 2px solid #0071e3;
+      outline-offset: 4px;
+    }
+
+    .pdp-layout__arrow svg {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pdp-layout__rail {
+      scroll-behavior: auto;
+    }
+
+    .pdp-layout__card {
+      transition: none;
+    }
+  }
+</style>
+
+<section
+  class="pdp-layout"
+  role="region"
+  aria-roledescription="carousel"
+  aria-label="{{ section.settings.heading | escape }}"
+>
+  {%- if section.settings.heading != blank or section.settings.subtext != blank -%}
+    <div class="pdp-layout__header">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="pdp-layout__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.subtext != blank -%}
+        <p class="pdp-layout__subtext">{{ section.settings.subtext }}</p>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="pdp-layout__container">
+    <div
+      class="pdp-layout__rail"
+      tabindex="0"
+      role="list"
+      data-default-index="{{ section.settings.default_index }}"
+    >
+      {%- for block in section.blocks -%}
+        <div class="pdp-layout__card" role="listitem" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            <div class="pdp-layout__image-wrapper">
+              {%- assign image_height = block.settings.image.width | divided_by: 1.333 | round -%}
+              <img
+                class="pdp-layout__image"
+                srcset="
+                  {%- if block.settings.image.width >= 375 -%}{{ block.settings.image | image_url: width: 375 }} 375w,{%- endif -%}
+                  {%- if block.settings.image.width >= 550 -%}{{ block.settings.image | image_url: width: 550 }} 550w,{%- endif -%}
+                  {%- if block.settings.image.width >= 750 -%}{{ block.settings.image | image_url: width: 750 }} 750w,{%- endif -%}
+                  {%- if block.settings.image.width >= 1100 -%}{{ block.settings.image | image_url: width: 1100 }} 1100w{%- endif -%}
+                "
+                src="{{ block.settings.image | image_url: width: 750 }}"
+                sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
+                loading="lazy"
+                width="{{ block.settings.image.width }}"
+                height="{{ image_height }}"
+              >
+            </div>
+          {%- endif -%}
+
+          <div class="pdp-layout__content">
+            {%- if block.settings.title != blank -%}
+              <h3 class="pdp-layout__title">{{ block.settings.title }}</h3>
+            {%- endif -%}
+
+            {%- if block.settings.one_liner != blank -%}
+              <p class="pdp-layout__one-liner">{{ block.settings.one_liner }}</p>
+            {%- endif -%}
+
+            {%- if block.settings.link_label != blank and block.settings.link_url != blank -%}
+              <a href="{{ block.settings.link_url }}" class="pdp-layout__link">
+                {{ block.settings.link_label }} →
+              </a>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <div class="pdp-layout__nav">
+      <div class="pdp-layout__nav-inner">
+        <button
+          class="pdp-layout__arrow pdp-layout__arrow--prev"
+          aria-label="前のレイアウトを表示"
+          type="button"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <button
+          class="pdp-layout__arrow pdp-layout__arrow--next"
+          aria-label="次のレイアウトを表示"
+          type="button"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  class PDPLayoutCompare {
+    constructor(element) {
+      this.section = element;
+      this.rail = this.section.querySelector('.pdp-layout__rail');
+      this.cards = Array.from(this.section.querySelectorAll('.pdp-layout__card'));
+      this.prevBtn = this.section.querySelector('.pdp-layout__arrow--prev');
+      this.nextBtn = this.section.querySelector('.pdp-layout__arrow--next');
+
+      if (!this.rail || this.cards.length === 0) return;
+
+      this.init();
+    }
+
+    init() {
+      // Scroll to default index
+      const defaultIndex = parseInt(this.rail.dataset.defaultIndex) || 0;
+      if (defaultIndex > 0 && defaultIndex < this.cards.length) {
+        setTimeout(() => {
+          this.scrollToCard(defaultIndex);
+        }, 100);
+      }
+
+      // Arrow navigation
+      if (this.prevBtn) {
+        this.prevBtn.addEventListener('click', () => this.scrollPrev());
+      }
+      if (this.nextBtn) {
+        this.nextBtn.addEventListener('click', () => this.scrollNext());
+      }
+
+      // Keyboard navigation
+      this.rail.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          this.scrollPrev();
+        } else if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          this.scrollNext();
+        }
+      });
+
+      // Update button states on scroll
+      this.rail.addEventListener('scroll', () => {
+        this.updateButtonStates();
+      });
+
+      this.updateButtonStates();
+    }
+
+    scrollToCard(index) {
+      if (index < 0 || index >= this.cards.length) return;
+
+      const card = this.cards[index];
+      const cardWidth = card.offsetWidth;
+      const gap = parseFloat(getComputedStyle(this.rail).gap) || 0;
+      const scrollPosition = (cardWidth + gap) * index;
+
+      this.rail.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
+    }
+
+    scrollPrev() {
+      const scrollAmount = this.getScrollAmount();
+      this.rail.scrollBy({
+        left: -scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+
+    scrollNext() {
+      const scrollAmount = this.getScrollAmount();
+      this.rail.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+
+    getScrollAmount() {
+      if (this.cards.length === 0) return 0;
+      const cardWidth = this.cards[0].offsetWidth;
+      const gap = parseFloat(getComputedStyle(this.rail).gap) || 0;
+      return cardWidth + gap;
+    }
+
+    updateButtonStates() {
+      if (!this.prevBtn || !this.nextBtn) return;
+
+      const scrollLeft = this.rail.scrollLeft;
+      const maxScroll = this.rail.scrollWidth - this.rail.clientWidth;
+
+      this.prevBtn.disabled = scrollLeft <= 0;
+      this.nextBtn.disabled = scrollLeft >= maxScroll - 1;
+    }
+  }
+
+  // Initialize all PDP Layout Compare sections
+  document.addEventListener('DOMContentLoaded', () => {
+    const sections = document.querySelectorAll('.pdp-layout');
+    sections.forEach(section => new PDPLayoutCompare(section));
+  });
+
+  // Reinitialize on Shopify theme editor events
+  if (window.Shopify && window.Shopify.designMode) {
+    document.addEventListener('shopify:section:load', (event) => {
+      const section = event.target.querySelector('.pdp-layout');
+      if (section) new PDPLayoutCompare(section);
+    });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "PDP Layout Compare",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "見出し"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "見出し",
+      "default": "レイアウトを比較"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "説明文",
+      "default": "60%、75%、TKL、分割など、あなたに最適なレイアウトを見つけましょう。"
+    },
+    {
+      "type": "header",
+      "content": "カルーセル設定"
+    },
+    {
+      "type": "range",
+      "id": "default_index",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "label": "初期表示位置",
+      "default": 0,
+      "info": "カルーセルの初期スクロール位置（0 = 最初のカード）"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "layout_card",
+      "name": "レイアウトカード",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "画像"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "タイトル",
+          "default": "60% コンパクト"
+        },
+        {
+          "type": "textarea",
+          "id": "one_liner",
+          "label": "説明（1行）",
+          "default": "省スペースで持ち運びやすい、ミニマリスト向け。"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "リンクラベル",
+          "default": "詳細を見る"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "リンクURL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDP Layout Compare",
+      "blocks": [
+        {
+          "type": "layout_card"
+        },
+        {
+          "type": "layout_card"
+        },
+        {
+          "type": "layout_card"
+        },
+        {
+          "type": "layout_card"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

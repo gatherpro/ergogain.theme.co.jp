@@ -1,0 +1,287 @@
+/* ============================================
+   PDP Shared Styles
+   - Common styles for all PDP sections
+   - Apple-inspired minimal design
+   - Performance optimized
+   ============================================ */
+
+/* ========== PDP Hero Section ========== */
+.pdp-hero {
+  width: 100%;
+  background-color: var(--pdp-hero-bg, #f5f5f7);
+  color: var(--pdp-hero-fg, #1d1d1f);
+  padding: var(--pdp-hero-padding-y, 80px) 0;
+  overflow: hidden;
+}
+
+.pdp-hero__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+/* ========== Left: Copy Section ========== */
+.pdp-hero__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 540px;
+}
+
+.pdp-hero__kicker {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pdp-hero-fg);
+  opacity: 0.7;
+  margin: 0;
+}
+
+.pdp-hero__heading {
+  font-size: var(--pdp-hero-title-size, 40px);
+  line-height: var(--pdp-hero-title-lh, 1.2);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--pdp-hero-fg);
+  /* Ensure heading stays within 2 lines on mobile */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.pdp-hero__subtext {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--pdp-hero-fg);
+  opacity: 0.8;
+  margin: 0;
+  max-width: 480px;
+}
+
+/* ========== CTAs ========== */
+.pdp-hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.pdp-hero__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.pdp-hero__cta--primary {
+  background-color: #1d1d1f;
+  color: #fff;
+  border-color: #1d1d1f;
+}
+
+.pdp-hero__cta--primary:hover {
+  background-color: #000;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.pdp-hero__cta--ghost {
+  background-color: transparent;
+  color: var(--pdp-hero-fg);
+  padding: 14px 0;
+  border: none;
+  border-bottom: 1px solid var(--pdp-hero-fg);
+  border-radius: 0;
+}
+
+.pdp-hero__cta--ghost:hover {
+  opacity: 0.7;
+  border-bottom-width: 2px;
+}
+
+/* ========== Right: Media Section ========== */
+.pdp-hero__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.pdp-hero__image-wrapper,
+.pdp-hero__video-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.pdp-hero__image,
+.pdp-hero__video {
+  width: 100%;
+  height: 100%;
+  object-fit: var(--object-fit, cover);
+  display: block;
+}
+
+/* Prevent CLS - Reserve space for image */
+.pdp-hero__image-wrapper::before {
+  content: '';
+  display: block;
+  padding-bottom: 75%; /* 4:3 aspect ratio */
+}
+
+.pdp-hero__image {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.pdp-hero__placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.pdp-hero__placeholder-svg {
+  width: 60%;
+  height: 60%;
+  opacity: 0.3;
+}
+
+/* ========== Mobile Responsive (< 990px) ========== */
+@media screen and (max-width: 989px) {
+  .pdp-hero__inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .pdp-hero__copy {
+    order: 2;
+    max-width: 100%;
+  }
+
+  .pdp-hero__media {
+    order: 1;
+  }
+
+  .pdp-hero__heading {
+    /* Ensure 2 lines max on mobile */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .pdp-hero__ctas {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .pdp-hero__cta {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ========== Tablet Adjustments (750px - 989px) ========== */
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  .pdp-hero__inner {
+    padding: 0 40px;
+  }
+
+  .pdp-hero__ctas {
+    flex-direction: row;
+  }
+
+  .pdp-hero__cta {
+    width: auto;
+  }
+}
+
+/* ========== Small Mobile (< 750px) ========== */
+@media screen and (max-width: 749px) {
+  .pdp-hero {
+    padding: var(--pdp-hero-padding-y, 60px) 0;
+  }
+
+  .pdp-hero__inner {
+    gap: 32px;
+    padding: 0 16px;
+  }
+
+  .pdp-hero__copy {
+    gap: 16px;
+  }
+
+  .pdp-hero__kicker {
+    font-size: 12px;
+  }
+
+  .pdp-hero__subtext {
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .pdp-hero__cta {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+
+  .pdp-hero__media {
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+  }
+}
+
+/* ========== Accessibility ========== */
+.pdp-hero__cta:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+.pdp-hero__cta--primary:focus-visible {
+  outline-color: #fff;
+}
+
+/* ========== Reduced Motion ========== */
+@media (prefers-reduced-motion: reduce) {
+  .pdp-hero__cta {
+    transition: none;
+  }
+
+  .pdp-hero__cta--primary:hover {
+    transform: none;
+  }
+}
+
+/* ========== Print Optimization ========== */
+@media print {
+  .pdp-hero {
+    break-inside: avoid;
+  }
+
+  .pdp-hero__cta {
+    border: 1px solid #000;
+  }
+
+  .pdp-hero__video-wrapper {
+    display: none;
+  }
+}
