@@ -66,6 +66,7 @@
         "description",
         "share"
       ],
+      "disabled": true,
       "settings": {
         "enable_sticky_info": true,
         "color_scheme": "scheme-1",
@@ -84,6 +85,7 @@
     },
     "related-products": {
       "type": "related-products",
+      "disabled": true,
       "settings": {
         "heading": "You may also like",
         "heading_size": "h2",
@@ -99,10 +101,25 @@
         "padding_top": 36,
         "padding_bottom": 28
       }
+    },
+    "ergolist_grid_TxdWT3": {
+      "type": "ergolist-grid",
+      "name": "ErgoList Grid",
+      "settings": {
+        "eg_grid_heading": "製品一覧",
+        "eg_grid_collection": "",
+        "eg_grid_per_page": 12,
+        "eg_grid_enable_filters": true,
+        "eg_grid_enable_sort": true,
+        "eg_grid_enable_quickview": true,
+        "eg_grid_padding_top": 60,
+        "eg_grid_padding_bottom": 60
+      }
     }
   },
   "order": [
     "main",
-    "related-products"
+    "related-products",
+    "ergolist_grid_TxdWT3"
   ]
 }
