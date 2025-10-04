@@ -164,14 +164,14 @@
       ],
       "name": "Featured Slider v2",
       "settings": {
-        "fs_v2_heading": "人気の商品",
+        "fs_v2_heading": "人気の商品をチェックしよう",
         "fs_v2_subtext": "",
-        "fs_v2_card_width": 280,
+        "fs_v2_card_width": 210,
         "fs_v2_card_gap": 24,
-        "fs_v2_heading_size": 40,
+        "fs_v2_heading_size": 32,
         "fs_v2_heading_line_height": 1.2,
         "fs_v2_text_color": "#000000",
-        "fs_v2_background_color": "#FFFFFF",
+        "fs_v2_background_color": "#f7e6d3",
         "fs_v2_padding_top": 64,
         "fs_v2_padding_bottom": 64
       }
