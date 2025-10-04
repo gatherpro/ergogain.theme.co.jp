@@ -1,0 +1,445 @@
+{% comment %}
+  About Hero - Apple風ミニマルセクション
+
+  使い方：
+  1. 管理画面 > オンラインストア > テーマ > カスタマイズ
+  2. 「セクションを追加」> 「About Hero」を選択
+  3. テキスト、メディア、CTAを設定
+
+  機能：
+  - 2カラムレイアウト（左：テキスト｜右：メディア）
+  - 画像/動画切り替え対応
+  - レスポンシブ対応
+  - アクセシビリティ対応
+{% endcomment %}
+
+<style>
+  .eg-about {
+    background-color: {{ section.settings.bg }};
+    color: {{ section.settings.fg }};
+    padding-top: {{ section.settings.padding_y }}px;
+    padding-bottom: {{ section.settings.padding_y }}px;
+  }
+
+  .eg-about__inner {
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+    padding: 0 {{ section.settings.padding_x_mobile }}px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  @media screen and (min-width: 1024px) {
+    .eg-about__inner {
+      grid-template-columns: 1.1fr 1fr;
+      gap: 4rem;
+      padding: 0 {{ section.settings.padding_x_desktop }}px;
+    }
+  }
+
+  .eg-about__text {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+  }
+
+  .eg-about__kicker {
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: {{ section.settings.muted }};
+    margin: 0;
+  }
+
+  .eg-about__heading {
+    font-size: {{ section.settings.title_size }}px;
+    line-height: {{ section.settings.title_lh }};
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0;
+    color: {{ section.settings.fg }};
+  }
+
+  @media screen and (max-width: 768px) {
+    .eg-about__heading {
+      font-size: calc({{ section.settings.title_size }}px * 0.7);
+    }
+  }
+
+  .eg-about__subtext {
+    font-size: 1.8rem;
+    line-height: 1.5;
+    color: {{ section.settings.muted }};
+    max-width: {{ section.settings.sub_max }}px;
+    margin: 0;
+  }
+
+  @media screen and (max-width: 768px) {
+    .eg-about__subtext {
+      font-size: 1.6rem;
+    }
+  }
+
+  .eg-about__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.6rem;
+    margin-top: 0.8rem;
+  }
+
+  .eg-about__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.4rem 2.8rem;
+    font-size: 1.6rem;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 980px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    outline: none;
+  }
+
+  .eg-about__btn:focus-visible {
+    outline: 2px solid {{ section.settings.fg }};
+    outline-offset: 4px;
+  }
+
+  .eg-about__btn--primary {
+    background-color: {{ section.settings.fg }};
+    color: #ffffff;
+  }
+
+  .eg-about__btn--primary:hover {
+    background-color: #424245;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+
+  .eg-about__btn--secondary {
+    background-color: transparent;
+    color: {{ section.settings.fg }};
+    border: 1px solid {{ section.settings.fg }};
+  }
+
+  .eg-about__btn--secondary:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+
+  .eg-about__media {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 1.6rem;
+  }
+
+  .eg-about__image,
+  .eg-about__video {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 1.6rem;
+    object-fit: cover;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eg-about__btn {
+      transition: none;
+    }
+  }
+</style>
+
+<section
+  class="eg-about"
+  role="region"
+  aria-label="{{ section.settings.heading | escape }}"
+>
+  <div class="eg-about__inner">
+    <div class="eg-about__text">
+      {%- if section.settings.kicker != blank -%}
+        <p class="eg-about__kicker">{{ section.settings.kicker }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="eg-about__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.subtext != blank -%}
+        <p class="eg-about__subtext">{{ section.settings.subtext }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.primary_label != blank and section.settings.primary_link != blank -%}
+        <div class="eg-about__cta">
+          <a href="{{ section.settings.primary_link }}" class="eg-about__btn eg-about__btn--primary">
+            {{ section.settings.primary_label }}
+          </a>
+
+          {%- if section.settings.secondary_label != blank and section.settings.secondary_link != blank -%}
+            <a href="{{ section.settings.secondary_link }}" class="eg-about__btn eg-about__btn--secondary">
+              {{ section.settings.secondary_label }}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="eg-about__media">
+      {%- if section.settings.media_type == 'video' and section.settings.video != blank -%}
+        <video
+          class="eg-about__video"
+          {% if section.settings.poster != blank %}
+            poster="{{ section.settings.poster | image_url: width: 1200 }}"
+          {% endif %}
+          {% if section.settings.autoplay %}
+            autoplay
+            muted
+            loop
+            playsinline
+          {% endif %}
+          {% if section.settings.controls %}
+            controls
+          {% endif %}
+          width="1200"
+          height="675"
+        >
+          <source src="{{ section.settings.video }}" type="video/mp4">
+        </video>
+      {%- elsif section.settings.image != blank -%}
+        {%- assign image_height = section.settings.image.width | divided_by: section.settings.image.aspect_ratio | round -%}
+        <img
+          class="eg-about__image"
+          srcset="
+            {%- if section.settings.image.width >= 375 -%}{{ section.settings.image | image_url: width: 375 }} 375w,{%- endif -%}
+            {%- if section.settings.image.width >= 550 -%}{{ section.settings.image | image_url: width: 550 }} 550w,{%- endif -%}
+            {%- if section.settings.image.width >= 750 -%}{{ section.settings.image | image_url: width: 750 }} 750w,{%- endif -%}
+            {%- if section.settings.image.width >= 1100 -%}{{ section.settings.image | image_url: width: 1100 }} 1100w,{%- endif -%}
+            {%- if section.settings.image.width >= 1500 -%}{{ section.settings.image | image_url: width: 1500 }} 1500w,{%- endif -%}
+            {%- if section.settings.image.width >= 1780 -%}{{ section.settings.image | image_url: width: 1780 }} 1780w,{%- endif -%}
+            {%- if section.settings.image.width >= 2000 -%}{{ section.settings.image | image_url: width: 2000 }} 2000w,{%- endif -%}
+            {%- if section.settings.image.width >= 3000 -%}{{ section.settings.image | image_url: width: 3000 }} 3000w{%- endif -%}
+          "
+          src="{{ section.settings.image | image_url: width: 1500 }}"
+          sizes="(min-width: 1024px) 50vw, 100vw"
+          alt="{{ section.settings.image.alt | escape }}"
+          loading="lazy"
+          width="{{ section.settings.image.width }}"
+          height="{{ image_height }}"
+        >
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About Hero v2",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "テキストコンテンツ"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "キッカー（任意）",
+      "default": "About Us"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "見出し",
+      "default": "Designed for performance"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "説明文",
+      "default": "We create products that blend innovation with simplicity. Every detail matters."
+    },
+    {
+      "type": "header",
+      "content": "CTA（行動喚起）"
+    },
+    {
+      "type": "text",
+      "id": "primary_label",
+      "label": "メインボタンラベル",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "primary_link",
+      "label": "メインボタンリンク"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "サブボタンラベル"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "サブボタンリンク"
+    },
+    {
+      "type": "header",
+      "content": "メディア"
+    },
+    {
+      "type": "select",
+      "id": "media_type",
+      "label": "メディアタイプ",
+      "options": [
+        {
+          "value": "image",
+          "label": "画像"
+        },
+        {
+          "value": "video",
+          "label": "動画"
+        }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "画像"
+    },
+    {
+      "type": "text",
+      "id": "video",
+      "label": "動画URL (.mp4)",
+      "info": "MP4ファイルの完全なURLを入力"
+    },
+    {
+      "type": "image_picker",
+      "id": "poster",
+      "label": "動画ポスター画像"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "動画を自動再生",
+      "default": true,
+      "info": "自動再生時は音声がミュートされます"
+    },
+    {
+      "type": "checkbox",
+      "id": "controls",
+      "label": "動画コントロールを表示",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "レイアウト・タイポグラフィ"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 800,
+      "max": 2400,
+      "step": 50,
+      "unit": "px",
+      "label": "セクション最大幅",
+      "default": 1280,
+      "info": "セクション全体の最大幅（800px〜2400px、フルワイドは2400px推奨）"
+    },
+    {
+      "type": "range",
+      "id": "padding_x_mobile",
+      "min": 16,
+      "max": 80,
+      "step": 8,
+      "unit": "px",
+      "label": "左右余白（モバイル）",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_x_desktop",
+      "min": 24,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "label": "左右余白（デスクトップ）",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 40,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "label": "上下余白",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 32,
+      "max": 72,
+      "step": 4,
+      "unit": "px",
+      "label": "見出しサイズ",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "title_lh",
+      "min": 1.0,
+      "max": 1.6,
+      "step": 0.1,
+      "label": "見出し行間",
+      "default": 1.1
+    },
+    {
+      "type": "range",
+      "id": "sub_max",
+      "min": 400,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "label": "説明文の最大幅",
+      "default": 550
+    },
+    {
+      "type": "header",
+      "content": "カラー"
+    },
+    {
+      "type": "color",
+      "id": "fg",
+      "label": "テキスト色",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "color",
+      "id": "muted",
+      "label": "弱いテキスト色",
+      "default": "#6e6e73"
+    },
+    {
+      "type": "color",
+      "id": "bg",
+      "label": "背景色",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Hero v2"
+    }
+  ]
+}
+{% endschema %}
