@@ -1,0 +1,70 @@
+/* Featured Slider v2 - Additional Styles for Show More Button */
+
+/* Show More Button */
+.featured-slider__show-more {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.featured-slider__show-more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 32px;
+  background: transparent;
+  border: 2px solid currentColor;
+  border-radius: 24px;
+  color: var(--featured-slider-text-color, #000);
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.featured-slider__show-more-btn:hover {
+  background: var(--featured-slider-text-color, #000);
+  color: var(--featured-slider-bg-color, #fff);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.featured-slider__show-more-btn:active {
+  transform: translateY(0);
+}
+
+.featured-slider__show-more-btn svg {
+  transition: transform 0.2s ease;
+}
+
+.featured-slider__show-more-btn:hover svg {
+  transform: translateX(4px);
+}
+
+.featured-slider__show-more-btn:focus-visible {
+  outline: 2px solid #0071e3;
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .featured-slider__show-more {
+    margin-top: 32px;
+  }
+
+  .featured-slider__show-more-btn {
+    padding: 10px 24px;
+    font-size: 15px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .featured-slider__show-more-btn,
+  .featured-slider__show-more-btn svg {
+    transition: none;
+  }
+
+  .featured-slider__show-more-btn:hover {
+    transform: none;
+  }
+}
