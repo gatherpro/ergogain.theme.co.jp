@@ -184,11 +184,45 @@
         "muted": "#6e6e73",
         "bg": "#fffef2"
       }
+    },
+    "about_hero_v3_Xd4hQh": {
+      "type": "about-hero-v3",
+      "name": "About Hero v3 (Video BG)",
+      "settings": {
+        "video": "https://drive.google.com/uc?id=1qQw1Nv3qRtRZyB2ysTK_Z15BCmIeX234&export=embed",
+        "poster": "shopify://shop_images/Gemini_Generated_Image_udfui1udfui1udfu.png",
+        "overlay_color": "#f2dfba",
+        "overlay_opacity": 30,
+        "kicker": "About Us",
+        "heading": "ものづくりで人々の生活を一段上へ",
+        "subtext": "ものづくりの精度と、美しい体験。エルゴノミクス設計と\n国内組立で、長く使える道具を届けます。 細部の手触りから、\n毎日の姿勢まで。あなたの一日に“良い違い”を。",
+        "primary_label": "show more",
+        "primary_link": "shopify://products/エルゴゲイン-分割エルゴノミクス-メカニカルキーボード-有線-2-4ghzレシーバー対応",
+        "secondary_label": "",
+        "secondary_link": "",
+        "min_height": 75,
+        "max_width": 1600,
+        "content_max_width": 700,
+        "content_align": "0 auto 0 0",
+        "padding_x_mobile": 32,
+        "padding_x_desktop": 64,
+        "padding_y": 100,
+        "title_size": 56,
+        "title_lh": 1.1,
+        "kicker_color": "#2b1919",
+        "heading_color": "#392121",
+        "text_color": "#381e1e",
+        "btn_primary_bg": "#e8bb75",
+        "btn_primary_text": "#000000",
+        "btn_secondary_text": "#110909",
+        "bg": "#1d1d1f"
+      }
     }
   },
   "order": [
     "hero_featured_products_qYaGfw",
     "featured_slider_v2_zidXgf",
-    "about_hero_CiKwmC"
+    "about_hero_CiKwmC",
+    "about_hero_v3_Xd4hQh"
   ]
 }
