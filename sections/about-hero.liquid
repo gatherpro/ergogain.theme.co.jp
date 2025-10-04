@@ -22,9 +22,9 @@
   }
 
   .eg-about__inner {
-    max-width: 1280px;
+    max-width: {{ section.settings.max_width }}px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 {{ section.settings.padding_x_mobile }}px;
     display: grid;
     grid-template-columns: 1fr;
     gap: 3rem;
@@ -35,7 +35,7 @@
     .eg-about__inner {
       grid-template-columns: 1.1fr 1fr;
       gap: 4rem;
-      padding: 0 4rem;
+      padding: 0 {{ section.settings.padding_x_desktop }}px;
     }
   }
 
@@ -342,6 +342,37 @@
     {
       "type": "header",
       "content": "レイアウト・タイポグラフィ"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 1000,
+      "max": 2000,
+      "step": 100,
+      "unit": "px",
+      "label": "セクション最大幅",
+      "default": 1280,
+      "info": "セクション全体の最大幅を設定"
+    },
+    {
+      "type": "range",
+      "id": "padding_x_mobile",
+      "min": 16,
+      "max": 80,
+      "step": 8,
+      "unit": "px",
+      "label": "左右余白（モバイル）",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_x_desktop",
+      "min": 24,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "label": "左右余白（デスクトップ）",
+      "default": 64
     },
     {
       "type": "range",
