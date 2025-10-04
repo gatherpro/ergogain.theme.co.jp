@@ -90,63 +90,20 @@
         "cta_style": "filled"
       }
     },
-    "rich_text_4YebQp": {
-      "type": "rich-text",
-      "blocks": {
-        "heading_pLCCac": {
-          "type": "heading",
-          "settings": {
-            "heading": "Talk about your brand",
-            "heading_size": "h1"
-          }
-        },
-        "text_aTLUKT": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>"
-          }
-        },
-        "button_iQ4tKE": {
-          "type": "button",
-          "settings": {
-            "button_label": "Button label",
-            "button_link": "",
-            "button_style_secondary": false,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
-          }
-        }
-      },
-      "block_order": [
-        "heading_pLCCac",
-        "text_aTLUKT",
-        "button_iQ4tKE"
-      ],
-      "name": "t:sections.rich-text.presets.name",
-      "settings": {
-        "desktop_content_position": "center",
-        "content_alignment": "center",
-        "color_scheme": "",
-        "full_width": true,
-        "padding_top": 40,
-        "padding_bottom": 52
-      }
-    },
     "featured_slider_dfkkjd": {
       "type": "featured-slider",
       "name": "Featured Slider",
       "settings": {
-        "heading": "Featured Products",
-        "subtext": "Discover our curated selection",
+        "heading": "人気の商品をチェックしよう",
+        "subtext": "",
         "collection": "",
-        "products_to_show": 8,
-        "card_width": 280,
-        "card_gap": 24,
-        "heading_size": 40,
-        "heading_line_height": 1.2,
+        "products_to_show": 5,
+        "card_width": 200,
+        "card_gap": 16,
+        "heading_size": 32,
+        "heading_line_height": 1.5,
         "text_color": "#000000",
-        "background_color": "#ffffff",
+        "background_color": "#fae6bb",
         "padding_top": 64,
         "padding_bottom": 64
       }
@@ -154,7 +111,6 @@
   },
   "order": [
     "hero_featured_products_qYaGfw",
-    "rich_text_4YebQp",
     "featured_slider_dfkkjd"
   ]
 }
