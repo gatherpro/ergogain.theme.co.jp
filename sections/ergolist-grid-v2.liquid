@@ -1,0 +1,269 @@
+{% comment %}
+  ErgoList Grid - 既製品一覧セクション
+  PC: 3列 / SP: 2列
+  フィルタ（配列/スイッチ/在庫）+ ソート + QuickView対応
+{% endcomment %}
+
+{{ 'ergo-shared-v2.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'quickview.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  #ErgoList-{{ section.id }} {
+    --eg-grid-padding-top: {{ section.settings.padding_top }}px;
+    --eg-grid-padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign collection = collections[section.settings.eg_grid_collection]
+  assign per_page = section.settings.eg_grid_per_page | default: 12
+  assign current_page = 1
+  if request.page
+    assign current_page = request.page
+  endif
+-%}
+
+<section
+  id="ErgoList-{{ section.id }}"
+  class="eg-grid-section"
+  data-section-id="{{ section.id }}"
+>
+  <div class="eg-grid-container page-width">
+
+    {%- if section.settings.eg_grid_heading != blank -%}
+      <h2 class="eg-grid-heading">{{ section.settings.eg_grid_heading }}</h2>
+    {%- endif -%}
+
+    {%- comment -%} フィルタ & ソート {%- endcomment -%}
+    {%- if section.settings.eg_grid_enable_filters or section.settings.eg_grid_enable_sort -%}
+      <div class="eg-grid-controls">
+
+        {%- if section.settings.eg_grid_enable_filters -%}
+          <div class="eg-grid-filters">
+            <div class="eg-grid-filter-group">
+              <label class="eg-grid-filter-label">配列</label>
+              <select class="eg-grid-filter-select" data-filter="layout" aria-label="Filter by keyboard layout">
+                <option value="">すべて</option>
+                <option value="分割">分割</option>
+                <option value="一体型">一体型</option>
+                <option value="左右分離">左右分離</option>
+              </select>
+            </div>
+
+            <div class="eg-grid-filter-group">
+              <label class="eg-grid-filter-label">スイッチ</label>
+              <select class="eg-grid-filter-select" data-filter="switch" aria-label="Filter by switch type">
+                <option value="">すべて</option>
+                <option value="青軸">青軸</option>
+                <option value="茶軸">茶軸</option>
+                <option value="赤軸">赤軸</option>
+                <option value="黒軸">黒軸</option>
+              </select>
+            </div>
+
+            <div class="eg-grid-filter-group">
+              <label class="eg-grid-filter-label">在庫</label>
+              <select class="eg-grid-filter-select" data-filter="stock" aria-label="Filter by stock status">
+                <option value="">すべて</option>
+                <option value="in-stock">在庫あり</option>
+                <option value="low-stock">残りわずか</option>
+              </select>
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.eg_grid_enable_sort -%}
+          <div class="eg-grid-sort">
+            <label for="eg-sort-{{ section.id }}" class="eg-grid-sort-label">並び替え</label>
+            <select id="eg-sort-{{ section.id }}" class="eg-grid-sort-select" data-sort aria-label="Sort products">
+              <option value="manual">おすすめ順</option>
+              <option value="created-descending">新着順</option>
+              <option value="price-ascending">価格が低い順</option>
+              <option value="price-descending">価格が高い順</option>
+              <option value="best-selling">人気順</option>
+            </select>
+          </div>
+        {%- endif -%}
+
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} 商品グリッド {%- endcomment -%}
+    <div
+      class="eg-grid-products"
+      id="eg-grid-products-{{ section.id }}"
+      role="list"
+      aria-label="Product grid"
+    >
+      {%- if collection != blank and collection.products.size > 0 -%}
+        {%- for product in collection.products limit: per_page -%}
+          <div class="eg-grid-card" role="listitem" data-product-id="{{ product.id }}">
+
+            {%- comment -%} 商品画像 {%- endcomment -%}
+            <a href="{{ product.url }}" class="eg-grid-card-image-link">
+              <div class="eg-grid-card-image-wrapper">
+                {%- if product.featured_media -%}
+                  {%- assign image = product.featured_media -%}
+                  {%- assign image_width = 600 -%}
+                  {%- assign image_height = image_width | divided_by: image.aspect_ratio | ceil -%}
+                  <img
+                    src="{{ image | image_url: width: image_width }}"
+                    srcset="{{ image | image_url: width: 300 }} 300w,
+                            {{ image | image_url: width: 600 }} 600w,
+                            {{ image | image_url: width: 900 }} 900w"
+                    sizes="(min-width: 990px) 33vw, (min-width: 750px) 50vw, 100vw"
+                    alt="{{ image.alt | escape }}"
+                    loading="lazy"
+                    width="{{ image_width }}"
+                    height="{{ image_height }}"
+                    class="eg-grid-card-image"
+                  >
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'eg-grid-card-image placeholder-svg' }}
+                {%- endif -%}
+              </div>
+            </a>
+
+            {%- comment -%} 商品情報 {%- endcomment -%}
+            <div class="eg-grid-card-content">
+              <h3 class="eg-grid-card-title">
+                <a href="{{ product.url }}">{{ product.title }}</a>
+              </h3>
+
+              <p class="eg-grid-card-price">
+                {%- if product.compare_at_price > product.price -%}
+                  <span class="eg-grid-card-price-compare">{{ product.compare_at_price | money }}</span>
+                  <span class="eg-grid-card-price-sale">{{ product.price | money }}</span>
+                {%- else -%}
+                  <span class="eg-grid-card-price-regular">{{ product.price | money }}</span>
+                {%- endif -%}
+              </p>
+
+              {%- if section.settings.eg_grid_enable_quickview -%}
+                <button
+                  type="button"
+                  class="eg-grid-card-quickview"
+                  data-quickview="{{ product.handle }}"
+                  data-product-url="{{ product.url }}.js"
+                  aria-label="Quick view {{ product.title }}"
+                >
+                  クイックビュー
+                </button>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        {%- comment -%} プレースホルダー {%- endcomment -%}
+        {%- for i in (1..per_page) -%}
+          <div class="eg-grid-card" role="listitem">
+            <div class="eg-grid-card-image-wrapper">
+              {{ 'product-1' | placeholder_svg_tag: 'eg-grid-card-image placeholder-svg' }}
+            </div>
+            <div class="eg-grid-card-content">
+              <h3 class="eg-grid-card-title">
+                <a href="#">サンプル商品 {{ i }}</a>
+              </h3>
+              <p class="eg-grid-card-price">
+                <span class="eg-grid-card-price-regular">¥0</span>
+              </p>
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} ページング（簡易実装） {%- endcomment -%}
+    {%- if collection.products.size > per_page -%}
+      <div class="eg-grid-pagination">
+        <button
+          type="button"
+          class="eg-grid-pagination-btn"
+          data-load-more
+          aria-label="Load more products"
+        >
+          もっと見る
+        </button>
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{%- comment -%} QuickView モーダル {%- endcomment -%}
+{%- if section.settings.eg_grid_enable_quickview -%}
+  {% render 'quickview' %}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "ErgoList Grid",
+  "tag": "section",
+  "class": "section-ergolist-grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eg_grid_heading",
+      "label": "見出し",
+      "default": "製品一覧"
+    },
+    {
+      "type": "collection",
+      "id": "eg_grid_collection",
+      "label": "コレクション"
+    },
+    {
+      "type": "range",
+      "id": "eg_grid_per_page",
+      "min": 6,
+      "max": 24,
+      "step": 3,
+      "default": 12,
+      "label": "1ページの表示数"
+    },
+    {
+      "type": "checkbox",
+      "id": "eg_grid_enable_filters",
+      "label": "フィルタを有効化",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "eg_grid_enable_sort",
+      "label": "ソートを有効化",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "eg_grid_enable_quickview",
+      "label": "クイックビューを有効化",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "eg_grid_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "上部パディング",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "eg_grid_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "下部パディング",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "ErgoList Grid"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,80 @@
+<link rel="stylesheet" href="{{ 'eg-shared.css' | asset_url }}">
+<script src="{{ 'eg-wizard.js' | asset_url }}" defer></script>
+{%- style -%}.eg-wizard-{{section.id}}{--eg-wizard-bg:{{section.settings.eg_wizard_bg}};--eg-wizard-fg:{{section.settings.eg_wizard_fg}};--eg-wizard-padding-y:{{section.settings.eg_wizard_padding_y}}px;}{%- endstyle -%}
+<section class="eg-wizard eg-wizard-{{section.id}}" data-eg-wizard data-wizard-type="semi" data-base-price="{{section.settings.eg_wizard_base_price}}" data-currency="{{section.settings.eg_wizard_currency}}" data-product-id="{{section.settings.eg_wizard_product_variant_id}}">
+<header class="eg-wizard__progress"><span data-step-current>1</span>/<span data-step-total>5</span></header>
+<div class="eg-wizard__rail" data-rail>
+<div class="eg-step" data-step="1">
+<div class="eg-step__inner">
+<h2 class="eg-step__title">キーキャップ</h2>
+<p class="eg-step__desc">素材とカラーを選択してください</p>
+{%- for block in section.blocks -%}{%- if block.type=='option' and block.settings.eg_wizard_opt_code contains 'keycap' -%}
+<fieldset class="eg-wizard__fieldset">
+<legend class="eg-wizard__legend">{{block.settings.eg_wizard_opt_name}}</legend>
+<div class="eg-wizard__options">
+{%- assign opts=block.settings.eg_wizard_opt_values|parse_json -%}
+{%- for opt in opts -%}
+<div class="eg-wizard__option">
+<input type="radio" name="properties[{{block.settings.eg_wizard_opt_code}}]" id="semi-opt-{{forloop.index}}" value="{{opt.value}}" data-option-code="{{block.settings.eg_wizard_opt_code}}" data-price-delta="{{opt.price_delta|default:0}}" {%if forloop.first%}checked{%endif%}>
+<label for="semi-opt-{{forloop.index}}" class="eg-wizard__option-label">
+<span class="eg-wizard__option-text">{{opt.label}}</span>
+{%if opt.price_delta!=0%}<span class="eg-wizard__option-price">+{{section.settings.eg_wizard_currency}}{{opt.price_delta}}</span>{%endif%}
+</label>
+</div>
+{%- endfor -%}
+</div>
+</fieldset>
+{%- endif -%}{%- endfor -%}
+</div>
+</div>
+<div class="eg-step" data-step="2">
+<div class="eg-step__inner"><h2 class="eg-step__title">スイッチ</h2><p class="eg-step__desc">打鍵感を選択</p></div>
+</div>
+<div class="eg-step" data-step="3">
+<div class="eg-step__inner"><h2 class="eg-step__title">本体・プレート</h2><p class="eg-step__desc">ケースカラーとプレート素材</p></div>
+</div>
+<div class="eg-step" data-step="4">
+<div class="eg-step__inner"><h2 class="eg-step__title">刻印・配列・サイズ</h2>
+<input type="text" name="properties[engrave_text]" class="eg-wizard__text-input" placeholder="刻印テキスト（任意）" maxlength="20" data-option-code="engrave_text">
+</div>
+</div>
+<div class="eg-step" data-step="5">
+<div class="eg-step__inner">
+<h2 class="eg-step__title">注文内容の確認</h2>
+<div class="eg-wizard__summary" data-summary></div>
+<div class="eg-wizard__total">合計: <span data-total-price>{{section.settings.eg_wizard_currency}}{{section.settings.eg_wizard_base_price}}</span></div>
+</div>
+</div>
+</div>
+<aside class="eg-wizard__preview">
+<img src="" data-preview-image class="eg-wizard__preview-img">
+<span class="eg-wizard__price" data-price>{{section.settings.eg_wizard_currency}}{{section.settings.eg_wizard_base_price}}</span>
+</aside>
+<footer class="eg-wizard__nav">
+<button type="button" class="eg-wizard__nav-btn eg-wizard__nav-btn--prev" data-prev>戻る</button>
+<button type="button" class="eg-wizard__nav-btn eg-wizard__nav-btn--next" data-next>次へ</button>
+<button type="button" class="eg-wizard__nav-btn eg-wizard__nav-btn--add-to-cart" data-add-to-cart hidden>カートに追加</button>
+</footer>
+<div class="eg-wizard__toast" data-toast hidden><span data-toast-message></span></div>
+</section>
+{% schema %}
+{
+"name":"Semi-Order Wizard",
+"settings":[
+{"type":"number","id":"eg_wizard_base_price","label":"ベース価格","default":40000},
+{"type":"text","id":"eg_wizard_currency","label":"通貨記号","default":"¥"},
+{"type":"text","id":"eg_wizard_product_variant_id","label":"商品バリアントID"},
+{"type":"range","id":"eg_wizard_padding_y","min":40,"max":160,"step":10,"unit":"px","label":"上下余白","default":80},
+{"type":"color","id":"eg_wizard_bg","label":"背景色","default":"#ffffff"},
+{"type":"color","id":"eg_wizard_fg","label":"テキスト色","default":"#1d1d1f"}
+],
+"blocks":[
+{"type":"option","name":"オプション","settings":[
+{"type":"text","id":"eg_wizard_opt_name","label":"オプション名","default":"キーキャップカラー"},
+{"type":"text","id":"eg_wizard_opt_code","label":"オプションコード","default":"keycap_color"},
+{"type":"textarea","id":"eg_wizard_opt_values","label":"選択肢JSON","default":"[{\"label\":\"ホワイト\",\"value\":\"white\",\"price_delta\":0}]"}
+]}
+],
+"presets":[{"name":"Semi-Order Wizard"}]
+}
+{% endschema %}
