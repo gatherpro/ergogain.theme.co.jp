@@ -63,8 +63,10 @@
 
 .apple-header__logo-img {
   display: block;
+  width: auto;
   height: auto;
-  max-height: 36px;
+  max-height: 40px;
+  object-fit: contain;
 }
 
 .apple-header__logo-text {
@@ -431,7 +433,7 @@
 /* ========== Small Mobile ========== */
 @media screen and (max-width: 749px) {
   .apple-header__logo-img {
-    max-height: 28px;
+    max-height: 32px;
   }
 
   .apple-header__icons {
