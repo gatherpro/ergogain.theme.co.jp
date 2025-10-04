@@ -108,6 +108,74 @@
         "padding_bottom": 24
       }
     },
+    "featured_slider_v2_zidXgf": {
+      "type": "featured-slider-v2",
+      "blocks": {
+        "product_card_6AdgCF": {
+          "type": "product_card",
+          "settings": {
+            "fs_v2_product_name": "フルオーダーメイドキーボード「ErgoGain」",
+            "fs_v2_price": "3980000",
+            "fs_v2_compare_price": "",
+            "fs_v2_product_link": "shopify://products/エルゴゲイン-分割エルゴノミクス-メカニカルキーボード-有線-2-4ghzレシーバー対応",
+            "fs_v2_show_more_enable": true,
+            "fs_v2_show_more_text": "show more"
+          }
+        },
+        "product_card_TJA7GV": {
+          "type": "product_card",
+          "settings": {
+            "fs_v2_product_name": "商品名",
+            "fs_v2_price": "0",
+            "fs_v2_compare_price": "",
+            "fs_v2_product_link": "",
+            "fs_v2_show_more_enable": false,
+            "fs_v2_show_more_text": "もっと見る"
+          }
+        },
+        "product_card_jzXKTn": {
+          "type": "product_card",
+          "settings": {
+            "fs_v2_product_name": "商品名",
+            "fs_v2_price": "0",
+            "fs_v2_compare_price": "",
+            "fs_v2_product_link": "",
+            "fs_v2_show_more_enable": false,
+            "fs_v2_show_more_text": "もっと見る"
+          }
+        },
+        "product_card_X6T4U6": {
+          "type": "product_card",
+          "settings": {
+            "fs_v2_product_name": "商品名",
+            "fs_v2_price": "0",
+            "fs_v2_compare_price": "",
+            "fs_v2_product_link": "",
+            "fs_v2_show_more_enable": false,
+            "fs_v2_show_more_text": "もっと見る"
+          }
+        }
+      },
+      "block_order": [
+        "product_card_6AdgCF",
+        "product_card_TJA7GV",
+        "product_card_jzXKTn",
+        "product_card_X6T4U6"
+      ],
+      "name": "Featured Slider v2",
+      "settings": {
+        "fs_v2_heading": "人気の商品",
+        "fs_v2_subtext": "",
+        "fs_v2_card_width": 280,
+        "fs_v2_card_gap": 24,
+        "fs_v2_heading_size": 40,
+        "fs_v2_heading_line_height": 1.2,
+        "fs_v2_text_color": "#000000",
+        "fs_v2_background_color": "#FFFFFF",
+        "fs_v2_padding_top": 64,
+        "fs_v2_padding_bottom": 64
+      }
+    },
     "about_hero_CiKwmC": {
       "type": "about-hero",
       "name": "About Hero",
@@ -136,6 +204,7 @@
   "order": [
     "hero_featured_products_qYaGfw",
     "featured_slider_dfkkjd",
+    "featured_slider_v2_zidXgf",
     "about_hero_CiKwmC"
   ]
 }
