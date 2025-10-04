@@ -107,10 +107,35 @@
         "padding_top": 76,
         "padding_bottom": 24
       }
+    },
+    "about_hero_CiKwmC": {
+      "type": "about-hero",
+      "name": "About Hero",
+      "settings": {
+        "kicker": "About Us",
+        "heading": "「ものづくりで人々の生活を一段上へ」",
+        "subtext": "",
+        "primary_label": "Learn more",
+        "primary_link": "",
+        "secondary_label": "",
+        "secondary_link": "",
+        "media_type": "image",
+        "video": "",
+        "autoplay": true,
+        "controls": false,
+        "padding_y": 80,
+        "title_size": 48,
+        "title_lh": 1.1,
+        "sub_max": 550,
+        "fg": "#1d1d1f",
+        "muted": "#6e6e73",
+        "bg": "#ffffff"
+      }
     }
   },
   "order": [
     "hero_featured_products_qYaGfw",
-    "featured_slider_dfkkjd"
+    "featured_slider_dfkkjd",
+    "about_hero_CiKwmC"
   ]
 }
