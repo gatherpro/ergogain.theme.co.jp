@@ -1,70 +1,47 @@
-/* Featured Slider v2 - Additional Styles for Show More Button */
+/* Featured Slider v2 - Card Show More Button */
 
-/* Show More Button */
-.featured-slider__show-more {
-  text-align: center;
-  margin-top: 40px;
+/* Card Show More (各カード内) */
+.featured-slider__card-show-more {
+  margin-top: 12px;
 }
 
-.featured-slider__show-more-btn {
+.featured-slider__card-show-more-link {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 32px;
-  background: transparent;
-  border: 2px solid currentColor;
-  border-radius: 24px;
-  color: var(--featured-slider-text-color, #000);
-  font-size: 16px;
-  font-weight: 600;
+  gap: 4px;
+  color: #0071e3;
+  font-size: 14px;
+  font-weight: 500;
   text-decoration: none;
   transition: all 0.2s ease;
   cursor: pointer;
 }
 
-.featured-slider__show-more-btn:hover {
-  background: var(--featured-slider-text-color, #000);
-  color: var(--featured-slider-bg-color, #fff);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+.featured-slider__card-link:hover .featured-slider__card-show-more-link {
+  color: #0051a8;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
 }
 
-.featured-slider__show-more-btn:active {
-  transform: translateY(0);
-}
-
-.featured-slider__show-more-btn svg {
+.featured-slider__card-show-more-link svg {
+  width: 12px;
+  height: 12px;
   transition: transform 0.2s ease;
 }
 
-.featured-slider__show-more-btn:hover svg {
-  transform: translateX(4px);
-}
-
-.featured-slider__show-more-btn:focus-visible {
-  outline: 2px solid #0071e3;
-  outline-offset: 2px;
-}
-
-@media (max-width: 768px) {
-  .featured-slider__show-more {
-    margin-top: 32px;
-  }
-
-  .featured-slider__show-more-btn {
-    padding: 10px 24px;
-    font-size: 15px;
-  }
+.featured-slider__card-link:hover .featured-slider__card-show-more-link svg {
+  transform: translateX(2px);
 }
 
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
-  .featured-slider__show-more-btn,
-  .featured-slider__show-more-btn svg {
+  .featured-slider__card-show-more-link,
+  .featured-slider__card-show-more-link svg {
     transition: none;
   }
 
-  .featured-slider__show-more-btn:hover {
+  .featured-slider__card-link:hover .featured-slider__card-show-more-link svg {
     transform: none;
   }
 }

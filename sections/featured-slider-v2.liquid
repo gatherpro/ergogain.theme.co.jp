@@ -105,6 +105,18 @@
                       </span>
                     {%- endif -%}
                   </div>
+
+                  {%- comment -%} Show More ボタン（カードごと） {%- endcomment -%}
+                  {%- if block.settings.fs_v2_show_more_enable -%}
+                    <div class="featured-slider__card-show-more">
+                      <span class="featured-slider__card-show-more-link">
+                        {{ block.settings.fs_v2_show_more_text | default: 'もっと見る' }}
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                          <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </span>
+                    </div>
+                  {%- endif -%}
                 </div>
               </a>
             </div>
@@ -140,22 +152,6 @@
       </button>
     </div>
 
-    {%- comment -%} Show More ボタン {%- endcomment -%}
-    {%- if section.settings.fs_v2_show_more_enable -%}
-      <div class="featured-slider__show-more">
-        <a
-          href="{{ section.settings.fs_v2_show_more_link | default: '/collections/all' }}"
-          class="featured-slider__show-more-btn"
-          aria-label="{{ section.settings.fs_v2_show_more_text | default: 'Show More' }}"
-        >
-          {{ section.settings.fs_v2_show_more_text | default: 'Show More' }}
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-      </div>
-    {%- endif -%}
-
   </div>
 </section>
 
@@ -181,28 +177,6 @@
       "type": "textarea",
       "id": "fs_v2_subtext",
       "label": "サブテキスト"
-    },
-    {
-      "type": "header",
-      "content": "Show More ボタン"
-    },
-    {
-      "type": "checkbox",
-      "id": "fs_v2_show_more_enable",
-      "label": "Show Moreボタンを表示",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "fs_v2_show_more_text",
-      "label": "ボタンテキスト",
-      "default": "もっと見る"
-    },
-    {
-      "type": "url",
-      "id": "fs_v2_show_more_link",
-      "label": "リンク先URL",
-      "info": "例: /collections/all または /pages/products"
     },
     {
       "type": "header",
@@ -326,6 +300,22 @@
           "id": "fs_v2_product_link",
           "label": "リンク先URL",
           "info": "商品詳細ページまたは任意のURL"
+        },
+        {
+          "type": "header",
+          "content": "Show More ボタン"
+        },
+        {
+          "type": "checkbox",
+          "id": "fs_v2_show_more_enable",
+          "label": "Show Moreボタンを表示",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "fs_v2_show_more_text",
+          "label": "ボタンテキスト",
+          "default": "もっと見る"
         }
       ]
     }
