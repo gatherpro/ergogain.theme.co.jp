@@ -108,12 +108,13 @@
         "product_card_TJA7GV": {
           "type": "product_card",
           "settings": {
-            "fs_v2_product_name": "商品名",
-            "fs_v2_price": "0",
+            "fs_v2_product_image": "shopify://shop_images/Gemini_Generated_Image_ipku0eipku0eipku.png",
+            "fs_v2_product_name": "エルゴノミクスキーボード",
+            "fs_v2_price": "15,800円～",
             "fs_v2_compare_price": "",
-            "fs_v2_product_link": "",
-            "fs_v2_show_more_enable": false,
-            "fs_v2_show_more_text": "もっと見る"
+            "fs_v2_product_link": "shopify://products/エルゴゲイン-分割エルゴノミクス-メカニカルキーボード-有線-2-4ghzレシーバー対応",
+            "fs_v2_show_more_enable": true,
+            "fs_v2_show_more_text": "show more"
           }
         },
         "product_card_jzXKTn": {
@@ -174,7 +175,7 @@
         "video": "",
         "autoplay": true,
         "controls": false,
-        "padding_y": 80,
+        "padding_y": 136,
         "title_size": 48,
         "title_lh": 1.1,
         "sub_max": 550,
