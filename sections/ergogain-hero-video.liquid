@@ -1,0 +1,275 @@
+{% comment %}
+  ErgoGain Hero Video - 動画ヒーローセクション
+
+  使い方：
+  1. 管理画面 > オンラインストア > テーマ > カスタマイズ
+  2. 「セクションを追加」> 「ErgoGain Hero Video」を選択
+  3. テキスト、メディア、CTAを設定
+
+  機能：
+  - 15-30秒動画でブランド価値を提示
+  - LCP最適化（fetchpriority="high", eager loading）
+  - 画像/動画切り替え対応
+  - CLS=0（aspect-ratio固定）
+  - レスポンシブ対応（SP縦積み、PC左右分割）
+  - Apple風ミニマルデザイン（1px下線）
+  - アクセシビリティ対応
+{% endcomment %}
+
+<link rel="stylesheet" href="{{ 'ergo-shared.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ 'ergo-shared.css' | asset_url }}"></noscript>
+
+<style>
+  .eg-hero-video-{{ section.id }} {
+    background-color: {{ section.settings.bg }};
+    color: {{ section.settings.fg }};
+    padding-top: {{ section.settings.padding_y }}px;
+    padding-bottom: {{ section.settings.padding_y }}px;
+  }
+
+  .eg-hero-video-{{ section.id }} .eg-hero-video__title {
+    font-size: {{ section.settings.title_size }}px;
+    line-height: {{ section.settings.title_lh }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .eg-hero-video-{{ section.id }} .eg-hero-video__title {
+      font-size: calc({{ section.settings.title_size }}px * 0.75);
+    }
+  }
+
+  .eg-hero-video-{{ section.id }} .eg-hero-video__link {
+    color: {{ section.settings.fg }};
+  }
+
+  .eg-hero-video-{{ section.id }} .eg-hero-video__link:hover {
+    border-bottom-color: {{ section.settings.fg }};
+  }
+</style>
+
+<section
+  class="eg-hero-video eg-hero-video-{{ section.id }}"
+  role="region"
+  aria-label="{{ section.settings.heading | escape }}"
+>
+  <div class="eg-hero-video__inner{% if section.settings.layout == 'split' %} eg-hero-video__inner--split{% endif %}">
+    <div class="eg-hero-video__copy">
+      {%- if section.settings.kicker != blank -%}
+        <p class="eg-hero-video__kicker">{{ section.settings.kicker }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h1 class="eg-hero-video__title">{{ section.settings.heading }}</h1>
+      {%- endif -%}
+
+      {%- if section.settings.subtext != blank -%}
+        <p class="eg-hero-video__sub">{{ section.settings.subtext }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.compare_link != blank -%}
+        <a
+          class="eg-hero-video__link"
+          href="{{ section.settings.compare_link }}"
+          aria-label="フル/セミの違いを見る"
+        >
+          フル/セミの違いを見る
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div id="eg-hero-media" class="eg-hero-video__media">
+      {%- if section.settings.media_type == 'video' and section.settings.video != blank -%}
+        <video
+          class="eg-hero-video__video"
+          playsinline
+          autoplay
+          muted
+          loop
+          {% if section.settings.poster != blank %}
+            poster="{{ section.settings.poster | image_url: width: 1600 }}"
+          {% endif %}
+          width="1600"
+          height="900"
+          aria-label="{{ section.settings.heading | escape }}"
+        >
+          <source src="{{ section.settings.video }}" type="video/mp4">
+          お使いのブラウザは動画再生に対応していません。
+        </video>
+      {%- elsif section.settings.image != blank -%}
+        {%- assign image_height = section.settings.image.width | divided_by: section.settings.image.aspect_ratio | round -%}
+        <img
+          class="eg-hero-video__image"
+          srcset="
+            {%- if section.settings.image.width >= 375 -%}{{ section.settings.image | image_url: width: 375 }} 375w,{%- endif -%}
+            {%- if section.settings.image.width >= 750 -%}{{ section.settings.image | image_url: width: 750 }} 750w,{%- endif -%}
+            {%- if section.settings.image.width >= 990 -%}{{ section.settings.image | image_url: width: 990 }} 990w,{%- endif -%}
+            {%- if section.settings.image.width >= 1200 -%}{{ section.settings.image | image_url: width: 1200 }} 1200w,{%- endif -%}
+            {%- if section.settings.image.width >= 1600 -%}{{ section.settings.image | image_url: width: 1600 }} 1600w{%- endif -%}
+          "
+          src="{{ section.settings.image | image_url: width: 1200 }}"
+          sizes="(min-width: 990px) 50vw, 100vw"
+          alt="{{ section.settings.image.alt | default: section.settings.heading | escape }}"
+          width="{{ section.settings.image.width }}"
+          height="{{ image_height }}"
+          fetchpriority="high"
+          loading="eager"
+        >
+      {%- else -%}
+        <div class="eg-hero-video__placeholder">
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'eg-hero-video__placeholder-svg' }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "ErgoGain Hero Video",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "コンテンツ"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "キッカー（任意）",
+      "default": "New Release"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "見出し",
+      "default": "ErgoGain Keyboard"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "説明文",
+      "info": "0-180文字推奨",
+      "default": "人間工学に基づいた設計と、こだわりの素材が織りなす極上の打鍵感。あなたの手元に、唯一無二の相棒を。"
+    },
+    {
+      "type": "url",
+      "id": "compare_link",
+      "label": "比較リンクURL"
+    },
+    {
+      "type": "header",
+      "content": "メディア"
+    },
+    {
+      "type": "select",
+      "id": "media_type",
+      "label": "メディアタイプ",
+      "options": [
+        {
+          "value": "image",
+          "label": "画像"
+        },
+        {
+          "value": "video",
+          "label": "動画"
+        }
+      ],
+      "default": "video"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "画像",
+      "info": "推奨サイズ: 1600x900px以上"
+    },
+    {
+      "type": "text",
+      "id": "video",
+      "label": "動画URL (.mp4)",
+      "info": "MP4ファイルの完全なURLを入力（15-30秒推奨）"
+    },
+    {
+      "type": "image_picker",
+      "id": "poster",
+      "label": "動画ポスター画像",
+      "info": "動画用のサムネイル画像（必須）"
+    },
+    {
+      "type": "header",
+      "content": "レイアウト"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "レイアウト",
+      "options": [
+        {
+          "value": "full",
+          "label": "フル幅"
+        },
+        {
+          "value": "split",
+          "label": "左右分割"
+        }
+      ],
+      "default": "split",
+      "info": "PC時のレイアウト。SPは常に縦積み。"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 40,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "上下余白",
+      "default": 96
+    },
+    {
+      "type": "header",
+      "content": "タイポグラフィ"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 22,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "タイトルサイズ",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "title_lh",
+      "min": 1.1,
+      "max": 1.4,
+      "step": 0.05,
+      "label": "タイトル行間",
+      "default": 1.2
+    },
+    {
+      "type": "header",
+      "content": "カラー"
+    },
+    {
+      "type": "color",
+      "id": "fg",
+      "label": "テキスト色",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "color",
+      "id": "bg",
+      "label": "背景色",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "ErgoGain Hero Video"
+    }
+  ]
+}
+{% endschema %}

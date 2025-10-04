@@ -1,0 +1,170 @@
+/* ============================================
+   ErgoGain Shared Styles
+   - Common styles for ErgoGain sections
+   - Apple-inspired minimal design
+   - Wide margins, minimal decoration, 1px underline
+   ============================================ */
+
+/* ========== Hero Video ========== */
+.eg-hero-video {
+  width: 100%;
+  overflow: hidden;
+}
+
+.eg-hero-video__inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.eg-hero-video__inner--split {
+  grid-template-columns: 1fr;
+}
+
+@media screen and (min-width: 990px) {
+  .eg-hero-video__inner {
+    padding: 0 4rem;
+  }
+
+  .eg-hero-video__inner--split {
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+  }
+}
+
+/* Copy */
+.eg-hero-video__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.eg-hero-video__kicker {
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin: 0;
+}
+
+.eg-hero-video__title {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+  /* SP: 2行以内 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.eg-hero-video__sub {
+  font-size: 1.8rem;
+  line-height: 1.6;
+  opacity: 0.85;
+  margin: 0;
+  max-width: 48rem;
+}
+
+@media screen and (max-width: 749px) {
+  .eg-hero-video__sub {
+    font-size: 1.6rem;
+    max-width: 100%;
+  }
+}
+
+.eg-hero-video__link {
+  display: inline-block;
+  font-size: 1.6rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: border-bottom-color 0.2s ease;
+  width: fit-content;
+}
+
+.eg-hero-video__link:hover {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+
+.eg-hero-video__link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* Media */
+.eg-hero-video__media {
+  width: 100%;
+  position: relative;
+  border-radius: 1.2rem;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.05);
+  /* CLS=0 */
+  aspect-ratio: 16 / 9;
+}
+
+@media screen and (max-width: 749px) {
+  .eg-hero-video__media {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+.eg-hero-video__image,
+.eg-hero-video__video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: 1.2rem;
+}
+
+.eg-hero-video__placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eg-hero-video__placeholder-svg {
+  width: 50%;
+  height: 50%;
+  opacity: 0.2;
+}
+
+/* Mobile: 縦積み（メディア→テキスト） */
+@media screen and (max-width: 989px) {
+  .eg-hero-video__copy {
+    order: 2;
+  }
+
+  .eg-hero-video__media {
+    order: 1;
+  }
+}
+
+/* Desktop: Split layout（テキスト→メディア） */
+@media screen and (min-width: 990px) {
+  .eg-hero-video__inner--split .eg-hero-video__copy {
+    order: 1;
+  }
+
+  .eg-hero-video__inner--split .eg-hero-video__media {
+    order: 2;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .eg-hero-video__link {
+    transition: none;
+  }
+}

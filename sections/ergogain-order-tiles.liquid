@@ -3,7 +3,7 @@
 
   使い方：
   1. 管理画面 > オンラインストア > テーマ > カスタマイズ
-  2. 「セクションを追加」> 「ErgoGain Order Tiles」を選択
+  2. 「セクションを追加」> 「EG Order Tiles」を選択
   3. フル/セミそれぞれのタイトル、説明、価格、リンクを設定
 
   機能：
@@ -17,9 +17,9 @@
 
 {%- style -%}
   #eg-order-tiles-{{ section.id }} {
-    --eg-order-padding-y: {{ section.settings.padding_y }}px;
-    --eg-order-fg: {{ section.settings.fg }};
-    --eg-order-bg: {{ section.settings.bg }};
+    --eg-order-padding-y: {{ section.settings.eg_order_padding_y }}px;
+    --eg-order-fg: {{ section.settings.eg_order_fg }};
+    --eg-order-bg: {{ section.settings.eg_order_bg }};
   }
 {%- endstyle -%}
 
@@ -34,23 +34,23 @@
     {%- comment -%} Full Order Card {%- endcomment -%}
     <article class="eg-order-card">
       <a
-        href="{{ section.settings.full_link | default: '#' }}"
+        href="{{ section.settings.eg_order_full_link | default: '#' }}"
         class="eg-order-card__link"
-        aria-label="{{ section.settings.full_title | default: 'フルオーダー' }} - {{ section.settings.full_price | money }}"
+        aria-label="{{ section.settings.eg_order_full_title | default: 'フルオーダー' }} - {{ section.settings.eg_order_full_price | money }}"
       >
         <div class="eg-order-card__content">
           <h2 class="eg-order-card__title">
-            {{ section.settings.full_title | default: 'フルオーダー' }}
+            {{ section.settings.eg_order_full_title | default: 'フルオーダー' }}
           </h2>
 
-          {%- if section.settings.full_summary != blank -%}
+          {%- if section.settings.eg_order_full_summary != blank -%}
             <p class="eg-order-card__summary">
-              {{ section.settings.full_summary }}
+              {{ section.settings.eg_order_full_summary }}
             </p>
           {%- endif -%}
 
           <p class="eg-order-card__price">
-            {{ section.settings.full_price | default: 0 | money }}
+            {{ section.settings.eg_order_full_price | default: 0 | money }}
           </p>
 
           <span class="eg-order-card__btn" aria-hidden="true">
@@ -63,23 +63,23 @@
     {%- comment -%} Semi Order Card {%- endcomment -%}
     <article class="eg-order-card">
       <a
-        href="{{ section.settings.semi_link | default: '#' }}"
+        href="{{ section.settings.eg_order_semi_link | default: '#' }}"
         class="eg-order-card__link"
-        aria-label="{{ section.settings.semi_title | default: 'セミオーダー' }} - {{ section.settings.semi_price | money }}"
+        aria-label="{{ section.settings.eg_order_semi_title | default: 'セミオーダー' }} - {{ section.settings.eg_order_semi_price | money }}"
       >
         <div class="eg-order-card__content">
           <h2 class="eg-order-card__title">
-            {{ section.settings.semi_title | default: 'セミオーダー' }}
+            {{ section.settings.eg_order_semi_title | default: 'セミオーダー' }}
           </h2>
 
-          {%- if section.settings.semi_summary != blank -%}
+          {%- if section.settings.eg_order_semi_summary != blank -%}
             <p class="eg-order-card__summary">
-              {{ section.settings.semi_summary }}
+              {{ section.settings.eg_order_semi_summary }}
             </p>
           {%- endif -%}
 
           <p class="eg-order-card__price">
-            {{ section.settings.semi_price | default: 0 | money }}
+            {{ section.settings.eg_order_semi_price | default: 0 | money }}
           </p>
 
           <span class="eg-order-card__btn" aria-hidden="true">
@@ -94,9 +94,9 @@
 
 {% schema %}
 {
-  "name": "ErgoGain Order Tiles",
+  "name": "EG Order Tiles",
   "tag": "section",
-  "class": "section-ergogain-order-tiles",
+  "class": "section",
   "settings": [
     {
       "type": "header",
@@ -104,26 +104,26 @@
     },
     {
       "type": "text",
-      "id": "full_title",
+      "id": "eg_order_full_title",
       "label": "タイトル",
       "default": "フルオーダー"
     },
     {
       "type": "textarea",
-      "id": "full_summary",
+      "id": "eg_order_full_summary",
       "label": "説明",
       "info": "0-120文字推奨",
       "default": "完全カスタマイズ可能。あなただけのキーボードを。"
     },
     {
       "type": "number",
-      "id": "full_price",
+      "id": "eg_order_full_price",
       "label": "価格",
       "default": 50000
     },
     {
       "type": "url",
-      "id": "full_link",
+      "id": "eg_order_full_link",
       "label": "リンク先URL"
     },
     {
@@ -132,26 +132,26 @@
     },
     {
       "type": "text",
-      "id": "semi_title",
+      "id": "eg_order_semi_title",
       "label": "タイトル",
       "default": "セミオーダー"
     },
     {
       "type": "textarea",
-      "id": "semi_summary",
+      "id": "eg_order_semi_summary",
       "label": "説明",
       "info": "0-120文字推奨",
       "default": "厳選されたプリセットから選択。手軽にカスタマイズ。"
     },
     {
       "type": "number",
-      "id": "semi_price",
+      "id": "eg_order_semi_price",
       "label": "価格",
       "default": 30000
     },
     {
       "type": "url",
-      "id": "semi_link",
+      "id": "eg_order_semi_link",
       "label": "リンク先URL"
     },
     {
@@ -160,7 +160,7 @@
     },
     {
       "type": "range",
-      "id": "padding_y",
+      "id": "eg_order_padding_y",
       "min": 0,
       "max": 120,
       "step": 8,
@@ -170,20 +170,20 @@
     },
     {
       "type": "color",
-      "id": "fg",
+      "id": "eg_order_fg",
       "label": "テキスト色",
       "default": "#000000"
     },
     {
       "type": "color",
-      "id": "bg",
+      "id": "eg_order_bg",
       "label": "背景色",
       "default": "#FFFFFF"
     }
   ],
   "presets": [
     {
-      "name": "ErgoGain Order Tiles"
+      "name": "EG Order Tiles"
     }
   ]
 }

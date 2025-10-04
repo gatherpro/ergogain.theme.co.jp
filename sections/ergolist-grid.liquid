@@ -15,8 +15,8 @@
 {%- endstyle -%}
 
 {%- liquid
-  assign collection = collections[section.settings.collection]
-  assign per_page = section.settings.per_page | default: 12
+  assign collection = collections[section.settings.eg_grid_collection]
+  assign per_page = section.settings.eg_grid_per_page | default: 12
   assign current_page = 1
   if request.page
     assign current_page = request.page
@@ -30,15 +30,15 @@
 >
   <div class="eg-grid-container page-width">
 
-    {%- if section.settings.heading != blank -%}
-      <h2 class="eg-grid-heading">{{ section.settings.heading }}</h2>
+    {%- if section.settings.eg_grid_heading != blank -%}
+      <h2 class="eg-grid-heading">{{ section.settings.eg_grid_heading }}</h2>
     {%- endif -%}
 
     {%- comment -%} フィルタ & ソート {%- endcomment -%}
-    {%- if section.settings.enable_filters or section.settings.enable_sort -%}
+    {%- if section.settings.eg_grid_enable_filters or section.settings.eg_grid_enable_sort -%}
       <div class="eg-grid-controls">
 
-        {%- if section.settings.enable_filters -%}
+        {%- if section.settings.eg_grid_enable_filters -%}
           <div class="eg-grid-filters">
             <div class="eg-grid-filter-group">
               <label class="eg-grid-filter-label">配列</label>
