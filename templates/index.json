@@ -160,31 +160,6 @@
         "fs_v2_padding_bottom": 64
       }
     },
-    "about_hero_CiKwmC": {
-      "type": "about-hero",
-      "name": "About Hero",
-      "settings": {
-        "kicker": "About Us",
-        "heading": "「ものづくりで人々の生活を一段上へ」",
-        "subtext": "ものづくりの精度と、美しい体験。エルゴノミクス設計と国内組立で、長く使える道具を届けます。\n\n細部の手触りから、毎日の姿勢まで。あなたの一日に“良い違い”を。",
-        "primary_label": "Learn more",
-        "primary_link": "",
-        "secondary_label": "",
-        "secondary_link": "",
-        "media_type": "video",
-        "video": "https://drive.google.com/uc?id=1qQw1Nv3qRtRZyB2ysTK_Z15BCmIeX234&export=embed",
-        "poster": "shopify://shop_images/4a106d7f840b3d19bae46373c4dd4286.png",
-        "autoplay": true,
-        "controls": false,
-        "padding_y": 136,
-        "title_size": 48,
-        "title_lh": 1.1,
-        "sub_max": 550,
-        "fg": "#1d1d1f",
-        "muted": "#6e6e73",
-        "bg": "#fffef2"
-      }
-    },
     "about_hero_v3_Xd4hQh": {
       "type": "about-hero-v3",
       "name": "About Hero v3 (Video BG)",
@@ -222,7 +197,6 @@
   "order": [
     "hero_featured_products_qYaGfw",
     "featured_slider_v2_zidXgf",
-    "about_hero_CiKwmC",
     "about_hero_v3_Xd4hQh"
   ]
 }
