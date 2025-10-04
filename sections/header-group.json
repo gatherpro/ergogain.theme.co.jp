@@ -23,7 +23,7 @@
         "header_height": 56,
         "padding_horizontal": 20,
         "padding_vertical": 12,
-        "menu_gap": 32,
+        "menu_gap": 20,
         "font_size": 14,
         "line_height": 1.5,
         "header_bg_color": "#f7f8fa",
