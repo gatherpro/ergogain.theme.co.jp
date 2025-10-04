@@ -26,7 +26,7 @@
         "menu_gap": 20,
         "font_size": 12,
         "line_height": 1.5,
-        "header_bg_color": "#f7f8fa",
+        "header_bg_color": "#fffef2",
         "header_text_color": "#1d1d1f",
         "header_hover_color": "#0066cc"
       }
