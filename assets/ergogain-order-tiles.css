@@ -1,0 +1,139 @@
+/* ErgoGain Order Tiles - フル/セミオーダーカードスタイル */
+
+.eg-order-tiles {
+  background-color: var(--eg-order-bg, #fff);
+  color: var(--eg-order-fg, #000);
+  padding-top: var(--eg-order-padding-y, 64px);
+  padding-bottom: var(--eg-order-padding-y, 64px);
+}
+
+.eg-order-tiles__grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media screen and (min-width: 768px) {
+  .eg-order-tiles__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    padding: 0 40px;
+  }
+}
+
+/* Card */
+.eg-order-card {
+  position: relative;
+  background: #f9f9f9;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.eg-order-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+.eg-order-card__link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  padding: 40px 32px;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.eg-order-card__link:focus {
+  outline: 3px solid var(--eg-order-fg, #000);
+  outline-offset: 4px;
+}
+
+.eg-order-card__link:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.eg-order-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Title */
+.eg-order-card__title {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+@media screen and (max-width: 767px) {
+  .eg-order-card__title {
+    font-size: 28px;
+  }
+}
+
+/* Summary */
+.eg-order-card__summary {
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.7);
+  margin: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+/* Price */
+.eg-order-card__price {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 8px 0 0;
+  color: var(--eg-order-fg, #000);
+}
+
+@media screen and (max-width: 767px) {
+  .eg-order-card__price {
+    font-size: 24px;
+  }
+}
+
+/* Button */
+.eg-order-card__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  background: var(--eg-order-fg, #000);
+  color: var(--eg-order-bg, #fff);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 8px;
+  transition: opacity 0.2s ease;
+  width: fit-content;
+}
+
+.eg-order-card__link:hover .eg-order-card__btn {
+  opacity: 0.85;
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .eg-order-card {
+    transition: none;
+  }
+
+  .eg-order-card__btn {
+    transition: none;
+  }
+}

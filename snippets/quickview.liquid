@@ -1,0 +1,168 @@
+{% comment %}
+  QuickView モーダル
+  - 左: 画像ギャラリー（色選択で自動切替）
+  - 右: 商品情報、バリアント選択、カートに追加
+  - A11y: role="dialog", aria-modal="true", フォーカストラップ, Esc閉じ
+{% endcomment %}
+
+<div
+  id="eg-quickview-modal"
+  class="eg-qv-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="eg-qv-title"
+  aria-hidden="true"
+  data-quickview-modal
+>
+  <div class="eg-qv-backdrop" data-quickview-close aria-label="Close quick view"></div>
+
+  <div class="eg-qv-container">
+
+    {%- comment -%} 閉じるボタン {%- endcomment -%}
+    <button
+      type="button"
+      class="eg-qv-close"
+      data-quickview-close
+      aria-label="Close quick view"
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <div class="eg-qv-content" data-quickview-content>
+
+      {%- comment -%} 左側: 画像ギャラリー {%- endcomment -%}
+      <div class="eg-qv-media">
+        <div class="eg-qv-gallery">
+          <div class="eg-qv-main-image" data-main-image>
+            {%- comment -%} 動的に挿入 {%- endcomment -%}
+            <img
+              src=""
+              alt=""
+              class="eg-qv-image"
+              data-current-image
+              width="800"
+              height="800"
+            >
+          </div>
+
+          <div class="eg-qv-thumbnails" data-thumbnails>
+            {%- comment -%} 動的に挿入 {%- endcomment -%}
+          </div>
+        </div>
+      </div>
+
+      {%- comment -%} 右側: 商品情報 {%- endcomment -%}
+      <div class="eg-qv-info">
+
+        <h2 id="eg-qv-title" class="eg-qv-title" data-product-title>
+          {%- comment -%} 動的に挿入 {%- endcomment -%}
+        </h2>
+
+        <div class="eg-qv-price" data-product-price>
+          {%- comment -%} 動的に挿入 {%- endcomment -%}
+        </div>
+
+        <div class="eg-qv-stock" data-product-stock>
+          {%- comment -%} 動的に挿入 {%- endcomment -%}
+        </div>
+
+        {%- comment -%} バリアント選択フォーム {%- endcomment -%}
+        <form class="eg-qv-form" data-quickview-form>
+
+          {%- comment -%} カラー選択（スウォッチ） {%- endcomment -%}
+          <div class="eg-qv-option-group" data-option-color>
+            <label class="eg-qv-option-label">
+              カラー: <span data-selected-color>-</span>
+            </label>
+            <div class="eg-qv-swatches" role="radiogroup" aria-label="Select color" data-color-swatches>
+              {%- comment -%} 動的に挿入 {%- endcomment -%}
+            </div>
+          </div>
+
+          {%- comment -%} サイズ選択 {%- endcomment -%}
+          <div class="eg-qv-option-group" data-option-size>
+            <label class="eg-qv-option-label">
+              サイズ: <span data-selected-size>-</span>
+            </label>
+            <div class="eg-qv-sizes" role="radiogroup" aria-label="Select size" data-size-buttons>
+              {%- comment -%} 動的に挿入 {%- endcomment -%}
+            </div>
+          </div>
+
+          {%- comment -%} 数量 {%- endcomment -%}
+          <div class="eg-qv-quantity-group">
+            <label for="eg-qv-quantity" class="eg-qv-option-label">数量</label>
+            <div class="eg-qv-quantity-wrapper">
+              <button
+                type="button"
+                class="eg-qv-quantity-btn"
+                data-quantity-minus
+                aria-label="Decrease quantity"
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M4 8H12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </button>
+              <input
+                type="number"
+                id="eg-qv-quantity"
+                name="quantity"
+                value="1"
+                min="1"
+                class="eg-qv-quantity-input"
+                data-quantity-input
+                aria-label="Quantity"
+              >
+              <button
+                type="button"
+                class="eg-qv-quantity-btn"
+                data-quantity-plus
+                aria-label="Increase quantity"
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M8 4V12M4 8H12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {%- comment -%} カートに追加ボタン {%- endcomment -%}
+          <button
+            type="submit"
+            class="eg-qv-add-to-cart"
+            data-add-to-cart
+            disabled
+          >
+            <span data-button-text>カートに追加</span>
+            <span class="eg-qv-spinner" data-spinner hidden>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" opacity="0.25"/>
+                <path d="M10 2C14.4183 2 18 5.58172 18 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </button>
+
+          {%- comment -%} エラーメッセージ {%- endcomment -%}
+          <div class="eg-qv-error" data-error-message hidden role="alert"></div>
+
+          {%- comment -%} 成功トースト {%- endcomment -%}
+          <div class="eg-qv-toast" data-success-toast hidden role="status" aria-live="polite">
+            カートに追加しました
+          </div>
+
+          {%- comment -%} 隠しフィールド {%- endcomment -%}
+          <input type="hidden" name="id" data-variant-id>
+        </form>
+
+        {%- comment -%} 商品詳細へのリンク {%- endcomment -%}
+        <a href="#" class="eg-qv-view-details" data-product-link>
+          詳細を見る →
+        </a>
+
+      </div>
+
+    </div>
+  </div>
+</div>

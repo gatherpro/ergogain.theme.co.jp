@@ -1,0 +1,190 @@
+{% comment %}
+  ErgoGain Order Tiles - フル/セミオーダーの2カード選択セクション
+
+  使い方：
+  1. 管理画面 > オンラインストア > テーマ > カスタマイズ
+  2. 「セクションを追加」> 「ErgoGain Order Tiles」を選択
+  3. フル/セミそれぞれのタイトル、説明、価格、リンクを設定
+
+  機能：
+  - 2カードレイアウト（フル/セミオーダー）
+  - レスポンシブ対応（PC2列/SP縦）
+  - カード全体クリッカブル
+  - キーボードアクセシビリティ対応
+{% endcomment %}
+
+{{ 'ergogain-order-tiles.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  #eg-order-tiles-{{ section.id }} {
+    --eg-order-padding-y: {{ section.settings.padding_y }}px;
+    --eg-order-fg: {{ section.settings.fg }};
+    --eg-order-bg: {{ section.settings.bg }};
+  }
+{%- endstyle -%}
+
+<section
+  id="eg-order-tiles-{{ section.id }}"
+  class="eg-order-tiles"
+  role="region"
+  aria-label="オーダー方式の選択"
+>
+  <div class="eg-order-tiles__grid">
+
+    {%- comment -%} Full Order Card {%- endcomment -%}
+    <article class="eg-order-card">
+      <a
+        href="{{ section.settings.full_link | default: '#' }}"
+        class="eg-order-card__link"
+        aria-label="{{ section.settings.full_title | default: 'フルオーダー' }} - {{ section.settings.full_price | money }}"
+      >
+        <div class="eg-order-card__content">
+          <h2 class="eg-order-card__title">
+            {{ section.settings.full_title | default: 'フルオーダー' }}
+          </h2>
+
+          {%- if section.settings.full_summary != blank -%}
+            <p class="eg-order-card__summary">
+              {{ section.settings.full_summary }}
+            </p>
+          {%- endif -%}
+
+          <p class="eg-order-card__price">
+            {{ section.settings.full_price | default: 0 | money }}
+          </p>
+
+          <span class="eg-order-card__btn" aria-hidden="true">
+            詳細を見る
+          </span>
+        </div>
+      </a>
+    </article>
+
+    {%- comment -%} Semi Order Card {%- endcomment -%}
+    <article class="eg-order-card">
+      <a
+        href="{{ section.settings.semi_link | default: '#' }}"
+        class="eg-order-card__link"
+        aria-label="{{ section.settings.semi_title | default: 'セミオーダー' }} - {{ section.settings.semi_price | money }}"
+      >
+        <div class="eg-order-card__content">
+          <h2 class="eg-order-card__title">
+            {{ section.settings.semi_title | default: 'セミオーダー' }}
+          </h2>
+
+          {%- if section.settings.semi_summary != blank -%}
+            <p class="eg-order-card__summary">
+              {{ section.settings.semi_summary }}
+            </p>
+          {%- endif -%}
+
+          <p class="eg-order-card__price">
+            {{ section.settings.semi_price | default: 0 | money }}
+          </p>
+
+          <span class="eg-order-card__btn" aria-hidden="true">
+            詳細を見る
+          </span>
+        </div>
+      </a>
+    </article>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "ErgoGain Order Tiles",
+  "tag": "section",
+  "class": "section-ergogain-order-tiles",
+  "settings": [
+    {
+      "type": "header",
+      "content": "フルオーダー設定"
+    },
+    {
+      "type": "text",
+      "id": "full_title",
+      "label": "タイトル",
+      "default": "フルオーダー"
+    },
+    {
+      "type": "textarea",
+      "id": "full_summary",
+      "label": "説明",
+      "info": "0-120文字推奨",
+      "default": "完全カスタマイズ可能。あなただけのキーボードを。"
+    },
+    {
+      "type": "number",
+      "id": "full_price",
+      "label": "価格",
+      "default": 50000
+    },
+    {
+      "type": "url",
+      "id": "full_link",
+      "label": "リンク先URL"
+    },
+    {
+      "type": "header",
+      "content": "セミオーダー設定"
+    },
+    {
+      "type": "text",
+      "id": "semi_title",
+      "label": "タイトル",
+      "default": "セミオーダー"
+    },
+    {
+      "type": "textarea",
+      "id": "semi_summary",
+      "label": "説明",
+      "info": "0-120文字推奨",
+      "default": "厳選されたプリセットから選択。手軽にカスタマイズ。"
+    },
+    {
+      "type": "number",
+      "id": "semi_price",
+      "label": "価格",
+      "default": 30000
+    },
+    {
+      "type": "url",
+      "id": "semi_link",
+      "label": "リンク先URL"
+    },
+    {
+      "type": "header",
+      "content": "スタイル設定"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "label": "上下余白",
+      "default": 64
+    },
+    {
+      "type": "color",
+      "id": "fg",
+      "label": "テキスト色",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "bg",
+      "label": "背景色",
+      "default": "#FFFFFF"
+    }
+  ],
+  "presets": [
+    {
+      "name": "ErgoGain Order Tiles"
+    }
+  ]
+}
+{% endschema %}

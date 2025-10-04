@@ -6,10 +6,10 @@
 
 {%- liquid
   assign section_id = 'eg-tp-' | append: section.id
-  assign padding_y = section.settings.padding_y | default: 60
-  assign fg = section.settings.fg | default: '#1d1d1f'
-  assign muted = section.settings.muted | default: '#6e6e73'
-  assign bg = section.settings.bg | default: '#ffffff'
+  assign padding_y = section.settings.eg_tp_padding_y | default: 60
+  assign fg = section.settings.eg_tp_fg | default: '#1d1d1f'
+  assign muted = section.settings.eg_tp_muted | default: '#6e6e73'
+  assign bg = section.settings.eg_tp_bg | default: '#ffffff'
 -%}
 
 <style>
@@ -118,8 +118,8 @@
     <ul class="eg-text-points__list">
       {%- for block in section.blocks -%}
         {%- liquid
-          assign title = block.settings.title
-          assign body = block.settings.body
+          assign title = block.settings.eg_tp_title
+          assign body = block.settings.eg_tp_body
         -%}
         {%- if title != blank or body != blank -%}
           <li class="eg-text-points__item" {{ block.shopify_attributes }}>
