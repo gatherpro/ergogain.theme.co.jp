@@ -1,0 +1,231 @@
+{% comment %}
+  ErgoGain Text Points Section
+  Apple-inspired minimal text points with 3 columns
+  セクション略称: tp (text-points)
+{% endcomment %}
+
+{%- liquid
+  assign section_id = 'eg-tp-' | append: section.id
+  assign padding_y = section.settings.padding_y | default: 60
+  assign fg = section.settings.fg | default: '#1d1d1f'
+  assign muted = section.settings.muted | default: '#6e6e73'
+  assign bg = section.settings.bg | default: '#ffffff'
+-%}
+
+<style>
+  #{{ section_id }} {
+    --eg-tp-fg: {{ fg }};
+    --eg-tp-muted: {{ muted }};
+    --eg-tp-bg: {{ bg }};
+    --eg-tp-padding-y: {{ padding_y }}px;
+  }
+
+  .eg-text-points {
+    background-color: var(--eg-tp-bg);
+    padding-top: var(--eg-tp-padding-y);
+    padding-bottom: var(--eg-tp-padding-y);
+  }
+
+  .eg-text-points__list {
+    list-style: none;
+    margin: 0;
+    padding: 0 20px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+
+  .eg-text-points__item {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .eg-text-points__title {
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    color: var(--eg-tp-fg);
+    margin: 0;
+  }
+
+  .eg-text-points__body {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: -0.003em;
+    color: var(--eg-tp-muted);
+    margin: 0;
+  }
+
+  .eg-text-points__body a {
+    color: var(--eg-tp-fg);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    transition: opacity 0.2s ease;
+  }
+
+  .eg-text-points__body a:hover {
+    opacity: 0.7;
+  }
+
+  /* Mobile: Stack vertically */
+  @media screen and (max-width: 749px) {
+    .eg-text-points__list {
+      grid-template-columns: 1fr;
+      gap: 32px;
+      padding: 0 16px;
+    }
+
+    .eg-text-points__title {
+      font-size: 19px;
+    }
+
+    .eg-text-points__body {
+      font-size: 14px;
+      line-height: 1.65;
+    }
+  }
+
+  /* Tablet: 2 columns */
+  @media screen and (min-width: 750px) and (max-width: 989px) {
+    .eg-text-points__list {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 36px;
+    }
+  }
+
+  /* Accessibility: Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .eg-text-points__body a {
+      transition: none;
+    }
+  }
+</style>
+
+<section
+  id="{{ section_id }}"
+  class="eg-text-points"
+  role="region"
+  aria-label="エルゴゲインの強み"
+>
+  {%- if section.blocks.size > 0 -%}
+    <ul class="eg-text-points__list">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign title = block.settings.title
+          assign body = block.settings.body
+        -%}
+        {%- if title != blank or body != blank -%}
+          <li class="eg-text-points__item" {{ block.shopify_attributes }}>
+            {%- if title != blank -%}
+              <h3 class="eg-text-points__title">{{ title }}</h3>
+            {%- endif -%}
+            {%- if body != blank -%}
+              <p class="eg-text-points__body">{{ body }}</p>
+            {%- endif -%}
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "ErgoGain Text Points",
+  "tag": "section",
+  "class": "section-ergogain-text-points",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "range",
+      "id": "eg_tp_padding_y",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "縦方向パディング",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "カラー設定"
+    },
+    {
+      "type": "color",
+      "id": "eg_tp_fg",
+      "label": "テキスト色（前景）",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "color",
+      "id": "eg_tp_muted",
+      "label": "本文色（薄め）",
+      "default": "#6e6e73"
+    },
+    {
+      "type": "color",
+      "id": "eg_tp_bg",
+      "label": "背景色",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "point",
+      "name": "テキストポイント",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "eg_tp_title",
+          "label": "見出し（4〜14字推奨）",
+          "default": "人間工学設計"
+        },
+        {
+          "type": "textarea",
+          "id": "eg_tp_body",
+          "label": "本文（40〜120字推奨）",
+          "default": "長時間のタイピングでも疲れにくい、エルゴノミクスに基づいた設計。手首の自然な角度を保ち、快適な作業環境を実現します。"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "ErgoGain Text Points",
+      "blocks": [
+        {
+          "type": "point",
+          "settings": {
+            "eg_tp_title": "人間工学設計",
+            "eg_tp_body": "長時間のタイピングでも疲れにくい、エルゴノミクスに基づいた設計。手首の自然な角度を保ち、快適な作業環境を実現します。"
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "eg_tp_title": "カスタマイズ自在",
+            "eg_tp_body": "スイッチ、キーキャップ、レイアウトまで自由にカスタマイズ可能。あなただけの最高のタイピング体験を構築できます。"
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "eg_tp_title": "プロ仕様の品質",
+            "eg_tp_body": "厳選された高品質なコンポーネントと精密な組み立て。プロフェッショナルの要求に応える耐久性と信頼性を提供します。"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
