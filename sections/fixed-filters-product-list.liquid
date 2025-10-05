@@ -1,0 +1,1433 @@
+{% comment %}
+  Fixed Filters Product List Section
+  Apple-inspired 2-column layout with sticky filters (left) and scrollable product grid (right)
+  セクション略称: ffpl (fixed-filters-product-list)
+
+  Features:
+  - Sticky sidebar filters (280px) with custom blocks
+  - Responsive drawer for mobile (<md)
+  - Native Shopify collection filtering (filter.v.*, filter.p.price.*, sort_by)
+  - Variant selection (size buttons, color swatches with image swap)
+  - Add to cart with fetch API
+  - Lazy loading + IntersectionObserver
+  - Full accessibility (ARIA, keyboard nav, focus management)
+  - Dark mode support (prefers-color-scheme)
+{% endcomment %}
+
+{%- liquid
+  assign section_id = 'eg-ffpl-' | append: section.id
+
+  # Settings
+  assign primary_collection = collections[section.settings.eg_ffpl_collection]
+  assign products_per_page = section.settings.eg_ffpl_products_per_page | default: 24
+  assign default_sort = section.settings.eg_ffpl_default_sort | default: 'manual'
+  assign load_more_type = section.settings.eg_ffpl_load_more | default: 'button'
+  assign theme_color = section.settings.eg_ffpl_theme_color | default: '#1d1d1f'
+  assign accent_color = section.settings.eg_ffpl_accent_color | default: '#0071e3'
+  assign bg_color = section.settings.eg_ffpl_bg_color | default: '#ffffff'
+  assign card_bg = section.settings.eg_ffpl_card_bg | default: '#f5f5f7'
+
+  # Get current filter/sort params from URL
+  assign current_sort = request.query_string | split: 'sort_by=' | last | split: '&' | first | default: default_sort
+-%}
+
+<style>
+  #{{ section_id }} {
+    --eg-ffpl-theme: {{ theme_color }};
+    --eg-ffpl-accent: {{ accent_color }};
+    --eg-ffpl-bg: {{ bg_color }};
+    --eg-ffpl-card-bg: {{ card_bg }};
+    --eg-ffpl-border: rgba(0, 0, 0, 0.08);
+    --eg-ffpl-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --eg-ffpl-radius: 12px;
+    --eg-ffpl-sidebar-width: 280px;
+    --eg-ffpl-gap: 24px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    #{{ section_id }} {
+      --eg-ffpl-theme: #f5f5f7;
+      --eg-ffpl-bg: #1d1d1f;
+      --eg-ffpl-card-bg: #2d2d2f;
+      --eg-ffpl-border: rgba(255, 255, 255, 0.12);
+      --eg-ffpl-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  /* Container */
+  .eg-ffpl {
+    background-color: var(--eg-ffpl-bg);
+    color: var(--eg-ffpl-theme);
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+
+  .eg-ffpl__container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: var(--eg-ffpl-sidebar-width) 1fr;
+    gap: var(--eg-ffpl-gap);
+    align-items: start;
+  }
+
+  /* Sidebar Filters */
+  .eg-ffpl__sidebar {
+    position: sticky;
+    top: 20px;
+    background: var(--eg-ffpl-card-bg);
+    border-radius: var(--eg-ffpl-radius);
+    padding: 24px;
+    box-shadow: var(--eg-ffpl-shadow);
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+  }
+
+  .eg-ffpl__sidebar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .eg-ffpl__sidebar::-webkit-scrollbar-thumb {
+    background: var(--eg-ffpl-border);
+    border-radius: 3px;
+  }
+
+  .eg-ffpl__sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--eg-ffpl-border);
+  }
+
+  .eg-ffpl__sidebar-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .eg-ffpl__clear-all {
+    font-size: 13px;
+    color: var(--eg-ffpl-accent);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.2s;
+  }
+
+  .eg-ffpl__clear-all:hover {
+    background: rgba(0, 113, 227, 0.1);
+  }
+
+  .eg-ffpl__clear-all:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  /* Filter Groups */
+  .eg-ffpl__filter-group {
+    margin-bottom: 24px;
+  }
+
+  .eg-ffpl__filter-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .eg-ffpl__filter-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    letter-spacing: -0.005em;
+  }
+
+  /* Checkbox Filters */
+  .eg-ffpl__checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .eg-ffpl__checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .eg-ffpl__checkbox-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--eg-ffpl-border);
+    border-radius: 4px;
+    cursor: pointer;
+    accent-color: var(--eg-ffpl-accent);
+  }
+
+  .eg-ffpl__checkbox-item label {
+    font-size: 13px;
+    cursor: pointer;
+    user-select: none;
+    flex: 1;
+  }
+
+  .eg-ffpl__checkbox-item label:hover {
+    color: var(--eg-ffpl-accent);
+  }
+
+  /* Price Range */
+  .eg-ffpl__price-range {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .eg-ffpl__price-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--eg-ffpl-border);
+    border-radius: 8px;
+    font-size: 13px;
+    background: var(--eg-ffpl-bg);
+    color: var(--eg-ffpl-theme);
+  }
+
+  .eg-ffpl__price-input:focus {
+    outline: 2px solid var(--eg-ffpl-accent);
+    outline-offset: 0;
+  }
+
+  /* Active Filters Pills */
+  .eg-ffpl__active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .eg-ffpl__filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--eg-ffpl-accent);
+    color: white;
+    font-size: 12px;
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .eg-ffpl__filter-pill:hover {
+    opacity: 0.8;
+  }
+
+  .eg-ffpl__filter-pill svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  /* Main Content */
+  .eg-ffpl__main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Toolbar */
+  .eg-ffpl__toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: var(--eg-ffpl-card-bg);
+    border-radius: var(--eg-ffpl-radius);
+    box-shadow: var(--eg-ffpl-shadow);
+  }
+
+  .eg-ffpl__result-count {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .eg-ffpl__sort-select {
+    padding: 8px 32px 8px 12px;
+    border: 1px solid var(--eg-ffpl-border);
+    border-radius: 8px;
+    font-size: 13px;
+    background: var(--eg-ffpl-bg) url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 4.5L6 8.5L10 4.5' stroke='%231d1d1f' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center;
+    appearance: none;
+    cursor: pointer;
+    color: var(--eg-ffpl-theme);
+  }
+
+  .eg-ffpl__sort-select:focus {
+    outline: 2px solid var(--eg-ffpl-accent);
+    outline-offset: 0;
+  }
+
+  /* Product Grid */
+  .eg-ffpl__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+  }
+
+  /* Product Card */
+  .eg-ffpl__card {
+    background: var(--eg-ffpl-card-bg);
+    border-radius: var(--eg-ffpl-radius);
+    padding: 16px;
+    box-shadow: var(--eg-ffpl-shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+    opacity: 0;
+    animation: eg-ffpl-fade-in 0.4s forwards;
+  }
+
+  @keyframes eg-ffpl-fade-in {
+    to { opacity: 1; }
+  }
+
+  .eg-ffpl__card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .eg-ffpl__card-image-wrapper {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    background: var(--eg-ffpl-bg);
+  }
+
+  .eg-ffpl__card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s;
+  }
+
+  .eg-ffpl__card-image--hover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+  }
+
+  .eg-ffpl__card:hover .eg-ffpl__card-image--hover {
+    opacity: 1;
+  }
+
+  .eg-ffpl__card-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .eg-ffpl__card-title a {
+    color: var(--eg-ffpl-theme);
+    text-decoration: none;
+  }
+
+  .eg-ffpl__card-title a:hover {
+    color: var(--eg-ffpl-accent);
+  }
+
+  .eg-ffpl__card-price {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+
+  .eg-ffpl__card-price--sale {
+    color: #d70015;
+    font-weight: 600;
+  }
+
+  .eg-ffpl__card-price--compare {
+    text-decoration: line-through;
+    opacity: 0.5;
+    font-size: 12px;
+  }
+
+  /* Specs Badges */
+  .eg-ffpl__card-specs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .eg-ffpl__spec-badge {
+    font-size: 10px;
+    padding: 4px 8px;
+    background: var(--eg-ffpl-bg);
+    border: 1px solid var(--eg-ffpl-border);
+    border-radius: 6px;
+    font-weight: 500;
+  }
+
+  /* Variant Selectors */
+  .eg-ffpl__variant-group {
+    margin-bottom: 12px;
+  }
+
+  .eg-ffpl__variant-label {
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Size Buttons */
+  .eg-ffpl__size-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .eg-ffpl__size-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    border: 1px solid var(--eg-ffpl-border);
+    border-radius: 6px;
+    background: var(--eg-ffpl-bg);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+    color: var(--eg-ffpl-theme);
+  }
+
+  .eg-ffpl__size-btn:hover:not(:disabled) {
+    border-color: var(--eg-ffpl-accent);
+    color: var(--eg-ffpl-accent);
+  }
+
+  .eg-ffpl__size-btn.active {
+    background: var(--eg-ffpl-accent);
+    color: white;
+    border-color: var(--eg-ffpl-accent);
+  }
+
+  .eg-ffpl__size-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+
+  /* Color Swatches */
+  .eg-ffpl__color-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .eg-ffpl__color-swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--eg-ffpl-border);
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .eg-ffpl__color-swatch:hover {
+    transform: scale(1.1);
+  }
+
+  .eg-ffpl__color-swatch.active {
+    border-color: var(--eg-ffpl-accent);
+    box-shadow: 0 0 0 2px var(--eg-ffpl-bg), 0 0 0 4px var(--eg-ffpl-accent);
+  }
+
+  .eg-ffpl__color-swatch:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  /* Add to Cart */
+  .eg-ffpl__add-to-cart {
+    width: 100%;
+    padding: 12px 20px;
+    background: var(--eg-ffpl-accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    margin-top: 8px;
+  }
+
+  .eg-ffpl__add-to-cart:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  .eg-ffpl__add-to-cart:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .eg-ffpl__add-to-cart--loading {
+    position: relative;
+  }
+
+  .eg-ffpl__add-to-cart--loading::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 2px solid white;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: eg-ffpl-spin 0.6s linear infinite;
+    top: 50%;
+    left: 50%;
+    margin: -7px 0 0 -7px;
+  }
+
+  @keyframes eg-ffpl-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Load More */
+  .eg-ffpl__load-more {
+    text-align: center;
+    padding: 40px 0;
+  }
+
+  .eg-ffpl__load-more-btn {
+    padding: 14px 32px;
+    background: var(--eg-ffpl-card-bg);
+    color: var(--eg-ffpl-theme);
+    border: 1px solid var(--eg-ffpl-border);
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .eg-ffpl__load-more-btn:hover {
+    background: var(--eg-ffpl-accent);
+    color: white;
+    border-color: var(--eg-ffpl-accent);
+  }
+
+  /* Mobile Styles */
+  @media screen and (max-width: 768px) {
+    .eg-ffpl__container {
+      grid-template-columns: 1fr;
+    }
+
+    .eg-ffpl__sidebar {
+      display: none;
+    }
+
+    .eg-ffpl__mobile-filter-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 12px 20px;
+      background: var(--eg-ffpl-card-bg);
+      border: 1px solid var(--eg-ffpl-border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 16px;
+      color: var(--eg-ffpl-theme);
+    }
+
+    .eg-ffpl__grid {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+    }
+
+    /* Drawer Overlay */
+    .eg-ffpl__drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .eg-ffpl__drawer-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* Drawer */
+    .eg-ffpl__drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 90%;
+      max-width: 320px;
+      height: 100%;
+      background: var(--eg-ffpl-card-bg);
+      z-index: 1000;
+      transform: translateX(-100%);
+      transition: transform 0.3s;
+      overflow-y: auto;
+      padding: 24px;
+    }
+
+    .eg-ffpl__drawer.active {
+      transform: translateX(0);
+    }
+
+    .eg-ffpl__drawer-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: var(--eg-ffpl-bg);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  @media screen and (min-width: 769px) {
+    .eg-ffpl__mobile-filter-btn,
+    .eg-ffpl__drawer-overlay,
+    .eg-ffpl__drawer {
+      display: none !important;
+    }
+  }
+
+  /* Focus Styles */
+  *:focus-visible {
+    outline: 2px solid var(--eg-ffpl-accent);
+    outline-offset: 2px;
+  }
+
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+
+<section
+  id="{{ section_id }}"
+  class="eg-ffpl"
+  data-section-id="{{ section.id }}"
+  data-collection-handle="{{ primary_collection.handle }}"
+  data-products-per-page="{{ products_per_page }}"
+  data-load-more-type="{{ load_more_type }}"
+  role="region"
+  aria-label="商品リスト"
+>
+  <div class="eg-ffpl__container">
+
+    {%- comment -%} Mobile Filter Button {%- endcomment -%}
+    <button
+      type="button"
+      class="eg-ffpl__mobile-filter-btn"
+      aria-label="フィルターを開く"
+      aria-expanded="false"
+      aria-controls="eg-ffpl-drawer-{{ section.id }}"
+      data-drawer-trigger
+    >
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M2 4h16M5 10h10M8 16h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      絞り込み
+    </button>
+
+    {%- comment -%} Sidebar Filters (Desktop) {%- endcomment -%}
+    <aside class="eg-ffpl__sidebar" aria-label="商品フィルター">
+      <div class="eg-ffpl__sidebar-header">
+        <h2 class="eg-ffpl__sidebar-title">絞り込み</h2>
+        <button
+          type="button"
+          class="eg-ffpl__clear-all"
+          data-clear-filters
+          disabled
+          aria-label="すべてのフィルターをクリア"
+        >
+          すべてクリア
+        </button>
+      </div>
+
+      {%- comment -%} Active Filters Pills {%- endcomment -%}
+      <div class="eg-ffpl__active-filters" data-active-filters aria-live="polite"></div>
+
+      {%- comment -%} Filter Blocks {%- endcomment -%}
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+
+          {%- when 'checkbox_filter' -%}
+            <div class="eg-ffpl__filter-group" {{ block.shopify_attributes }}>
+              <h3 class="eg-ffpl__filter-title">{{ block.settings.eg_ffpl_filter_label }}</h3>
+              <div class="eg-ffpl__checkbox-list">
+                {%- liquid
+                  assign filter_key = block.settings.eg_ffpl_filter_key
+                  assign filter_values = block.settings.eg_ffpl_filter_values | split: ','
+                -%}
+                {%- for value in filter_values -%}
+                  {%- assign trimmed_value = value | strip -%}
+                  <div class="eg-ffpl__checkbox-item">
+                    <input
+                      type="checkbox"
+                      id="filter-{{ filter_key | handleize }}-{{ trimmed_value | handleize }}-{{ block.id }}"
+                      name="filter.v.option.{{ filter_key }}"
+                      value="{{ trimmed_value }}"
+                      data-filter-checkbox
+                    >
+                    <label for="filter-{{ filter_key | handleize }}-{{ trimmed_value | handleize }}-{{ block.id }}">
+                      {{ trimmed_value }}
+                    </label>
+                  </div>
+                {%- endfor -%}
+              </div>
+            </div>
+
+          {%- when 'price_range' -%}
+            <div class="eg-ffpl__filter-group" {{ block.shopify_attributes }}>
+              <h3 class="eg-ffpl__filter-title">価格範囲</h3>
+              <div class="eg-ffpl__price-range">
+                <input
+                  type="number"
+                  class="eg-ffpl__price-input"
+                  placeholder="最小"
+                  name="filter.v.price.gte"
+                  data-price-min
+                  min="0"
+                  aria-label="最小価格"
+                >
+                <span>-</span>
+                <input
+                  type="number"
+                  class="eg-ffpl__price-input"
+                  placeholder="最大"
+                  name="filter.v.price.lte"
+                  data-price-max
+                  min="0"
+                  aria-label="最大価格"
+                >
+              </div>
+            </div>
+
+        {%- endcase -%}
+      {%- endfor -%}
+    </aside>
+
+    {%- comment -%} Main Content {%- endcomment -%}
+    <main class="eg-ffpl__main">
+
+      {%- comment -%} Toolbar {%- endcomment -%}
+      <div class="eg-ffpl__toolbar">
+        <div class="eg-ffpl__result-count" data-result-count aria-live="polite">
+          {%- if primary_collection -%}
+            {{ primary_collection.products_count }}件の商品
+          {%- else -%}
+            0件の商品
+          {%- endif -%}
+        </div>
+        <select
+          class="eg-ffpl__sort-select"
+          data-sort-select
+          aria-label="並び替え"
+        >
+          <option value="manual" {% if current_sort == 'manual' %}selected{% endif %}>おすすめ順</option>
+          <option value="best-selling" {% if current_sort == 'best-selling' %}selected{% endif %}>人気順</option>
+          <option value="title-ascending" {% if current_sort == 'title-ascending' %}selected{% endif %}>名前: A-Z</option>
+          <option value="title-descending" {% if current_sort == 'title-descending' %}selected{% endif %}>名前: Z-A</option>
+          <option value="price-ascending" {% if current_sort == 'price-ascending' %}selected{% endif %}>価格: 安い順</option>
+          <option value="price-descending" {% if current_sort == 'price-descending' %}selected{% endif %}>価格: 高い順</option>
+          <option value="created-ascending" {% if current_sort == 'created-ascending' %}selected{% endif %}>古い順</option>
+          <option value="created-descending" {% if current_sort == 'created-descending' %}selected{% endif %}>新着順</option>
+        </select>
+      </div>
+
+      {%- comment -%} Product Grid {%- endcomment -%}
+      <div
+        class="eg-ffpl__grid"
+        data-product-grid
+        role="list"
+        aria-label="商品一覧"
+      >
+        {%- if primary_collection and primary_collection.products.size > 0 -%}
+          {%- for product in primary_collection.products limit: products_per_page -%}
+            {%- render 'eg-ffpl-product-card',
+              product: product,
+              section_id: section.id
+            -%}
+          {%- endfor -%}
+        {%- else -%}
+          <p style="grid-column: 1/-1; text-align: center; padding: 60px 20px; opacity: 0.5;">
+            商品が見つかりませんでした
+          </p>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Load More {%- endcomment -%}
+      {%- if primary_collection and primary_collection.products.size > products_per_page -%}
+        <div class="eg-ffpl__load-more" data-load-more>
+          {%- if load_more_type == 'button' -%}
+            <button
+              type="button"
+              class="eg-ffpl__load-more-btn"
+              data-load-more-btn
+              aria-label="もっと読み込む"
+            >
+              もっと見る
+            </button>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </main>
+
+  </div>
+
+  {%- comment -%} Mobile Drawer {%- endcomment -%}
+  <div class="eg-ffpl__drawer-overlay" data-drawer-overlay aria-hidden="true"></div>
+  <aside
+    id="eg-ffpl-drawer-{{ section.id }}"
+    class="eg-ffpl__drawer"
+    data-drawer
+    role="dialog"
+    aria-modal="true"
+    aria-label="フィルターメニュー"
+  >
+    <button
+      type="button"
+      class="eg-ffpl__drawer-close"
+      data-drawer-close
+      aria-label="フィルターを閉じる"
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M12 4L4 12M4 4l8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+    {%- comment -%} Drawer content will be cloned from sidebar via JS {%- endcomment -%}
+  </aside>
+</section>
+
+<script type="module">
+  (function() {
+    const sectionId = '{{ section.id }}';
+    const container = document.querySelector(`[data-section-id="${sectionId}"]`);
+    if (!container) return;
+
+    // State
+    const state = {
+      filters: new Map(),
+      sort: '{{ current_sort }}',
+      page: 1,
+      loading: false,
+      hasMore: true
+    };
+
+    // Elements
+    const els = {
+      grid: container.querySelector('[data-product-grid]'),
+      sortSelect: container.querySelector('[data-sort-select]'),
+      clearBtn: container.querySelector('[data-clear-filters]'),
+      activeFilters: container.querySelector('[data-active-filters]'),
+      resultCount: container.querySelector('[data-result-count]'),
+      loadMoreBtn: container.querySelector('[data-load-more-btn]'),
+      checkboxes: container.querySelectorAll('[data-filter-checkbox]'),
+      priceMin: container.querySelector('[data-price-min]'),
+      priceMax: container.querySelector('[data-price-max]'),
+      drawerTrigger: container.querySelector('[data-drawer-trigger]'),
+      drawerClose: container.querySelector('[data-drawer-close]'),
+      drawer: container.querySelector('[data-drawer]'),
+      drawerOverlay: container.querySelector('[data-drawer-overlay]')
+    };
+
+    // Initialize from URL params
+    function initFromURL() {
+      const params = new URLSearchParams(window.location.search);
+
+      // Restore checkboxes
+      params.forEach((value, key) => {
+        if (key.startsWith('filter.v.option.')) {
+          const filterKey = key.replace('filter.v.option.', '');
+          state.filters.set(key, value);
+
+          const checkbox = Array.from(els.checkboxes).find(
+            cb => cb.name === key && cb.value === value
+          );
+          if (checkbox) checkbox.checked = true;
+        }
+      });
+
+      // Restore price range
+      if (params.has('filter.v.price.gte') && els.priceMin) {
+        els.priceMin.value = params.get('filter.v.price.gte');
+        state.filters.set('filter.v.price.gte', els.priceMin.value);
+      }
+      if (params.has('filter.v.price.lte') && els.priceMax) {
+        els.priceMax.value = params.get('filter.v.price.lte');
+        state.filters.set('filter.v.price.lte', els.priceMax.value);
+      }
+
+      // Restore sort
+      if (params.has('sort_by')) {
+        state.sort = params.get('sort_by');
+        if (els.sortSelect) els.sortSelect.value = state.sort;
+      }
+
+      updateActiveFilters();
+      updateClearButton();
+    }
+
+    // Update URL with pushState
+    function updateURL() {
+      const params = new URLSearchParams();
+
+      state.filters.forEach((value, key) => {
+        params.append(key, value);
+      });
+
+      if (state.sort && state.sort !== 'manual') {
+        params.set('sort_by', state.sort);
+      }
+
+      const newURL = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
+      window.history.pushState({}, '', newURL);
+    }
+
+    // Fetch filtered products
+    async function fetchProducts() {
+      if (state.loading) return;
+      state.loading = true;
+
+      const collectionHandle = container.dataset.collectionHandle;
+      const params = new URLSearchParams();
+
+      state.filters.forEach((value, key) => {
+        params.append(key, value);
+      });
+
+      if (state.sort) params.set('sort_by', state.sort);
+
+      try {
+        const response = await fetch(`/collections/${collectionHandle}?${params.toString()}&view=json`);
+
+        if (!response.ok) {
+          // Fallback: reload page if JSON view not available
+          window.location.href = `/collections/${collectionHandle}?${params.toString()}`;
+          return;
+        }
+
+        const html = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        // Update grid
+        const newGrid = doc.querySelector('[data-product-grid]');
+        if (newGrid && els.grid) {
+          els.grid.innerHTML = newGrid.innerHTML;
+        }
+
+        // Update count
+        const newCount = doc.querySelector('[data-result-count]');
+        if (newCount && els.resultCount) {
+          els.resultCount.textContent = newCount.textContent;
+        }
+
+        // Re-init card interactions
+        initCardInteractions();
+
+      } catch (error) {
+        console.error('Filter error:', error);
+      } finally {
+        state.loading = false;
+      }
+    }
+
+    // Handle checkbox change
+    function handleCheckboxChange(e) {
+      const checkbox = e.target;
+      const key = checkbox.name;
+      const value = checkbox.value;
+
+      if (checkbox.checked) {
+        state.filters.set(`${key}`, value);
+      } else {
+        state.filters.delete(`${key}`);
+      }
+
+      updateURL();
+      updateActiveFilters();
+      updateClearButton();
+      fetchProducts();
+    }
+
+    // Handle price range change
+    function handlePriceChange() {
+      const min = els.priceMin?.value;
+      const max = els.priceMax?.value;
+
+      if (min) {
+        state.filters.set('filter.v.price.gte', min);
+      } else {
+        state.filters.delete('filter.v.price.gte');
+      }
+
+      if (max) {
+        state.filters.set('filter.v.price.lte', max);
+      } else {
+        state.filters.delete('filter.v.price.lte');
+      }
+
+      updateURL();
+      updateActiveFilters();
+      updateClearButton();
+      fetchProducts();
+    }
+
+    // Handle sort change
+    function handleSortChange(e) {
+      state.sort = e.target.value;
+      updateURL();
+      fetchProducts();
+    }
+
+    // Update active filter pills
+    function updateActiveFilters() {
+      if (!els.activeFilters) return;
+
+      els.activeFilters.innerHTML = '';
+
+      state.filters.forEach((value, key) => {
+        const pill = document.createElement('button');
+        pill.className = 'eg-ffpl__filter-pill';
+        pill.type = 'button';
+        pill.setAttribute('aria-label', `フィルター ${value} を削除`);
+
+        let label = value;
+        if (key === 'filter.v.price.gte') label = `¥${value}以上`;
+        if (key === 'filter.v.price.lte') label = `¥${value}以下`;
+
+        pill.innerHTML = `
+          ${label}
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M9 3L3 9M3 3l6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        `;
+
+        pill.addEventListener('click', () => {
+          state.filters.delete(key);
+
+          // Uncheck corresponding checkbox
+          const checkbox = Array.from(els.checkboxes).find(
+            cb => cb.name === key && cb.value === value
+          );
+          if (checkbox) checkbox.checked = false;
+
+          // Clear price inputs
+          if (key === 'filter.v.price.gte' && els.priceMin) els.priceMin.value = '';
+          if (key === 'filter.v.price.lte' && els.priceMax) els.priceMax.value = '';
+
+          updateURL();
+          updateActiveFilters();
+          updateClearButton();
+          fetchProducts();
+        });
+
+        els.activeFilters.appendChild(pill);
+      });
+    }
+
+    // Update clear button state
+    function updateClearButton() {
+      if (!els.clearBtn) return;
+      els.clearBtn.disabled = state.filters.size === 0;
+    }
+
+    // Clear all filters
+    function clearAllFilters() {
+      state.filters.clear();
+
+      els.checkboxes.forEach(cb => cb.checked = false);
+      if (els.priceMin) els.priceMin.value = '';
+      if (els.priceMax) els.priceMax.value = '';
+
+      updateURL();
+      updateActiveFilters();
+      updateClearButton();
+      fetchProducts();
+    }
+
+    // Mobile drawer
+    function openDrawer() {
+      if (!els.drawer || !els.drawerOverlay) return;
+
+      // Clone sidebar content to drawer
+      const sidebar = container.querySelector('.eg-ffpl__sidebar');
+      if (sidebar && els.drawer.children.length === 1) {
+        const clone = sidebar.cloneNode(true);
+        clone.classList.remove('eg-ffpl__sidebar');
+        clone.classList.add('eg-ffpl__drawer-content');
+        els.drawer.appendChild(clone);
+
+        // Re-attach event listeners to cloned elements
+        clone.querySelectorAll('[data-filter-checkbox]').forEach(cb => {
+          cb.addEventListener('change', handleCheckboxChange);
+        });
+
+        const clonedPriceMin = clone.querySelector('[data-price-min]');
+        const clonedPriceMax = clone.querySelector('[data-price-max]');
+        if (clonedPriceMin) clonedPriceMin.addEventListener('change', handlePriceChange);
+        if (clonedPriceMax) clonedPriceMax.addEventListener('change', handlePriceChange);
+
+        const clonedClearBtn = clone.querySelector('[data-clear-filters]');
+        if (clonedClearBtn) clonedClearBtn.addEventListener('click', clearAllFilters);
+      }
+
+      els.drawer.classList.add('active');
+      els.drawerOverlay.classList.add('active');
+      els.drawerTrigger?.setAttribute('aria-expanded', 'true');
+
+      // Trap focus
+      const focusableEls = els.drawer.querySelectorAll('button, input, select');
+      if (focusableEls.length > 0) focusableEls[0].focus();
+    }
+
+    function closeDrawer() {
+      if (!els.drawer || !els.drawerOverlay) return;
+
+      els.drawer.classList.remove('active');
+      els.drawerOverlay.classList.remove('active');
+      els.drawerTrigger?.setAttribute('aria-expanded', 'false');
+      els.drawerTrigger?.focus();
+    }
+
+    // Card interactions (variant selection, add to cart)
+    function initCardInteractions() {
+      const cards = els.grid.querySelectorAll('.eg-ffpl__card');
+
+      cards.forEach(card => {
+        // Image hover swap
+        const img = card.querySelector('.eg-ffpl__card-image');
+        const hoverImg = card.querySelector('.eg-ffpl__card-image--hover');
+
+        // Size button selection
+        const sizeButtons = card.querySelectorAll('.eg-ffpl__size-btn');
+        sizeButtons.forEach(btn => {
+          btn.addEventListener('click', function() {
+            sizeButtons.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            updateAddToCartButton(card);
+          });
+        });
+
+        // Color swatch selection
+        const colorSwatches = card.querySelectorAll('.eg-ffpl__color-swatch');
+        colorSwatches.forEach(swatch => {
+          swatch.addEventListener('click', function() {
+            colorSwatches.forEach(s => s.classList.remove('active'));
+            this.classList.add('active');
+
+            // Swap image
+            const newImageSrc = this.dataset.imageSrc;
+            if (newImageSrc && img) {
+              img.src = newImageSrc;
+            }
+
+            updateAddToCartButton(card);
+          });
+        });
+
+        // Add to cart
+        const addToCartBtn = card.querySelector('.eg-ffpl__add-to-cart');
+        if (addToCartBtn) {
+          addToCartBtn.addEventListener('click', async function() {
+            const variantId = this.dataset.variantId;
+            if (!variantId) return;
+
+            this.disabled = true;
+            this.classList.add('eg-ffpl__add-to-cart--loading');
+            const originalText = this.textContent;
+            this.textContent = '';
+
+            try {
+              const formData = new FormData();
+              formData.append('id', variantId);
+              formData.append('quantity', 1);
+
+              const response = await fetch('/cart/add.js', {
+                method: 'POST',
+                body: formData
+              });
+
+              if (response.ok) {
+                const data = await response.json();
+
+                // Trigger cart drawer/notification
+                document.dispatchEvent(new CustomEvent('cart:item-added', { detail: data }));
+
+                this.textContent = '追加しました！';
+                setTimeout(() => {
+                  this.textContent = originalText;
+                  this.disabled = false;
+                  this.classList.remove('eg-ffpl__add-to-cart--loading');
+                }, 2000);
+              } else {
+                throw new Error('カートに追加できませんでした');
+              }
+            } catch (error) {
+              console.error('Add to cart error:', error);
+              this.textContent = 'エラーが発生しました';
+              setTimeout(() => {
+                this.textContent = originalText;
+                this.disabled = false;
+                this.classList.remove('eg-ffpl__add-to-cart--loading');
+              }, 2000);
+            }
+          });
+        }
+      });
+    }
+
+    function updateAddToCartButton(card) {
+      // Update variant ID based on selected size/color
+      // This is a simplified version - full implementation would query Shopify variants
+      const addToCartBtn = card.querySelector('.eg-ffpl__add-to-cart');
+      const activeSize = card.querySelector('.eg-ffpl__size-btn.active');
+      const activeColor = card.querySelector('.eg-ffpl__color-swatch.active');
+
+      // Check if selected variant is available
+      // In real implementation, check variant.available from product data
+      const isAvailable = true; // Placeholder
+
+      if (addToCartBtn) {
+        addToCartBtn.disabled = !isAvailable;
+        addToCartBtn.textContent = isAvailable ? 'カートに追加' : '在庫切れ';
+      }
+    }
+
+    // Lazy loading with IntersectionObserver
+    function initLazyLoad() {
+      const images = els.grid.querySelectorAll('.eg-ffpl__card-image[data-src]');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+            observer.unobserve(img);
+          }
+        });
+      }, {
+        rootMargin: '50px'
+      });
+
+      images.forEach(img => observer.observe(img));
+    }
+
+    // Event listeners
+    els.checkboxes.forEach(cb => {
+      cb.addEventListener('change', handleCheckboxChange);
+    });
+
+    if (els.priceMin) els.priceMin.addEventListener('change', handlePriceChange);
+    if (els.priceMax) els.priceMax.addEventListener('change', handlePriceChange);
+    if (els.sortSelect) els.sortSelect.addEventListener('change', handleSortChange);
+    if (els.clearBtn) els.clearBtn.addEventListener('click', clearAllFilters);
+
+    if (els.drawerTrigger) els.drawerTrigger.addEventListener('click', openDrawer);
+    if (els.drawerClose) els.drawerClose.addEventListener('click', closeDrawer);
+    if (els.drawerOverlay) els.drawerOverlay.addEventListener('click', closeDrawer);
+
+    // Keyboard navigation for drawer
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && els.drawer?.classList.contains('active')) {
+        closeDrawer();
+      }
+    });
+
+    // Initialize
+    initFromURL();
+    initCardInteractions();
+    initLazyLoad();
+
+    // Load more button
+    if (els.loadMoreBtn) {
+      els.loadMoreBtn.addEventListener('click', () => {
+        state.page++;
+        // Implement pagination fetch here
+        console.log('Load more clicked - page:', state.page);
+      });
+    }
+
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Fixed Filters Product List",
+  "tag": "section",
+  "class": "section-fixed-filters-product-list",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "コレクション設定"
+    },
+    {
+      "type": "collection",
+      "id": "eg_ffpl_collection",
+      "label": "表示コレクション"
+    },
+    {
+      "type": "range",
+      "id": "eg_ffpl_products_per_page",
+      "min": 12,
+      "max": 48,
+      "step": 6,
+      "label": "1ページあたりの商品数",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "eg_ffpl_default_sort",
+      "label": "デフォルト並び替え",
+      "options": [
+        { "value": "manual", "label": "おすすめ順" },
+        { "value": "best-selling", "label": "人気順" },
+        { "value": "title-ascending", "label": "名前: A-Z" },
+        { "value": "title-descending", "label": "名前: Z-A" },
+        { "value": "price-ascending", "label": "価格: 安い順" },
+        { "value": "price-descending", "label": "価格: 高い順" },
+        { "value": "created-descending", "label": "新着順" }
+      ],
+      "default": "manual"
+    },
+    {
+      "type": "select",
+      "id": "eg_ffpl_load_more",
+      "label": "「もっと見る」タイプ",
+      "options": [
+        { "value": "button", "label": "ボタン" },
+        { "value": "infinite", "label": "無限スクロール" }
+      ],
+      "default": "button"
+    },
+    {
+      "type": "header",
+      "content": "カラー設定"
+    },
+    {
+      "type": "color",
+      "id": "eg_ffpl_theme_color",
+      "label": "テーマカラー",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "color",
+      "id": "eg_ffpl_accent_color",
+      "label": "アクセントカラー",
+      "default": "#0071e3"
+    },
+    {
+      "type": "color",
+      "id": "eg_ffpl_bg_color",
+      "label": "背景色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "eg_ffpl_card_bg",
+      "label": "カード背景色",
+      "default": "#f5f5f7"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "checkbox_filter",
+      "name": "チェックボックスフィルター",
+      "limit": 20,
+      "settings": [
+        {
+          "type": "text",
+          "id": "eg_ffpl_filter_label",
+          "label": "フィルター名",
+          "default": "ブランド"
+        },
+        {
+          "type": "text",
+          "id": "eg_ffpl_filter_key",
+          "label": "フィルターキー（Shopifyオプション名）",
+          "info": "例: Brand, Size, Color",
+          "default": "Brand"
+        },
+        {
+          "type": "textarea",
+          "id": "eg_ffpl_filter_values",
+          "label": "フィルター値（カンマ区切り）",
+          "info": "例: Apple, Dell, HP, Lenovo",
+          "default": "Apple, Dell, HP"
+        }
+      ]
+    },
+    {
+      "type": "price_range",
+      "name": "価格範囲フィルター",
+      "limit": 1,
+      "settings": []
+    }
+  ],
+  "presets": [
+    {
+      "name": "Fixed Filters Product List",
+      "blocks": [
+        {
+          "type": "checkbox_filter",
+          "settings": {
+            "eg_ffpl_filter_label": "ブランド",
+            "eg_ffpl_filter_key": "Brand",
+            "eg_ffpl_filter_values": "Apple, Dell, HP, Lenovo"
+          }
+        },
+        {
+          "type": "price_range"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

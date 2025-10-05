@@ -1,0 +1,279 @@
+{% comment %}
+  Product Card for Fixed Filters Product List
+  Renders a single product card with:
+  - Image (hover swap, lazy loading, srcset)
+  - Title + Price
+  - Size buttons (if available)
+  - Color swatches (if available)
+  - Spec badges (from metafields or tags)
+  - Add to cart button
+{% endcomment %}
+
+{%- liquid
+  assign card_id = 'eg-ffpl-card-' | append: product.id | append: '-' | append: section_id
+  assign first_available_variant = product.selected_or_first_available_variant
+  assign second_image = product.images[1]
+
+  # Find Size and Color options
+  assign size_option = null
+  assign color_option = null
+
+  for option in product.options_with_values
+    if option.name == 'Size' or option.name == 'サイズ'
+      assign size_option = option
+    elsif option.name == 'Color' or option.name == 'カラー'
+      assign color_option = option
+    endif
+  endfor
+
+  # Get specs from metafields or tags
+  assign specs = product.metafields.tech
+  assign spec_array = product.tags | where_exp: 'tag', 'tag contains "spec:"' | split: 'spec:' | slice: 1, 10
+-%}
+
+<article
+  id="{{ card_id }}"
+  class="eg-ffpl__card"
+  data-product-id="{{ product.id }}"
+  role="listitem"
+>
+  {%- comment -%} Image {%- endcomment -%}
+  <div class="eg-ffpl__card-image-wrapper">
+    {%- if product.featured_image -%}
+      <img
+        class="eg-ffpl__card-image"
+        src="{{ product.featured_image | image_url: width: 600 }}"
+        srcset="
+          {{ product.featured_image | image_url: width: 300 }} 300w,
+          {{ product.featured_image | image_url: width: 600 }} 600w,
+          {{ product.featured_image | image_url: width: 900 }} 900w
+        "
+        sizes="(max-width: 768px) 50vw, 300px"
+        alt="{{ product.featured_image.alt | escape }}"
+        loading="lazy"
+        width="600"
+        height="{{ 600 | divided_by: product.featured_image.aspect_ratio | ceil }}"
+      >
+      {%- if second_image -%}
+        <img
+          class="eg-ffpl__card-image eg-ffpl__card-image--hover"
+          src="{{ second_image | image_url: width: 600 }}"
+          alt="{{ second_image.alt | escape }}"
+          loading="lazy"
+          width="600"
+          height="{{ 600 | divided_by: second_image.aspect_ratio | ceil }}"
+        >
+      {%- endif -%}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'eg-ffpl__card-image' }}
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} Title {%- endcomment -%}
+  <h3 class="eg-ffpl__card-title">
+    <a href="{{ product.url }}">{{ product.title }}</a>
+  </h3>
+
+  {%- comment -%} Price {%- endcomment -%}
+  <div class="eg-ffpl__card-price">
+    {%- if product.compare_at_price > product.price -%}
+      <span class="eg-ffpl__card-price--sale">
+        {{ product.price | money }}
+      </span>
+      <span class="eg-ffpl__card-price--compare">
+        {{ product.compare_at_price | money }}
+      </span>
+    {%- else -%}
+      <span class="eg-ffpl__card-price--regular">
+        {{ product.price | money }}
+      </span>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} Spec Badges {%- endcomment -%}
+  {%- if specs or spec_array.size > 0 -%}
+    <div class="eg-ffpl__card-specs" aria-label="製品仕様">
+      {%- if specs.cpu -%}
+        <span class="eg-ffpl__spec-badge">{{ specs.cpu }}</span>
+      {%- endif -%}
+      {%- if specs.gpu -%}
+        <span class="eg-ffpl__spec-badge">{{ specs.gpu }}</span>
+      {%- endif -%}
+      {%- if specs.ram -%}
+        <span class="eg-ffpl__spec-badge">{{ specs.ram }}</span>
+      {%- endif -%}
+      {%- if specs.storage -%}
+        <span class="eg-ffpl__spec-badge">{{ specs.storage }}</span>
+      {%- endif -%}
+      {%- if specs.display_size -%}
+        <span class="eg-ffpl__spec-badge">{{ specs.display_size }}</span>
+      {%- endif -%}
+      {%- if specs.key_count -%}
+        <span class="eg-ffpl__spec-badge">{{ specs.key_count }}キー</span>
+      {%- endif -%}
+
+      {%- comment -%} Fallback: parse from tags {%- endcomment -%}
+      {%- if specs == blank -%}
+        {%- for tag in product.tags -%}
+          {%- if tag contains 'spec:' -%}
+            {%- assign spec_value = tag | remove: 'spec:' | strip -%}
+            <span class="eg-ffpl__spec-badge">{{ spec_value }}</span>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} Size Buttons {%- endcomment -%}
+  {%- if size_option and size_option.values.size > 0 -%}
+    <div class="eg-ffpl__variant-group">
+      <span class="eg-ffpl__variant-label">サイズ</span>
+      <div class="eg-ffpl__size-buttons" role="group" aria-label="サイズ選択">
+        {%- for value in size_option.values -%}
+          {%- liquid
+            # Check if this size variant is available
+            assign is_available = false
+            for variant in product.variants
+              if variant.option1 == value or variant.option2 == value or variant.option3 == value
+                if variant.available
+                  assign is_available = true
+                  assign variant_for_size = variant
+                  break
+                endif
+              endif
+            endfor
+          -%}
+          <button
+            type="button"
+            class="eg-ffpl__size-btn{% if forloop.first %} active{% endif %}"
+            data-size="{{ value | escape }}"
+            data-variant-id="{% if is_available %}{{ variant_for_size.id }}{% endif %}"
+            {% unless is_available %}disabled{% endunless %}
+            aria-label="サイズ {{ value }}"
+            aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+          >
+            {{ value }}
+          </button>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} Color Swatches {%- endcomment -%}
+  {%- if color_option and color_option.values.size > 0 -%}
+    <div class="eg-ffpl__variant-group">
+      <span class="eg-ffpl__variant-label">カラー</span>
+      <div class="eg-ffpl__color-swatches" role="group" aria-label="カラー選択">
+        {%- for value in color_option.values -%}
+          {%- liquid
+            # Find variant for this color
+            assign is_available = false
+            assign color_image = product.featured_image
+
+            for variant in product.variants
+              assign variant_color = null
+              if variant.option1 == value
+                assign variant_color = variant.option1
+              elsif variant.option2 == value
+                assign variant_color = variant.option2
+              elsif variant.option3 == value
+                assign variant_color = variant.option3
+              endif
+
+              if variant_color == value
+                if variant.available
+                  assign is_available = true
+                endif
+                if variant.featured_image
+                  assign color_image = variant.featured_image
+                endif
+                break
+              endif
+            endfor
+
+            # Generate color code from name (fallback)
+            assign color_code = '#cccccc'
+            assign value_lower = value | downcase
+
+            if value_lower contains 'black' or value_lower contains 'ブラック'
+              assign color_code = '#000000'
+            elsif value_lower contains 'white' or value_lower contains 'ホワイト'
+              assign color_code = '#ffffff'
+            elsif value_lower contains 'red' or value_lower contains 'レッド'
+              assign color_code = '#ff0000'
+            elsif value_lower contains 'blue' or value_lower contains 'ブルー'
+              assign color_code = '#0000ff'
+            elsif value_lower contains 'green' or value_lower contains 'グリーン'
+              assign color_code = '#00ff00'
+            elsif value_lower contains 'gray' or value_lower contains 'grey' or value_lower contains 'グレー'
+              assign color_code = '#808080'
+            elsif value_lower contains 'silver' or value_lower contains 'シルバー'
+              assign color_code = '#c0c0c0'
+            elsif value_lower contains 'gold' or value_lower contains 'ゴールド'
+              assign color_code = '#ffd700'
+            endif
+          -%}
+          <button
+            type="button"
+            class="eg-ffpl__color-swatch{% if forloop.first %} active{% endif %}"
+            style="background-color: {{ color_code }};"
+            data-color="{{ value | escape }}"
+            data-image-src="{{ color_image | image_url: width: 600 }}"
+            {% unless is_available %}disabled{% endunless %}
+            aria-label="カラー {{ value }}"
+            aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+            title="{{ value }}"
+          ></button>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} Stock Status {%- endcomment -%}
+  {%- if first_available_variant.available == false -%}
+    <p class="eg-ffpl__stock-status" style="font-size: 12px; color: #d70015; margin: 8px 0;">
+      在庫切れ
+    </p>
+  {%- elsif first_available_variant.inventory_quantity > 0 and first_available_variant.inventory_quantity <= 5 -%}
+    <p class="eg-ffpl__stock-status" style="font-size: 12px; color: #ff9500; margin: 8px 0;">
+      残り{{ first_available_variant.inventory_quantity }}点
+    </p>
+  {%- endif -%}
+
+  {%- comment -%} Add to Cart Button {%- endcomment -%}
+  <button
+    type="button"
+    class="eg-ffpl__add-to-cart"
+    data-variant-id="{{ first_available_variant.id }}"
+    data-product-id="{{ product.id }}"
+    {% unless first_available_variant.available %}disabled{% endunless %}
+    aria-label="カートに追加: {{ product.title }}"
+  >
+    {%- if first_available_variant.available -%}
+      カートに追加
+    {%- else -%}
+      在庫切れ
+    {%- endif -%}
+  </button>
+
+  {%- comment -%} Hidden data for JS {%- endcomment -%}
+  <script type="application/json" data-product-variants>
+    {
+      "variants": [
+        {%- for variant in product.variants -%}
+          {
+            "id": {{ variant.id | json }},
+            "title": {{ variant.title | json }},
+            "option1": {{ variant.option1 | json }},
+            "option2": {{ variant.option2 | json }},
+            "option3": {{ variant.option3 | json }},
+            "available": {{ variant.available | json }},
+            "price": {{ variant.price | json }},
+            "compare_at_price": {{ variant.compare_at_price | json }},
+            "featured_image": {% if variant.featured_image %}{{ variant.featured_image | image_url: width: 600 | json }}{% else %}null{% endif %}
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+</article>
