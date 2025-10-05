@@ -1,0 +1,254 @@
+{% comment %}
+  Sales Sticky CTA - 下部固定CTAバー
+  セクション略称: sscta
+
+  機能:
+  - スクロールで出現する下部固定バー
+  - 主要CTA: 「手サイズを入れて提案を見る」
+  - 副CTA: 「今すぐカスタム」
+  - アンカー連携 + config_openイベント発火
+  - モバイルは主要CTAのみ表示
+  - Apple風デザイン
+
+  使い方:
+  1. 管理画面 > テーマカスタマイズ
+  2. セクション追加 > Sales Sticky CTA
+  3. CTA設定、リンク、表示タイミング調整
+{% endcomment %}
+
+<link rel="stylesheet" href="{{ 'sales-sticky-cta.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ 'sales-sticky-cta.css' | asset_url }}"></noscript>
+
+{%- liquid
+  assign section_id = 'eg-sscta-' | append: section.id
+  assign scroll_threshold = section.settings.eg_sscta_scroll_threshold | default: 300
+  assign primary_label = section.settings.eg_sscta_primary_label | default: '手サイズを入れて提案を見る'
+  assign primary_link = section.settings.eg_sscta_primary_link
+  assign secondary_label = section.settings.eg_sscta_secondary_label | default: '今すぐカスタム'
+  assign secondary_link = section.settings.eg_sscta_secondary_link
+  assign primary_event = section.settings.eg_sscta_primary_event | default: 'config_open'
+  assign secondary_event = section.settings.eg_sscta_secondary_event
+-%}
+
+<style>
+  #{{ section_id }} {
+    --eg-sscta-bg: {{ section.settings.eg_sscta_bg }};
+    --eg-sscta-text: {{ section.settings.eg_sscta_text }};
+    --eg-sscta-primary-bg: {{ section.settings.eg_sscta_primary_bg }};
+    --eg-sscta-primary-text: {{ section.settings.eg_sscta_primary_text }};
+    --eg-sscta-secondary-text: {{ section.settings.eg_sscta_secondary_text }};
+    --eg-sscta-shadow: {{ section.settings.eg_sscta_shadow }};
+    --eg-sscta-height: {{ section.settings.eg_sscta_height }}px;
+    --eg-sscta-blur: {{ section.settings.eg_sscta_blur }}px;
+  }
+
+  @media screen and (max-width: 749px) {
+    #{{ section_id }} {
+      --eg-sscta-height: {{ section.settings.eg_sscta_height_mobile }}px;
+    }
+  }
+</style>
+
+<div
+  id="{{ section_id }}"
+  class="eg-sscta"
+  data-scroll-threshold="{{ scroll_threshold }}"
+  data-primary-event="{{ primary_event }}"
+  data-secondary-event="{{ secondary_event }}"
+  role="complementary"
+  aria-label="Sticky Call to Action"
+>
+  <div class="eg-sscta__inner">
+    <div class="eg-sscta__ctas">
+      {%- if primary_label != blank -%}
+        <a
+          href="{{ primary_link | default: '#' }}"
+          class="eg-sscta__btn eg-sscta__btn--primary"
+          data-eg-sscta-primary
+          aria-label="{{ primary_label | escape }}"
+        >
+          <span class="eg-sscta__btn-text">{{ primary_label }}</span>
+          <svg class="eg-sscta__btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      {%- endif -%}
+
+      {%- if secondary_label != blank -%}
+        <a
+          href="{{ secondary_link | default: '#' }}"
+          class="eg-sscta__btn eg-sscta__btn--secondary"
+          data-eg-sscta-secondary
+          aria-label="{{ secondary_label | escape }}"
+        >
+          <span class="eg-sscta__btn-text">{{ secondary_label }}</span>
+        </a>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.eg_sscta_show_close -%}
+      <button
+        class="eg-sscta__close"
+        data-eg-sscta-close
+        aria-label="閉じる"
+        type="button"
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    {%- endif -%}
+  </div>
+</div>
+
+<script src="{{ 'sales-sticky-cta.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Sales Sticky CTA",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "コンテンツ"
+    },
+    {
+      "type": "text",
+      "id": "eg_sscta_primary_label",
+      "label": "主要CTAラベル",
+      "default": "手サイズを入れて提案を見る",
+      "info": "メインボタンのテキスト"
+    },
+    {
+      "type": "url",
+      "id": "eg_sscta_primary_link",
+      "label": "主要CTAリンク",
+      "info": "アンカーリンク（例: #config）またはURL"
+    },
+    {
+      "type": "text",
+      "id": "eg_sscta_primary_event",
+      "label": "主要CTAイベント",
+      "default": "config_open",
+      "info": "クリック時に発火するカスタムイベント名（空欄可）"
+    },
+    {
+      "type": "text",
+      "id": "eg_sscta_secondary_label",
+      "label": "副CTAラベル",
+      "default": "今すぐカスタム",
+      "info": "サブボタンのテキスト（モバイルは非表示）"
+    },
+    {
+      "type": "url",
+      "id": "eg_sscta_secondary_link",
+      "label": "副CTAリンク"
+    },
+    {
+      "type": "text",
+      "id": "eg_sscta_secondary_event",
+      "label": "副CTAイベント",
+      "info": "クリック時に発火するカスタムイベント名（空欄可）"
+    },
+    {
+      "type": "header",
+      "content": "表示設定"
+    },
+    {
+      "type": "range",
+      "id": "eg_sscta_scroll_threshold",
+      "min": 0,
+      "max": 1000,
+      "step": 50,
+      "unit": "px",
+      "label": "表示開始スクロール量",
+      "default": 300,
+      "info": "この距離スクロールしたら表示"
+    },
+    {
+      "type": "checkbox",
+      "id": "eg_sscta_show_close",
+      "label": "閉じるボタンを表示",
+      "default": true,
+      "info": "×ボタンでバーを非表示にできる"
+    },
+    {
+      "type": "header",
+      "content": "スタイル"
+    },
+    {
+      "type": "range",
+      "id": "eg_sscta_height",
+      "min": 60,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "バー高さ（デスクトップ）",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "eg_sscta_height_mobile",
+      "min": 56,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "バー高さ（モバイル）",
+      "default": 72
+    },
+    {
+      "type": "color",
+      "id": "eg_sscta_bg",
+      "label": "背景色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "eg_sscta_text",
+      "label": "テキスト色",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "color",
+      "id": "eg_sscta_primary_bg",
+      "label": "主要CTA背景色",
+      "default": "#0071e3"
+    },
+    {
+      "type": "color",
+      "id": "eg_sscta_primary_text",
+      "label": "主要CTAテキスト色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "eg_sscta_secondary_text",
+      "label": "副CTAテキスト色",
+      "default": "#0071e3"
+    },
+    {
+      "type": "color",
+      "id": "eg_sscta_shadow",
+      "label": "影の色",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "eg_sscta_blur",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "背景ぼかし量",
+      "default": 20,
+      "info": "背景のblur効果（frosted glass）"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sales Sticky CTA"
+    }
+  ]
+}
+{% endschema %}

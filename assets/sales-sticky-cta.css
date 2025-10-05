@@ -1,0 +1,255 @@
+/* ============================================
+   Sales Sticky CTA
+   セクション略称: sscta
+   - 下部固定CTAバー
+   - スクロールで出現
+   - Apple風デザイン
+   ============================================ */
+
+/* ========== Container ========== */
+.eg-sscta {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: var(--eg-sscta-height);
+  background: var(--eg-sscta-bg);
+  color: var(--eg-sscta-text);
+  box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(var(--eg-sscta-blur));
+  -webkit-backdrop-filter: blur(var(--eg-sscta-blur));
+  z-index: 1000;
+
+  /* 初期状態: 非表示 */
+  transform: translateY(100%);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 0.4s;
+}
+
+/* 表示状態 */
+.eg-sscta.is-visible {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 非表示状態（ユーザーが閉じた） */
+.eg-sscta.is-hidden {
+  transform: translateY(100%);
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* ========== Inner Container ========== */
+.eg-sscta__inner {
+  max-width: 1200px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  position: relative;
+}
+
+/* ========== CTA Buttons Container ========== */
+.eg-sscta__ctas {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  flex: 1;
+  justify-content: center;
+}
+
+/* ========== Buttons ========== */
+.eg-sscta__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 1.4rem 2.8rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 0.8rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  cursor: pointer;
+  border: none;
+  letter-spacing: -0.01em;
+}
+
+.eg-sscta__btn:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+/* 主要CTA */
+.eg-sscta__btn--primary {
+  background-color: var(--eg-sscta-primary-bg);
+  color: var(--eg-sscta-primary-text);
+  box-shadow: 0 2px 8px rgba(0, 113, 227, 0.25);
+}
+
+.eg-sscta__btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 113, 227, 0.35);
+}
+
+.eg-sscta__btn--primary:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(0, 113, 227, 0.2);
+}
+
+/* 副CTA */
+.eg-sscta__btn--secondary {
+  background-color: transparent;
+  color: var(--eg-sscta-secondary-text);
+  border: 1px solid currentColor;
+  padding: 1.3rem 2.7rem;
+}
+
+.eg-sscta__btn--secondary:hover {
+  background-color: rgba(0, 113, 227, 0.08);
+}
+
+.eg-sscta__btn--secondary:active {
+  background-color: rgba(0, 113, 227, 0.15);
+}
+
+/* ボタンアイコン */
+.eg-sscta__btn-icon {
+  width: 1.6rem;
+  height: 1.6rem;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.eg-sscta__btn--primary:hover .eg-sscta__btn-icon {
+  transform: translateX(4px);
+}
+
+/* ========== Close Button ========== */
+.eg-sscta__close {
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.6rem;
+  height: 3.6rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--eg-sscta-text);
+  opacity: 0.6;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.eg-sscta__close:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.eg-sscta__close:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.eg-sscta__close:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ========== Mobile Responsive ========== */
+@media screen and (max-width: 749px) {
+  .eg-sscta__inner {
+    padding: 0 1.6rem;
+  }
+
+  /* モバイルは副CTAを非表示 */
+  .eg-sscta__btn--secondary {
+    display: none;
+  }
+
+  .eg-sscta__ctas {
+    gap: 1.2rem;
+  }
+
+  .eg-sscta__btn {
+    padding: 1.2rem 2.4rem;
+    font-size: 1.4rem;
+  }
+
+  .eg-sscta__btn--primary {
+    width: 100%;
+    max-width: 32rem;
+  }
+
+  .eg-sscta__close {
+    position: relative;
+    right: auto;
+    transform: none;
+    width: 3.2rem;
+    height: 3.2rem;
+    flex-shrink: 0;
+  }
+
+  .eg-sscta__close:active {
+    transform: scale(0.95);
+  }
+}
+
+/* タブレット */
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  .eg-sscta__btn {
+    padding: 1.3rem 2.4rem;
+    font-size: 1.4rem;
+  }
+}
+
+/* ========== Accessibility ========== */
+@media (prefers-reduced-motion: reduce) {
+  .eg-sscta,
+  .eg-sscta__btn,
+  .eg-sscta__btn-icon,
+  .eg-sscta__close {
+    transition: none;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .eg-sscta {
+    border-top: 2px solid currentColor;
+  }
+
+  .eg-sscta__btn--primary {
+    border: 2px solid transparent;
+  }
+
+  .eg-sscta__btn--secondary {
+    border-width: 2px;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .eg-sscta {
+    box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* ========== Print ========== */
+@media print {
+  .eg-sscta {
+    display: none;
+  }
+}
