@@ -1,0 +1,408 @@
+{% comment %}
+  Sales Assurance - 安心保証セクション
+
+  使い方：
+  1. 管理画面 > オンラインストア > テーマ > カスタマイズ
+  2. 「セクションを追加」> 「Sales Assurance」を選択
+  3. 結果保証、サポート、リードタイムを設定
+  4. FAQブロックを追加（反復可能）
+
+  機能：
+  - 3カラムカード（結果保証・サポート・リードタイム）
+  - CTQ未達時の無料再調整保証
+  - オンライン角度合わせサポート15分
+  - 実績納期（中央値・90%範囲）を小さく併記
+  - FAQアコーディオン（2-3個、schema反復可）
+  - レスポンシブ対応
+  - アクセシビリティ対応
+{% endcomment %}
+
+{{ 'sales-assurance.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sales-assurance.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign section_id = 'eg-sa-' | append: section.id
+-%}
+
+{%- style -%}
+  #{{ section_id }} {
+    --eg-sa-bg: {{ section.settings.eg_sa_bg }};
+    --eg-sa-card-bg: {{ section.settings.eg_sa_card_bg }};
+    --eg-sa-fg: {{ section.settings.eg_sa_fg }};
+    --eg-sa-accent: {{ section.settings.eg_sa_accent }};
+    --eg-sa-border: {{ section.settings.eg_sa_border }};
+    --eg-sa-padding-y: {{ section.settings.eg_sa_padding_y }}px;
+    --eg-sa-padding-x-mobile: {{ section.settings.eg_sa_padding_x_mobile }}px;
+    --eg-sa-padding-x-desktop: {{ section.settings.eg_sa_padding_x_desktop }}px;
+    --eg-sa-max-width: {{ section.settings.eg_sa_max_width }}px;
+  }
+{%- endstyle -%}
+
+<section
+  id="{{ section_id }}"
+  class="eg-sa"
+  role="region"
+  aria-label="安心保証"
+>
+  <div class="eg-sa__container">
+
+    {%- comment -%} Section Header {%- endcomment -%}
+    {%- if section.settings.eg_sa_heading != blank -%}
+      <header class="eg-sa__header">
+        <h2 class="eg-sa__heading">{{ section.settings.eg_sa_heading }}</h2>
+        {%- if section.settings.eg_sa_subtext != blank -%}
+          <p class="eg-sa__subtext">{{ section.settings.eg_sa_subtext }}</p>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    {%- comment -%} 3-Column Cards {%- endcomment -%}
+    <div class="eg-sa__cards">
+
+      {%- comment -%} Card 1: 結果保証（CTQ未達は無料再調整） {%- endcomment -%}
+      <div class="eg-sa__card">
+        <div class="eg-sa__card-icon" aria-hidden="true">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 2L19.09 10.26L28 11.27L22 17.14L23.18 26.02L16 21.77L8.82 26.02L10 17.14L4 11.27L12.91 10.26L16 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </div>
+        <h3 class="eg-sa__card-title">{{ section.settings.eg_sa_card1_title | default: '結果保証' }}</h3>
+        <p class="eg-sa__card-text">{{ section.settings.eg_sa_card1_text | default: 'CTQ未達時は無料で再調整（スペーサ追加・ネジ位置変更）。安心してお試しいただけます。' }}</p>
+        {%- if section.settings.eg_sa_card1_note != blank -%}
+          <p class="eg-sa__card-note">{{ section.settings.eg_sa_card1_note }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Card 2: サポート（オンライン角度合わせ15分） {%- endcomment -%}
+      <div class="eg-sa__card">
+        <div class="eg-sa__card-icon" aria-hidden="true">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M28 22C28 23.0609 27.5786 24.0783 26.8284 24.8284C26.0783 25.5786 25.0609 26 24 26H8C6.93913 26 5.92172 25.5786 5.17157 24.8284C4.42143 24.0783 4 23.0609 4 22V10C4 8.93913 4.42143 7.92172 5.17157 7.17157C5.92172 6.42143 6.93913 6 8 6H24C25.0609 6 26.0783 6.42143 26.8284 7.17157C27.5786 7.92172 28 8.93913 28 10V22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 14L16 18L22 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3 class="eg-sa__card-title">{{ section.settings.eg_sa_card2_title | default: 'オンラインサポート' }}</h3>
+        <p class="eg-sa__card-text">{{ section.settings.eg_sa_card2_text | default: '角度合わせをオンラインで15分サポート。初めての方も安心して設定できます。' }}</p>
+        {%- if section.settings.eg_sa_card2_note != blank -%}
+          <p class="eg-sa__card-note">{{ section.settings.eg_sa_card2_note }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Card 3: リードタイム（X-Y営業日） {%- endcomment -%}
+      <div class="eg-sa__card">
+        <div class="eg-sa__card-icon" aria-hidden="true">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2"/>
+            <path d="M16 8V16L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3 class="eg-sa__card-title">{{ section.settings.eg_sa_card3_title | default: 'リードタイム' }}</h3>
+        <p class="eg-sa__card-text">
+          {%- if section.settings.eg_sa_leadtime_min != blank and section.settings.eg_sa_leadtime_max != blank -%}
+            {{ section.settings.eg_sa_leadtime_min }}〜{{ section.settings.eg_sa_leadtime_max }}営業日でお届け
+          {%- else -%}
+            {{ section.settings.eg_sa_card3_text | default: '7〜14営業日でお届け' }}
+          {%- endif -%}
+        </p>
+        {%- if section.settings.eg_sa_show_stats -%}
+          <p class="eg-sa__card-stats">
+            実績：中央値{{ section.settings.eg_sa_median_days | default: 9 }}日、90%が{{ section.settings.eg_sa_p90_days | default: 12 }}日以内
+          </p>
+        {%- endif -%}
+        {%- if section.settings.eg_sa_card3_note != blank -%}
+          <p class="eg-sa__card-note">{{ section.settings.eg_sa_card3_note }}</p>
+        {%- endif -%}
+      </div>
+
+    </div>
+
+    {%- comment -%} FAQ Accordion {%- endcomment -%}
+    {%- if section.blocks.size > 0 -%}
+      <div class="eg-sa__faq">
+        <h3 class="eg-sa__faq-heading">{{ section.settings.eg_sa_faq_heading | default: 'よくある質問' }}</h3>
+        <div class="eg-sa__faq-list">
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+              {%- when 'faq' -%}
+                <details
+                  class="eg-sa__faq-item"
+                  id="eg-sa-faq-{{ block.id }}"
+                  {{ block.shopify_attributes }}
+                >
+                  <summary class="eg-sa__faq-question" aria-expanded="false">
+                    <span class="eg-sa__faq-question-text">{{ block.settings.eg_sa_faq_question }}</span>
+                    <svg class="eg-sa__faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </summary>
+                  <div class="eg-sa__faq-answer">
+                    {{ block.settings.eg_sa_faq_answer }}
+                  </div>
+                </details>
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Sales Assurance",
+  "tag": "section",
+  "class": "section-sales-assurance",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eg_sa_heading",
+      "label": "見出し",
+      "default": "安心してご購入いただける3つの保証"
+    },
+    {
+      "type": "textarea",
+      "id": "eg_sa_subtext",
+      "label": "サブテキスト",
+      "default": "ErgoGainは結果保証・サポート体制・納期実績で安心をお届けします"
+    },
+    {
+      "type": "header",
+      "content": "Card 1: 結果保証"
+    },
+    {
+      "type": "text",
+      "id": "eg_sa_card1_title",
+      "label": "タイトル",
+      "default": "結果保証"
+    },
+    {
+      "type": "textarea",
+      "id": "eg_sa_card1_text",
+      "label": "本文",
+      "default": "CTQ未達時は無料で再調整（スペーサ追加・ネジ位置変更）。安心してお試しいただけます。"
+    },
+    {
+      "type": "text",
+      "id": "eg_sa_card1_note",
+      "label": "注釈（任意）",
+      "placeholder": "※到着後14日間有効"
+    },
+    {
+      "type": "header",
+      "content": "Card 2: サポート"
+    },
+    {
+      "type": "text",
+      "id": "eg_sa_card2_title",
+      "label": "タイトル",
+      "default": "オンラインサポート"
+    },
+    {
+      "type": "textarea",
+      "id": "eg_sa_card2_text",
+      "label": "本文",
+      "default": "角度合わせをオンラインで15分サポート。初めての方も安心して設定できます。"
+    },
+    {
+      "type": "text",
+      "id": "eg_sa_card2_note",
+      "label": "注釈（任意）",
+      "placeholder": "※予約制（平日10-18時）"
+    },
+    {
+      "type": "header",
+      "content": "Card 3: リードタイム"
+    },
+    {
+      "type": "text",
+      "id": "eg_sa_card3_title",
+      "label": "タイトル",
+      "default": "リードタイム"
+    },
+    {
+      "type": "text",
+      "id": "eg_sa_leadtime_min",
+      "label": "最短日数（営業日）",
+      "default": "7"
+    },
+    {
+      "type": "text",
+      "id": "eg_sa_leadtime_max",
+      "label": "最長日数（営業日）",
+      "default": "14"
+    },
+    {
+      "type": "textarea",
+      "id": "eg_sa_card3_text",
+      "label": "本文（リードタイム未設定時）",
+      "default": "7〜14営業日でお届け"
+    },
+    {
+      "type": "checkbox",
+      "id": "eg_sa_show_stats",
+      "label": "実績納期を表示",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "eg_sa_median_days",
+      "label": "実績中央値（日）",
+      "default": "9"
+    },
+    {
+      "type": "text",
+      "id": "eg_sa_p90_days",
+      "label": "実績90%範囲（日）",
+      "default": "12"
+    },
+    {
+      "type": "text",
+      "id": "eg_sa_card3_note",
+      "label": "注釈（任意）",
+      "placeholder": "※受注生産のため変動あり"
+    },
+    {
+      "type": "header",
+      "content": "FAQ Section"
+    },
+    {
+      "type": "text",
+      "id": "eg_sa_faq_heading",
+      "label": "FAQ見出し",
+      "default": "よくある質問"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "eg_sa_padding_y",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "上下パディング",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "eg_sa_padding_x_mobile",
+      "min": 16,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "label": "左右パディング（モバイル）",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "eg_sa_padding_x_desktop",
+      "min": 20,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "左右パディング（デスクトップ）",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "eg_sa_max_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "最大幅",
+      "default": 1200
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "eg_sa_bg",
+      "label": "背景色",
+      "default": "#f5f5f7"
+    },
+    {
+      "type": "color",
+      "id": "eg_sa_card_bg",
+      "label": "カード背景色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "eg_sa_fg",
+      "label": "テキスト色",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "color",
+      "id": "eg_sa_accent",
+      "label": "アクセント色",
+      "default": "#0071e3"
+    },
+    {
+      "type": "color",
+      "id": "eg_sa_border",
+      "label": "ボーダー色",
+      "default": "#d2d2d7"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ",
+      "settings": [
+        {
+          "type": "text",
+          "id": "eg_sa_faq_question",
+          "label": "質問",
+          "default": "返品はできますか？"
+        },
+        {
+          "type": "richtext",
+          "id": "eg_sa_faq_answer",
+          "label": "回答",
+          "default": "<p>未使用品に限り、到着後7日以内であれば返品を承ります。詳細は返品ポリシーをご確認ください。</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sales Assurance",
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "eg_sa_faq_question": "返品はできますか？",
+            "eg_sa_faq_answer": "<p>未使用品に限り、到着後7日以内であれば返品を承ります。詳細は返品ポリシーをご確認ください。</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "eg_sa_faq_question": "納期が遅れることはありますか？",
+            "eg_sa_faq_answer": "<p>受注生産のため、繁忙期や部材調達状況により遅れる場合があります。ご注文時に最新の納期目安をお知らせします。</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "eg_sa_faq_question": "角度調整に工具は必要ですか？",
+            "eg_sa_faq_answer": "<p>六角レンチ（付属）のみで調整可能です。特殊な工具は不要で、初めての方でも簡単に調整できます。</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

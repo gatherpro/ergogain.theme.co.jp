@@ -1,0 +1,322 @@
+/* ============================================================
+   Sales Assurance Section - Dedicated Styles
+   セクション略称: sa (sales-assurance)
+   名前空間: eg-sa-*
+   ============================================================ */
+
+/* ============================================================
+   Container & Layout
+   ============================================================ */
+.eg-sa {
+  background-color: var(--eg-sa-bg, #f5f5f7);
+  color: var(--eg-sa-fg, #1d1d1f);
+  padding: var(--eg-sa-padding-y, 64px) var(--eg-sa-padding-x-mobile, 20px);
+}
+
+@media screen and (min-width: 750px) {
+  .eg-sa {
+    padding-left: var(--eg-sa-padding-x-desktop, 40px);
+    padding-right: var(--eg-sa-padding-x-desktop, 40px);
+  }
+}
+
+.eg-sa__container {
+  max-width: var(--eg-sa-max-width, 1200px);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   Section Header
+   ============================================================ */
+.eg-sa__header {
+  text-align: center;
+  margin-bottom: 4.8rem;
+}
+
+.eg-sa__heading {
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0 0 1.2rem;
+  color: var(--eg-sa-fg);
+}
+
+@media screen and (max-width: 749px) {
+  .eg-sa__heading {
+    font-size: 2.4rem;
+  }
+}
+
+.eg-sa__subtext {
+  font-size: 1.6rem;
+  line-height: 1.6;
+  color: var(--eg-sa-fg);
+  opacity: 0.8;
+  margin: 0;
+  max-width: 60rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media screen and (max-width: 749px) {
+  .eg-sa__subtext {
+    font-size: 1.4rem;
+  }
+}
+
+/* ============================================================
+   3-Column Cards
+   ============================================================ */
+.eg-sa__cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.4rem;
+  margin-bottom: 6.4rem;
+}
+
+@media screen and (min-width: 750px) {
+  .eg-sa__cards {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3.2rem;
+  }
+}
+
+.eg-sa__card {
+  background-color: var(--eg-sa-card-bg, #ffffff);
+  border: 1px solid var(--eg-sa-border, #d2d2d7);
+  border-radius: 1.2rem;
+  padding: 3.2rem 2.4rem;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.eg-sa__card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.eg-sa__card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 6.4rem;
+  height: 6.4rem;
+  margin: 0 auto 2rem;
+  color: var(--eg-sa-accent, #0071e3);
+}
+
+.eg-sa__card-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.eg-sa__card-title {
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0 0 1.2rem;
+  color: var(--eg-sa-fg);
+}
+
+@media screen and (max-width: 749px) {
+  .eg-sa__card-title {
+    font-size: 1.8rem;
+  }
+}
+
+.eg-sa__card-text {
+  font-size: 1.5rem;
+  line-height: 1.6;
+  color: var(--eg-sa-fg);
+  opacity: 0.85;
+  margin: 0 0 1.2rem;
+}
+
+@media screen and (max-width: 749px) {
+  .eg-sa__card-text {
+    font-size: 1.4rem;
+  }
+}
+
+.eg-sa__card-stats {
+  font-size: 1.3rem;
+  line-height: 1.5;
+  color: var(--eg-sa-fg);
+  opacity: 0.7;
+  margin: 0 0 0.8rem;
+  font-style: italic;
+}
+
+.eg-sa__card-note {
+  font-size: 1.2rem;
+  line-height: 1.5;
+  color: var(--eg-sa-fg);
+  opacity: 0.6;
+  margin: 0;
+}
+
+/* ============================================================
+   FAQ Accordion
+   ============================================================ */
+.eg-sa__faq {
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+.eg-sa__faq-heading {
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+  margin: 0 0 3.2rem;
+  color: var(--eg-sa-fg);
+}
+
+@media screen and (max-width: 749px) {
+  .eg-sa__faq-heading {
+    font-size: 2rem;
+  }
+}
+
+.eg-sa__faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.eg-sa__faq-item {
+  background-color: var(--eg-sa-card-bg, #ffffff);
+  border: 1px solid var(--eg-sa-border, #d2d2d7);
+  border-radius: 1.2rem;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+.eg-sa__faq-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.eg-sa__faq-item[open] {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.eg-sa__faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.6rem;
+  padding: 2rem 2.4rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--eg-sa-fg);
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  transition: background-color 0.2s ease;
+}
+
+.eg-sa__faq-question::-webkit-details-marker {
+  display: none;
+}
+
+.eg-sa__faq-question:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.eg-sa__faq-question:focus {
+  outline: 2px solid var(--eg-sa-accent, #0071e3);
+  outline-offset: -2px;
+}
+
+@media screen and (max-width: 749px) {
+  .eg-sa__faq-question {
+    font-size: 1.5rem;
+    padding: 1.6rem 2rem;
+  }
+}
+
+.eg-sa__faq-question-text {
+  flex: 1;
+}
+
+.eg-sa__faq-icon {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--eg-sa-accent, #0071e3);
+}
+
+.eg-sa__faq-item[open] .eg-sa__faq-icon {
+  transform: rotate(180deg);
+}
+
+.eg-sa__faq-answer {
+  padding: 0 2.4rem 2.4rem;
+  font-size: 1.5rem;
+  line-height: 1.7;
+  color: var(--eg-sa-fg);
+  opacity: 0.85;
+  animation: eg-sa-faq-slidedown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media screen and (max-width: 749px) {
+  .eg-sa__faq-answer {
+    font-size: 1.4rem;
+    padding: 0 2rem 2rem;
+  }
+}
+
+.eg-sa__faq-answer p {
+  margin: 0 0 1.2rem;
+}
+
+.eg-sa__faq-answer p:last-child {
+  margin-bottom: 0;
+}
+
+.eg-sa__faq-answer a {
+  color: var(--eg-sa-accent, #0071e3);
+  text-decoration: underline;
+  transition: opacity 0.2s ease;
+}
+
+.eg-sa__faq-answer a:hover {
+  opacity: 0.8;
+}
+
+/* ============================================================
+   Animations
+   ============================================================ */
+@keyframes eg-sa-faq-slidedown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================
+   Accessibility & Motion Preferences
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .eg-sa__card,
+  .eg-sa__faq-item,
+  .eg-sa__faq-icon,
+  .eg-sa__faq-answer {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Focus visible styles for keyboard navigation */
+.eg-sa__card:focus-visible,
+.eg-sa__faq-question:focus-visible {
+  outline: 2px solid var(--eg-sa-accent, #0071e3);
+  outline-offset: 4px;
+}
