@@ -1,0 +1,452 @@
+/**
+ * Sales Onepager - Apple風グローバルスタイル
+ * - Apple風タイポグラフィ（clamp + 最適な行間）
+ * - 配色 #fff / #111 + accent
+ * - ボタン角丸16px薄影
+ * - カード微小シャドウ
+ * - セクション間隔 SP40-56px / PC80-120px
+ * - Hero 2カラム→SP縦積み
+ * - 画像 object-fit:cover, max-inline-size:100%
+ */
+
+/* ========================================
+   CSS Variables (Custom Properties)
+======================================== */
+:root {
+  /* Colors */
+  --sop-bg: #ffffff;
+  --sop-fg: #111111;
+  --sop-accent: #0066cc;
+  --sop-muted: #6e6e73;
+  --sop-border: #d2d2d7;
+
+  /* Typography */
+  --sop-h1-size: clamp(28px, 4vw, 44px);
+  --sop-h2-size: clamp(20px, 3vw, 28px);
+  --sop-h3-size: clamp(18px, 2.5vw, 24px);
+  --sop-body-size: clamp(16px, 1.5vw, 18px);
+  --sop-small-size: 14px;
+
+  /* Spacing */
+  --sop-section-gap-mobile: clamp(40px, 10vw, 56px);
+  --sop-section-gap-desktop: clamp(80px, 12vw, 120px);
+  --sop-content-max-width: 1200px;
+  --sop-narrow-max-width: 800px;
+
+  /* Effects */
+  --sop-border-radius: 16px;
+  --sop-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --sop-button-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --sop-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================
+   Base Reset & Typography
+======================================== */
+* {
+  box-sizing: border-box;
+}
+
+.sop-page {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  font-size: var(--sop-body-size);
+  line-height: 1.6;
+  color: var(--sop-fg);
+  background-color: var(--sop-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings */
+.sop-h1 {
+  font-size: var(--sop-h1-size);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0 0 1rem;
+  color: var(--sop-fg);
+}
+
+.sop-h2 {
+  font-size: var(--sop-h2-size);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.875rem;
+  color: var(--sop-fg);
+}
+
+.sop-h3 {
+  font-size: var(--sop-h3-size);
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0 0 0.75rem;
+  color: var(--sop-fg);
+}
+
+.sop-body,
+.sop-p {
+  font-size: var(--sop-body-size);
+  line-height: 1.6;
+  margin: 0 0 1rem;
+  color: var(--sop-fg);
+}
+
+.sop-small {
+  font-size: var(--sop-small-size);
+  line-height: 1.5;
+  color: var(--sop-muted);
+}
+
+/* Muted text */
+.sop-muted {
+  color: var(--sop-muted);
+}
+
+/* ========================================
+   Layout - Sections
+======================================== */
+.sop-section {
+  padding-top: var(--sop-section-gap-mobile);
+  padding-bottom: var(--sop-section-gap-mobile);
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+@media screen and (min-width: 1024px) {
+  .sop-section {
+    padding-top: var(--sop-section-gap-desktop);
+    padding-bottom: var(--sop-section-gap-desktop);
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}
+
+.sop-container {
+  max-width: var(--sop-content-max-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.sop-container--narrow {
+  max-width: var(--sop-narrow-max-width);
+}
+
+/* ========================================
+   Layout - Hero (2 Column → SP Stack)
+======================================== */
+.sop-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+@media screen and (min-width: 1024px) {
+  .sop-hero {
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+  }
+}
+
+/* Mobile: 画像を上に */
+@media screen and (max-width: 1023px) {
+  .sop-hero__media {
+    order: -1;
+  }
+}
+
+.sop-hero__content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ========================================
+   Images
+======================================== */
+.sop-img {
+  max-inline-size: 100%;
+  block-size: auto;
+  object-fit: cover;
+  display: block;
+}
+
+.sop-picture {
+  display: block;
+  max-inline-size: 100%;
+}
+
+.sop-img--rounded {
+  border-radius: var(--sop-border-radius);
+  overflow: hidden;
+}
+
+/* ========================================
+   Buttons
+======================================== */
+.sop-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  border-radius: var(--sop-border-radius);
+  border: none;
+  cursor: pointer;
+  transition: var(--sop-transition);
+  white-space: nowrap;
+}
+
+/* Primary Button */
+.sop-btn--primary {
+  background: var(--sop-accent);
+  color: var(--sop-bg);
+  box-shadow: var(--sop-button-shadow);
+}
+
+.sop-btn--primary:hover {
+  background: #0055b3;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 102, 204, 0.3);
+}
+
+.sop-btn--primary:active {
+  transform: translateY(0);
+}
+
+/* Secondary Button */
+.sop-btn--secondary {
+  background: transparent;
+  color: var(--sop-accent);
+  border: 2px solid var(--sop-accent);
+}
+
+.sop-btn--secondary:hover {
+  background: var(--sop-accent);
+  color: var(--sop-bg);
+}
+
+/* Dark Button */
+.sop-btn--dark {
+  background: var(--sop-fg);
+  color: var(--sop-bg);
+  box-shadow: var(--sop-button-shadow);
+}
+
+.sop-btn--dark:hover {
+  background: #2c2c2e;
+  transform: translateY(-2px);
+}
+
+/* Button Group */
+.sop-btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* ========================================
+   Cards
+======================================== */
+.sop-card {
+  background: var(--sop-bg);
+  border-radius: var(--sop-border-radius);
+  box-shadow: var(--sop-card-shadow);
+  padding: 32px;
+  transition: var(--sop-transition);
+}
+
+.sop-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+}
+
+.sop-card--bordered {
+  border: 1px solid var(--sop-border);
+  box-shadow: none;
+}
+
+.sop-card--bordered:hover {
+  box-shadow: var(--sop-card-shadow);
+}
+
+/* Card Grid */
+.sop-card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media screen and (min-width: 768px) {
+  .sop-card-grid--2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .sop-card-grid--3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .sop-card-grid--4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ========================================
+   Utilities
+======================================== */
+
+/* Text Alignment */
+.sop-text-center {
+  text-align: center;
+}
+
+.sop-text-left {
+  text-align: left;
+}
+
+.sop-text-right {
+  text-align: right;
+}
+
+/* Spacing */
+.sop-mt-0 { margin-top: 0; }
+.sop-mt-1 { margin-top: 8px; }
+.sop-mt-2 { margin-top: 16px; }
+.sop-mt-3 { margin-top: 24px; }
+.sop-mt-4 { margin-top: 32px; }
+.sop-mt-5 { margin-top: 48px; }
+
+.sop-mb-0 { margin-bottom: 0; }
+.sop-mb-1 { margin-bottom: 8px; }
+.sop-mb-2 { margin-bottom: 16px; }
+.sop-mb-3 { margin-bottom: 24px; }
+.sop-mb-4 { margin-bottom: 32px; }
+.sop-mb-5 { margin-bottom: 48px; }
+
+.sop-gap-1 { gap: 8px; }
+.sop-gap-2 { gap: 16px; }
+.sop-gap-3 { gap: 24px; }
+.sop-gap-4 { gap: 32px; }
+
+/* Flex Utilities */
+.sop-flex {
+  display: flex;
+}
+
+.sop-flex-col {
+  flex-direction: column;
+}
+
+.sop-items-center {
+  align-items: center;
+}
+
+.sop-justify-center {
+  justify-content: center;
+}
+
+.sop-justify-between {
+  justify-content: space-between;
+}
+
+/* Background Colors */
+.sop-bg-white {
+  background-color: var(--sop-bg);
+}
+
+.sop-bg-dark {
+  background-color: var(--sop-fg);
+  color: var(--sop-bg);
+}
+
+.sop-bg-accent {
+  background-color: var(--sop-accent);
+  color: var(--sop-bg);
+}
+
+/* Border */
+.sop-border {
+  border: 1px solid var(--sop-border);
+}
+
+.sop-border-top {
+  border-top: 1px solid var(--sop-border);
+}
+
+.sop-border-bottom {
+  border-bottom: 1px solid var(--sop-border);
+}
+
+/* ========================================
+   Accessibility
+======================================== */
+
+/* Focus Styles */
+.sop-btn:focus,
+.sop-card:focus,
+a:focus {
+  outline: 3px solid var(--sop-accent);
+  outline-offset: 4px;
+}
+
+.sop-btn:focus:not(:focus-visible),
+.sop-card:focus:not(:focus-visible),
+a:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .sop-btn:hover,
+  .sop-card:hover {
+    transform: none;
+  }
+}
+
+/* Screen Reader Only */
+.sop-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ========================================
+   Responsive Typography Scale
+======================================== */
+@media screen and (max-width: 767px) {
+  .sop-h1 {
+    line-height: 1.15;
+  }
+
+  .sop-h2 {
+    line-height: 1.25;
+  }
+
+  .sop-section {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .sop-h1 {
+    line-height: 1.05;
+  }
+}

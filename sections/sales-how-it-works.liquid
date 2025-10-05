@@ -1,0 +1,530 @@
+{% comment %}
+  Sales How It Works - オーダーメイドプロセス説明セクション
+
+  使い方：
+  1. 管理画面 > オンラインストア > テーマ > カスタマイズ
+  2. 「セクションを追加」> 「Sales How It Works」を選択
+  3. 3ステップの内容、メタ情報を設定
+
+  機能：
+  - 3ステップ表示（①2D入力→自動計算 ②到着後調整 ③結果チェック）
+  - 所要時間・必要道具・完了率/平均時間を小さく表示
+  - レスポンシブ対応（モバイル縦並び、デスクトップ横並び）
+  - Apple風ミニマルデザイン
+  - 完全編集可能なschema
+{% endcomment %}
+
+<style>
+  .eg-hiw {
+    background-color: {{ section.settings.eg_hiw_bg }};
+    color: {{ section.settings.eg_hiw_text }};
+    padding: {{ section.settings.eg_hiw_padding_y }}px {{ section.settings.eg_hiw_padding_x_mobile }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .eg-hiw {
+      padding: {{ section.settings.eg_hiw_padding_y }}px {{ section.settings.eg_hiw_padding_x_desktop }}px;
+    }
+  }
+
+  .eg-hiw__container {
+    max-width: {{ section.settings.eg_hiw_max_width }}px;
+    margin: 0 auto;
+  }
+
+  /* ヘッダー */
+  .eg-hiw__header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .eg-hiw__kicker {
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: {{ section.settings.eg_hiw_muted }};
+    margin: 0 0 1.2rem 0;
+  }
+
+  .eg-hiw__title {
+    font-size: {{ section.settings.eg_hiw_title_size }}px;
+    line-height: {{ section.settings.eg_hiw_title_lh }};
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 1.6rem 0;
+    color: {{ section.settings.eg_hiw_text }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .eg-hiw__title {
+      font-size: calc({{ section.settings.eg_hiw_title_size }}px * 0.75);
+    }
+  }
+
+  .eg-hiw__subtitle {
+    font-size: 1.8rem;
+    line-height: 1.6;
+    color: {{ section.settings.eg_hiw_muted }};
+    max-width: 64rem;
+    margin: 0 auto;
+  }
+
+  @media screen and (max-width: 749px) {
+    .eg-hiw__subtitle {
+      font-size: 1.6rem;
+    }
+  }
+
+  /* ステップグリッド */
+  .eg-hiw__steps {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    margin-bottom: 4rem;
+  }
+
+  @media screen and (min-width: 990px) {
+    .eg-hiw__steps {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4rem;
+    }
+  }
+
+  /* 各ステップカード */
+  .eg-hiw__step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 3rem 2rem;
+    background-color: {{ section.settings.eg_hiw_card_bg }};
+    border-radius: 1.2rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .eg-hiw__step:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eg-hiw__step {
+      transition: none;
+    }
+    .eg-hiw__step:hover {
+      transform: none;
+    }
+  }
+
+  /* ステップ番号バッジ */
+  .eg-hiw__step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 5.6rem;
+    height: 5.6rem;
+    border-radius: 50%;
+    background-color: {{ section.settings.eg_hiw_badge_bg }};
+    color: {{ section.settings.eg_hiw_badge_text }};
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+  }
+
+  .eg-hiw__step-title {
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0 0 1.2rem 0;
+    color: {{ section.settings.eg_hiw_text }};
+  }
+
+  .eg-hiw__step-desc {
+    font-size: 1.5rem;
+    line-height: 1.6;
+    color: {{ section.settings.eg_hiw_muted }};
+    margin: 0;
+  }
+
+  /* メタ情報（所要時間・道具・完了率等） */
+  .eg-hiw__meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem 4rem;
+    padding: 2.4rem 2rem;
+    background-color: {{ section.settings.eg_hiw_meta_bg }};
+    border-radius: 0.8rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .eg-hiw__meta-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .eg-hiw__meta-label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: {{ section.settings.eg_hiw_muted }};
+    margin-bottom: 0.4rem;
+  }
+
+  .eg-hiw__meta-value {
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: {{ section.settings.eg_hiw_text }};
+  }
+
+  /* アクセシビリティ */
+  .eg-hiw__step:focus-within {
+    outline: 2px solid {{ section.settings.eg_hiw_badge_bg }};
+    outline-offset: 4px;
+  }
+</style>
+
+<section
+  class="eg-hiw"
+  role="region"
+  aria-label="{{ section.settings.eg_hiw_heading | escape }}"
+>
+  <div class="eg-hiw__container">
+    {%- if section.settings.eg_hiw_show_header -%}
+      <div class="eg-hiw__header">
+        {%- if section.settings.eg_hiw_kicker != blank -%}
+          <p class="eg-hiw__kicker">{{ section.settings.eg_hiw_kicker }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.eg_hiw_heading != blank -%}
+          <h2 class="eg-hiw__title">{{ section.settings.eg_hiw_heading }}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.eg_hiw_subtext != blank -%}
+          <p class="eg-hiw__subtitle">{{ section.settings.eg_hiw_subtext }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="eg-hiw__steps">
+      {%- comment -%} ステップ1: 2D入力→自動計算 {%- endcomment -%}
+      <div class="eg-hiw__step">
+        <div class="eg-hiw__step-number" aria-label="ステップ1">1</div>
+        <h3 class="eg-hiw__step-title">{{ section.settings.eg_hiw_step1_title }}</h3>
+        <p class="eg-hiw__step-desc">{{ section.settings.eg_hiw_step1_desc }}</p>
+      </div>
+
+      {%- comment -%} ステップ2: 到着後±レンジで中立にロック {%- endcomment -%}
+      <div class="eg-hiw__step">
+        <div class="eg-hiw__step-number" aria-label="ステップ2">2</div>
+        <h3 class="eg-hiw__step-title">{{ section.settings.eg_hiw_step2_title }}</h3>
+        <p class="eg-hiw__step-desc">{{ section.settings.eg_hiw_step2_desc }}</p>
+      </div>
+
+      {%- comment -%} ステップ3: 結果チェック→未達は無償再調整1回 {%- endcomment -%}
+      <div class="eg-hiw__step">
+        <div class="eg-hiw__step-number" aria-label="ステップ3">3</div>
+        <h3 class="eg-hiw__step-title">{{ section.settings.eg_hiw_step3_title }}</h3>
+        <p class="eg-hiw__step-desc">{{ section.settings.eg_hiw_step3_desc }}</p>
+      </div>
+    </div>
+
+    {%- if section.settings.eg_hiw_show_meta -%}
+      <div class="eg-hiw__meta">
+        {%- comment -%} 所要時間 {%- endcomment -%}
+        {%- if section.settings.eg_hiw_meta_duration != blank -%}
+          <div class="eg-hiw__meta-item">
+            <span class="eg-hiw__meta-label">{{ section.settings.eg_hiw_meta_duration_label }}</span>
+            <span class="eg-hiw__meta-value">{{ section.settings.eg_hiw_meta_duration }}</span>
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} 必要道具 {%- endcomment -%}
+        {%- if section.settings.eg_hiw_meta_tools != blank -%}
+          <div class="eg-hiw__meta-item">
+            <span class="eg-hiw__meta-label">{{ section.settings.eg_hiw_meta_tools_label }}</span>
+            <span class="eg-hiw__meta-value">{{ section.settings.eg_hiw_meta_tools }}</span>
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} 完了率 {%- endcomment -%}
+        {%- if section.settings.eg_hiw_meta_completion != blank -%}
+          <div class="eg-hiw__meta-item">
+            <span class="eg-hiw__meta-label">{{ section.settings.eg_hiw_meta_completion_label }}</span>
+            <span class="eg-hiw__meta-value">{{ section.settings.eg_hiw_meta_completion }}</span>
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} 平均時間 {%- endcomment -%}
+        {%- if section.settings.eg_hiw_meta_avg_time != blank -%}
+          <div class="eg-hiw__meta-item">
+            <span class="eg-hiw__meta-label">{{ section.settings.eg_hiw_meta_avg_time_label }}</span>
+            <span class="eg-hiw__meta-value">{{ section.settings.eg_hiw_meta_avg_time }}</span>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Sales How It Works",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "ヘッダー設定"
+    },
+    {
+      "type": "checkbox",
+      "id": "eg_hiw_show_header",
+      "label": "ヘッダーを表示",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "eg_hiw_kicker",
+      "label": "キッカー（任意）",
+      "default": "How It Works"
+    },
+    {
+      "type": "text",
+      "id": "eg_hiw_heading",
+      "label": "見出し",
+      "default": "簡単3ステップで最適なキーボードが届く"
+    },
+    {
+      "type": "textarea",
+      "id": "eg_hiw_subtext",
+      "label": "説明文",
+      "default": "専門知識不要。スマホと定規だけで、あなたにぴったりのエルゴノミクスキーボードを作ります。"
+    },
+    {
+      "type": "header",
+      "content": "ステップ1: 2D入力→自動計算"
+    },
+    {
+      "type": "text",
+      "id": "eg_hiw_step1_title",
+      "label": "ステップ1 タイトル",
+      "default": "2D入力→自動計算"
+    },
+    {
+      "type": "textarea",
+      "id": "eg_hiw_step1_desc",
+      "label": "ステップ1 説明",
+      "default": "手のサイズと使い方を入力。AIが最適な角度・高さ・キー配置を自動計算します。"
+    },
+    {
+      "type": "header",
+      "content": "ステップ2: 到着後調整"
+    },
+    {
+      "type": "text",
+      "id": "eg_hiw_step2_title",
+      "label": "ステップ2 タイトル",
+      "default": "到着後±レンジで中立にロック"
+    },
+    {
+      "type": "textarea",
+      "id": "eg_hiw_step2_desc",
+      "label": "ステップ2 説明",
+      "default": "届いたキーボードの角度を±10°範囲で微調整。最も快適な位置でロック完了。"
+    },
+    {
+      "type": "header",
+      "content": "ステップ3: 結果チェック"
+    },
+    {
+      "type": "text",
+      "id": "eg_hiw_step3_title",
+      "label": "ステップ3 タイトル",
+      "default": "結果チェック→未達は無償再調整"
+    },
+    {
+      "type": "textarea",
+      "id": "eg_hiw_step3_desc",
+      "label": "ステップ3 説明",
+      "default": "1週間使用後、違和感があれば無償で再調整1回。完璧にフィットするまでサポートします。"
+    },
+    {
+      "type": "header",
+      "content": "メタ情報（所要時間・道具等）"
+    },
+    {
+      "type": "checkbox",
+      "id": "eg_hiw_show_meta",
+      "label": "メタ情報を表示",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "eg_hiw_meta_duration_label",
+      "label": "所要時間ラベル",
+      "default": "所要時間"
+    },
+    {
+      "type": "text",
+      "id": "eg_hiw_meta_duration",
+      "label": "所要時間",
+      "default": "約5分"
+    },
+    {
+      "type": "text",
+      "id": "eg_hiw_meta_tools_label",
+      "label": "必要道具ラベル",
+      "default": "必要道具"
+    },
+    {
+      "type": "text",
+      "id": "eg_hiw_meta_tools",
+      "label": "必要道具",
+      "default": "定規・スマホ"
+    },
+    {
+      "type": "text",
+      "id": "eg_hiw_meta_completion_label",
+      "label": "完了率ラベル",
+      "default": "完了率"
+    },
+    {
+      "type": "text",
+      "id": "eg_hiw_meta_completion",
+      "label": "完了率",
+      "default": "98.7%"
+    },
+    {
+      "type": "text",
+      "id": "eg_hiw_meta_avg_time_label",
+      "label": "平均時間ラベル",
+      "default": "平均時間"
+    },
+    {
+      "type": "text",
+      "id": "eg_hiw_meta_avg_time",
+      "label": "平均時間",
+      "default": "4分32秒"
+    },
+    {
+      "type": "header",
+      "content": "レイアウト・スタイル"
+    },
+    {
+      "type": "range",
+      "id": "eg_hiw_max_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 100,
+      "unit": "px",
+      "label": "セクション最大幅",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "eg_hiw_padding_x_mobile",
+      "min": 16,
+      "max": 80,
+      "step": 8,
+      "unit": "px",
+      "label": "左右余白（モバイル）",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "eg_hiw_padding_x_desktop",
+      "min": 24,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "label": "左右余白（デスクトップ）",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "eg_hiw_padding_y",
+      "min": 40,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "label": "上下余白",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "eg_hiw_title_size",
+      "min": 24,
+      "max": 56,
+      "step": 2,
+      "unit": "px",
+      "label": "見出しサイズ",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "eg_hiw_title_lh",
+      "min": 1.1,
+      "max": 1.5,
+      "step": 0.1,
+      "label": "見出し行間",
+      "default": 1.2
+    },
+    {
+      "type": "header",
+      "content": "カラー"
+    },
+    {
+      "type": "color",
+      "id": "eg_hiw_bg",
+      "label": "背景色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "eg_hiw_text",
+      "label": "テキスト色",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "color",
+      "id": "eg_hiw_muted",
+      "label": "弱いテキスト色",
+      "default": "#6e6e73"
+    },
+    {
+      "type": "color",
+      "id": "eg_hiw_card_bg",
+      "label": "カード背景色",
+      "default": "#f5f5f7"
+    },
+    {
+      "type": "color",
+      "id": "eg_hiw_badge_bg",
+      "label": "バッジ背景色",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "color",
+      "id": "eg_hiw_badge_text",
+      "label": "バッジテキスト色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "eg_hiw_meta_bg",
+      "label": "メタ情報背景色",
+      "default": "#f5f5f7"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sales How It Works"
+    }
+  ]
+}
+{% endschema %}
