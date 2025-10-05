@@ -1,0 +1,271 @@
+/* ========================================
+   Sales CTQ Criteria Section Styles
+   ======================================== */
+
+.eg-ctq-section {
+  width: 100%;
+}
+
+.eg-ctq-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+@media screen and (min-width: 750px) {
+  .eg-ctq-container {
+    padding: 0 4rem;
+  }
+}
+
+/* Heading */
+.eg-ctq-heading {
+  font-size: 3.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0 0 1.6rem 0;
+  text-align: center;
+}
+
+@media screen and (max-width: 749px) {
+  .eg-ctq-heading {
+    font-size: 2.8rem;
+  }
+}
+
+.eg-ctq-subheading {
+  font-size: 1.8rem;
+  line-height: 1.5;
+  color: #6e6e73;
+  margin: 0 0 4rem 0;
+  text-align: center;
+}
+
+@media screen and (max-width: 749px) {
+  .eg-ctq-subheading {
+    font-size: 1.6rem;
+    margin-bottom: 3rem;
+  }
+}
+
+/* Table */
+.eg-ctq-table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 4rem;
+  border-radius: 1.2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.eg-ctq-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.6rem;
+  background-color: #ffffff;
+}
+
+.eg-ctq-table th {
+  padding: 1.6rem 2rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 1.4rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border-bottom: 2px solid #d2d2d7;
+}
+
+.eg-ctq-table td {
+  padding: 1.6rem 2rem;
+  border-bottom: 1px solid #d2d2d7;
+  vertical-align: top;
+}
+
+.eg-ctq-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.eg-ctq-table tbody tr:hover {
+  background-color: #f5f5f7;
+}
+
+.eg-ctq-item-name {
+  font-weight: 600;
+  color: #1d1d1f;
+}
+
+.eg-ctq-item-range {
+  font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+  font-weight: 600;
+  color: #0071e3;
+  font-size: 1.5rem;
+}
+
+.eg-ctq-item-note {
+  color: #6e6e73;
+  font-size: 1.4rem;
+}
+
+@media screen and (max-width: 749px) {
+  .eg-ctq-table th,
+  .eg-ctq-table td {
+    padding: 1.2rem 1.6rem;
+  }
+
+  .eg-ctq-table {
+    font-size: 1.4rem;
+  }
+
+  .eg-ctq-item-range {
+    font-size: 1.4rem;
+  }
+
+  .eg-ctq-item-note {
+    font-size: 1.3rem;
+  }
+}
+
+/* Judgment Flow */
+.eg-ctq-judgment {
+  margin-bottom: 4rem;
+}
+
+.eg-ctq-judgment-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 750px) {
+  .eg-ctq-judgment-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+}
+
+.eg-ctq-judgment-item {
+  background-color: #f5f5f7;
+  border-radius: 1.2rem;
+  padding: 2.4rem;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.eg-ctq-judgment-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.eg-ctq-judgment-icon {
+  font-size: 4rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+}
+
+.eg-ctq-judgment-label {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.8rem 0;
+}
+
+.eg-ctq-judgment-action {
+  font-size: 1.6rem;
+  margin: 0;
+  color: #6e6e73;
+}
+
+.eg-ctq-pass {
+  color: #30a14e;
+}
+
+.eg-ctq-fail {
+  color: #d73a49;
+}
+
+/* Note */
+.eg-ctq-note {
+  background-color: #f5f5f7;
+  border-left: 4px solid #0071e3;
+  border-radius: 0.8rem;
+  padding: 2rem 2.4rem;
+  margin-bottom: 3rem;
+}
+
+.eg-ctq-note-label {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin: 0 0 0.8rem 0;
+}
+
+.eg-ctq-note-text {
+  font-size: 1.4rem;
+  line-height: 1.6;
+  color: #6e6e73;
+  margin: 0;
+}
+
+/* PDF Button */
+.eg-ctq-pdf {
+  text-align: center;
+}
+
+.eg-ctq-pdf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 1.4rem 2.8rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 980px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.eg-ctq-pdf-btn:focus-visible {
+  outline: 2px solid #0071e3;
+  outline-offset: 4px;
+}
+
+.eg-ctq-pdf-icon {
+  transition: transform 0.2s ease;
+}
+
+.eg-ctq-pdf-btn:hover .eg-ctq-pdf-icon {
+  transform: translateX(2px) translateY(-2px);
+}
+
+@media screen and (max-width: 749px) {
+  .eg-ctq-pdf-btn {
+    font-size: 1.5rem;
+    padding: 1.2rem 2.4rem;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .eg-ctq-judgment-item,
+  .eg-ctq-pdf-btn,
+  .eg-ctq-pdf-icon {
+    transition: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .eg-ctq-judgment-item {
+    break-inside: avoid;
+  }
+
+  .eg-ctq-table {
+    page-break-inside: auto;
+  }
+
+  .eg-ctq-table tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+}

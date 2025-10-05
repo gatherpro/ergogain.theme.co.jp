@@ -1,0 +1,388 @@
+{% comment %}
+  Sales CTQ Criteria - CTQ品質基準表セクション
+
+  特徴：
+  - CTQ（Critical to Quality）基準項目の表示
+  - 合格基準範囲と判定ロジックの明示
+  - 合格＝出荷／未達＝要再調整のフロー説明
+  - PDF詳細資料へのリンク
+  - 測定条件の注記表示
+{% endcomment %}
+
+<link rel="stylesheet" href="{{ 'sales-ctq-criteria.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ 'sales-ctq-criteria.css' | asset_url }}"></noscript>
+
+<style>
+  .eg-ctq-section-{{ section.id }} {
+    background-color: {{ section.settings.eg_ctq_bg }};
+    padding-top: {{ section.settings.eg_ctq_padding_top }}px;
+    padding-bottom: {{ section.settings.eg_ctq_padding_bottom }}px;
+  }
+
+  .eg-ctq-section-{{ section.id }} .eg-ctq-heading {
+    color: {{ section.settings.eg_ctq_heading_color }};
+  }
+
+  .eg-ctq-section-{{ section.id }} .eg-ctq-table th {
+    background-color: {{ section.settings.eg_ctq_table_header_bg }};
+    color: {{ section.settings.eg_ctq_table_header_color }};
+  }
+
+  .eg-ctq-section-{{ section.id }} .eg-ctq-table td {
+    border-color: {{ section.settings.eg_ctq_table_border_color }};
+  }
+
+  .eg-ctq-section-{{ section.id }} .eg-ctq-pass {
+    color: {{ section.settings.eg_ctq_pass_color }};
+  }
+
+  .eg-ctq-section-{{ section.id }} .eg-ctq-fail {
+    color: {{ section.settings.eg_ctq_fail_color }};
+  }
+
+  .eg-ctq-section-{{ section.id }} .eg-ctq-pdf-btn {
+    background-color: {{ section.settings.eg_ctq_btn_bg }};
+    color: {{ section.settings.eg_ctq_btn_color }};
+  }
+
+  .eg-ctq-section-{{ section.id }} .eg-ctq-pdf-btn:hover {
+    opacity: 0.9;
+  }
+</style>
+
+<section
+  class="eg-ctq-section eg-ctq-section-{{ section.id }}"
+  role="region"
+  aria-label="{{ section.settings.eg_ctq_heading | escape }}"
+>
+  <div class="eg-ctq-container">
+    {%- if section.settings.eg_ctq_heading != blank -%}
+      <h2 class="eg-ctq-heading">{{ section.settings.eg_ctq_heading }}</h2>
+    {%- endif -%}
+
+    {%- if section.settings.eg_ctq_subheading != blank -%}
+      <p class="eg-ctq-subheading">{{ section.settings.eg_ctq_subheading }}</p>
+    {%- endif -%}
+
+    <div class="eg-ctq-table-wrapper">
+      <table class="eg-ctq-table" role="table" aria-label="CTQ品質基準表">
+        <thead>
+          <tr>
+            <th scope="col">{{ section.settings.eg_ctq_col1_label }}</th>
+            <th scope="col">{{ section.settings.eg_ctq_col2_label }}</th>
+            <th scope="col">{{ section.settings.eg_ctq_col3_label }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+              {%- when 'ctq_item' -%}
+                <tr>
+                  <td class="eg-ctq-item-name">{{ block.settings.eg_ctq_item_name }}</td>
+                  <td class="eg-ctq-item-range">{{ block.settings.eg_ctq_item_range }}</td>
+                  <td class="eg-ctq-item-note">{{ block.settings.eg_ctq_item_note }}</td>
+                </tr>
+            {%- endcase -%}
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="eg-ctq-judgment">
+      <div class="eg-ctq-judgment-grid">
+        <div class="eg-ctq-judgment-item">
+          <div class="eg-ctq-judgment-icon eg-ctq-pass">✓</div>
+          <p class="eg-ctq-judgment-label eg-ctq-pass">{{ section.settings.eg_ctq_pass_label }}</p>
+          <p class="eg-ctq-judgment-action">{{ section.settings.eg_ctq_pass_action }}</p>
+        </div>
+        <div class="eg-ctq-judgment-item">
+          <div class="eg-ctq-judgment-icon eg-ctq-fail">✗</div>
+          <p class="eg-ctq-judgment-label eg-ctq-fail">{{ section.settings.eg_ctq_fail_label }}</p>
+          <p class="eg-ctq-judgment-action">{{ section.settings.eg_ctq_fail_action }}</p>
+        </div>
+      </div>
+    </div>
+
+    {%- if section.settings.eg_ctq_measurement_note != blank -%}
+      <div class="eg-ctq-note">
+        <p class="eg-ctq-note-label">{{ section.settings.eg_ctq_measurement_note_label }}</p>
+        <p class="eg-ctq-note-text">{{ section.settings.eg_ctq_measurement_note }}</p>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.eg_ctq_pdf_url != blank and section.settings.eg_ctq_pdf_label != blank -%}
+      <div class="eg-ctq-pdf">
+        <a
+          href="{{ section.settings.eg_ctq_pdf_url }}"
+          class="eg-ctq-pdf-btn"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="{{ section.settings.eg_ctq_pdf_label | escape }}"
+        >
+          {{ section.settings.eg_ctq_pdf_label }}
+          <svg class="eg-ctq-pdf-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 8.66667V12.6667C12 13.0203 11.8595 13.3594 11.6095 13.6095C11.3594 13.8595 11.0203 14 10.6667 14H3.33333C2.97971 14 2.64057 13.8595 2.39052 13.6095C2.14048 13.3594 2 13.0203 2 12.6667V5.33333C2 4.97971 2.14048 4.64057 2.39052 4.39052C2.64057 4.14048 2.97971 4 3.33333 4H7.33333M10 2H14M14 2V6M14 2L6.66667 9.33333" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Sales CTQ Criteria",
+  "tag": "section",
+  "class": "section-ctq-criteria",
+  "settings": [
+    {
+      "type": "header",
+      "content": "コンテンツ設定"
+    },
+    {
+      "type": "text",
+      "id": "eg_ctq_heading",
+      "label": "見出し",
+      "default": "CTQ品質基準（抜粋）"
+    },
+    {
+      "type": "textarea",
+      "id": "eg_ctq_subheading",
+      "label": "サブ見出し",
+      "default": "各項目の合格基準範囲を満たした製品のみ出荷されます"
+    },
+    {
+      "type": "header",
+      "content": "テーブル列ラベル"
+    },
+    {
+      "type": "text",
+      "id": "eg_ctq_col1_label",
+      "label": "列1：項目名",
+      "default": "測定項目"
+    },
+    {
+      "type": "text",
+      "id": "eg_ctq_col2_label",
+      "label": "列2：基準範囲",
+      "default": "合格範囲"
+    },
+    {
+      "type": "text",
+      "id": "eg_ctq_col3_label",
+      "label": "列3：備考",
+      "default": "備考"
+    },
+    {
+      "type": "header",
+      "content": "判定フロー"
+    },
+    {
+      "type": "text",
+      "id": "eg_ctq_pass_label",
+      "label": "合格ラベル",
+      "default": "合格"
+    },
+    {
+      "type": "text",
+      "id": "eg_ctq_pass_action",
+      "label": "合格時アクション",
+      "default": "→ 出荷"
+    },
+    {
+      "type": "text",
+      "id": "eg_ctq_fail_label",
+      "label": "未達ラベル",
+      "default": "未達"
+    },
+    {
+      "type": "text",
+      "id": "eg_ctq_fail_action",
+      "label": "未達時アクション",
+      "default": "→ 要再調整"
+    },
+    {
+      "type": "header",
+      "content": "測定条件注記"
+    },
+    {
+      "type": "text",
+      "id": "eg_ctq_measurement_note_label",
+      "label": "注記ラベル",
+      "default": "※ 測定条件"
+    },
+    {
+      "type": "textarea",
+      "id": "eg_ctq_measurement_note",
+      "label": "測定条件テキスト",
+      "default": "室温23±2℃、湿度50±10%の環境下で、標準治具を用いて測定。3回測定の平均値を採用。"
+    },
+    {
+      "type": "header",
+      "content": "PDF詳細資料"
+    },
+    {
+      "type": "url",
+      "id": "eg_ctq_pdf_url",
+      "label": "PDF URL",
+      "info": "詳細基準書PDFのURL"
+    },
+    {
+      "type": "text",
+      "id": "eg_ctq_pdf_label",
+      "label": "PDFボタンラベル",
+      "default": "詳細基準書（PDF）を見る"
+    },
+    {
+      "type": "header",
+      "content": "カラー設定"
+    },
+    {
+      "type": "color",
+      "id": "eg_ctq_bg",
+      "label": "背景色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "eg_ctq_heading_color",
+      "label": "見出し色",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "color",
+      "id": "eg_ctq_table_header_bg",
+      "label": "テーブルヘッダー背景",
+      "default": "#f5f5f7"
+    },
+    {
+      "type": "color",
+      "id": "eg_ctq_table_header_color",
+      "label": "テーブルヘッダー文字色",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "color",
+      "id": "eg_ctq_table_border_color",
+      "label": "テーブル罫線色",
+      "default": "#d2d2d7"
+    },
+    {
+      "type": "color",
+      "id": "eg_ctq_pass_color",
+      "label": "合格色",
+      "default": "#30a14e"
+    },
+    {
+      "type": "color",
+      "id": "eg_ctq_fail_color",
+      "label": "未達色",
+      "default": "#d73a49"
+    },
+    {
+      "type": "color",
+      "id": "eg_ctq_btn_bg",
+      "label": "PDFボタン背景",
+      "default": "#0071e3"
+    },
+    {
+      "type": "color",
+      "id": "eg_ctq_btn_color",
+      "label": "PDFボタン文字色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "スペーシング"
+    },
+    {
+      "type": "range",
+      "id": "eg_ctq_padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "上部余白",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "eg_ctq_padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "下部余白",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "ctq_item",
+      "name": "CTQ項目",
+      "settings": [
+        {
+          "type": "text",
+          "id": "eg_ctq_item_name",
+          "label": "項目名",
+          "default": "橈尺偏位",
+          "info": "例：橈尺偏位、背屈、親指到達"
+        },
+        {
+          "type": "text",
+          "id": "eg_ctq_item_range",
+          "label": "合格範囲",
+          "default": "5–15°",
+          "info": "例：5–15°、0–10°、X≤Ymm"
+        },
+        {
+          "type": "text",
+          "id": "eg_ctq_item_note",
+          "label": "備考",
+          "default": "中立位基準",
+          "info": "測定時の特記事項"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sales CTQ Criteria",
+      "blocks": [
+        {
+          "type": "ctq_item",
+          "settings": {
+            "eg_ctq_item_name": "橈尺偏位",
+            "eg_ctq_item_range": "5–15°",
+            "eg_ctq_item_note": "中立位基準"
+          }
+        },
+        {
+          "type": "ctq_item",
+          "settings": {
+            "eg_ctq_item_name": "背屈",
+            "eg_ctq_item_range": "0–10°",
+            "eg_ctq_item_note": "自然状態"
+          }
+        },
+        {
+          "type": "ctq_item",
+          "settings": {
+            "eg_ctq_item_name": "親指到達距離",
+            "eg_ctq_item_range": "X ≤ 85mm",
+            "eg_ctq_item_note": "キーボード中心から"
+          }
+        },
+        {
+          "type": "ctq_item",
+          "settings": {
+            "eg_ctq_item_name": "掌屈角度",
+            "eg_ctq_item_range": "0–5°",
+            "eg_ctq_item_note": "タイピング時"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
