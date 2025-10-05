@@ -192,11 +192,24 @@
         "btn_secondary_text": "#110909",
         "bg": "#1d1d1f"
       }
+    },
+    "fullorder_wizard_LXPX4U": {
+      "type": "fullorder-wizard",
+      "name": "Full-Order Wizard",
+      "settings": {
+        "eg_wizard_base_price": 50000,
+        "eg_wizard_currency": "¥",
+        "eg_wizard_product_variant_id": "",
+        "eg_wizard_padding_y": 80,
+        "eg_wizard_bg": "#ffffff",
+        "eg_wizard_fg": "#1d1d1f"
+      }
     }
   },
   "order": [
     "hero_featured_products_qYaGfw",
     "featured_slider_v2_zidXgf",
-    "about_hero_v3_Xd4hQh"
+    "about_hero_v3_Xd4hQh",
+    "fullorder_wizard_LXPX4U"
   ]
 }
