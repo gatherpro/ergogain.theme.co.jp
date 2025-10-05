@@ -102,57 +102,396 @@
         "padding_bottom": 28
       }
     },
-    "ergolist_grid_TxdWT3": {
-      "type": "ergolist-grid",
-      "name": "ErgoList Grid",
+    "ergogain_hero_video_v2_LqWyPb": {
+      "type": "ergogain-hero-video-v2",
+      "name": "Hero Video v2 (Apple)",
       "settings": {
-        "eg_grid_heading": "製品一覧",
-        "eg_grid_collection": "",
-        "eg_grid_per_page": 12,
-        "eg_grid_enable_filters": true,
-        "eg_grid_enable_sort": true,
-        "eg_grid_enable_quickview": true,
-        "eg_grid_padding_top": 60,
-        "eg_grid_padding_bottom": 60
+        "eghv2_text_align": "center",
+        "eghv2_kicker": "New",
+        "eghv2_heading": "ErgoGain",
+        "eghv2_subtext": "究極を、その手に。フルオーダーメイドキーボード",
+        "eghv2_primary_label": "",
+        "eghv2_primary_link": "",
+        "eghv2_secondary_label": "",
+        "eghv2_secondary_link": "",
+        "eghv2_video": "https://www.dropbox.com/scl/fi/2v3l3zf7o0xray519xp9t/Clipchamp-1.mp4?rlkey=h2x28asy6uzkw20zl06xdp2uu&st=qqwzyp63&dl=0",
+        "eghv2_poster": "shopify://shop_images/Gemini_Generated_Image_udfui1udfui1udfu.png",
+        "eghv2_video_max_width": 100,
+        "eghv2_video_radius": 16,
+        "eghv2_video_shadow": "0 16px 48px rgba(0, 0, 0, 0.15)",
+        "eghv2_max_width": 1600,
+        "eghv2_padding_x_mobile": 24,
+        "eghv2_padding_x_desktop": 64,
+        "eghv2_padding_top": 80,
+        "eghv2_padding_bottom": 100,
+        "eghv2_text_video_gap": 60,
+        "eghv2_heading_size": 64,
+        "eghv2_heading_lh": 1.1,
+        "eghv2_subtext_max_width": 700,
+        "eghv2_kicker_color": "#86868b",
+        "eghv2_heading_color": "#1d1d1f",
+        "eghv2_subtext_color": "#6e6e73",
+        "eghv2_btn_primary_bg": "#0071e3",
+        "eghv2_btn_primary_text": "#ffffff",
+        "eghv2_btn_secondary_color": "#0071e3",
+        "eghv2_bg": "#ffffff"
       }
     },
-    "fixed_filters_product_list_XtqCWA": {
-      "type": "fixed-filters-product-list",
+    "ergogain_order_tiles_xMEnDj": {
+      "type": "ergogain-order-tiles",
+      "name": "EG Order Tiles",
+      "settings": {
+        "eg_order_full_title": "フルオーダー",
+        "eg_order_full_summary": "完全カスタマイズ可能。あなただけのキーボードを。",
+        "eg_order_full_price": 3980000,
+        "eg_order_full_link": "",
+        "eg_order_semi_title": "セミオーダー",
+        "eg_order_semi_summary": "厳選されたプリセットから選択。手軽にカスタマイズ。",
+        "eg_order_semi_price": 1980000,
+        "eg_order_semi_link": "",
+        "eg_order_padding_y": 64,
+        "eg_order_fg": "#000000",
+        "eg_order_bg": "#ffffff"
+      }
+    },
+    "sales_problem_outcome_TehfxB": {
+      "type": "sales-problem-outcome",
       "blocks": {
-        "checkbox_filter_kBTTP7": {
-          "type": "checkbox_filter",
+        "outcome_tile_reqr6H": {
+          "type": "outcome_tile",
           "settings": {
-            "eg_ffpl_filter_label": "ブランド",
-            "eg_ffpl_filter_key": "Brand",
-            "eg_ffpl_filter_values": "Apple, Dell, HP, Lenovo"
+            "spo_tile_title": "手首がまっすぐ",
+            "spo_tile_desc": "橈尺偏位を5–15°に抑制",
+            "spo_tile_tooltip": "測定条件：8時間タイピング、手首角度測定器使用",
+            "spo_before_value": 75,
+            "spo_after_value": 15,
+            "spo_unit": "°",
+            "spo_tile_note": "※個人差があります"
           }
         },
-        "price_range_hA4py6": {
-          "type": "price_range",
-          "settings": {}
+        "outcome_tile_mkGAAw": {
+          "type": "outcome_tile",
+          "settings": {
+            "spo_tile_title": "親指が届く",
+            "spo_tile_desc": "修飾キー到達率↑",
+            "spo_tile_tooltip": "測定条件：親指での修飾キー操作成功率",
+            "spo_before_value": 45,
+            "spo_after_value": 95,
+            "spo_unit": "%",
+            "spo_tile_note": "※個人差があります"
+          }
+        },
+        "outcome_tile_7haVdV": {
+          "type": "outcome_tile",
+          "settings": {
+            "spo_tile_title": "長時間でも快適",
+            "spo_tile_desc": "接触圧分散",
+            "spo_tile_tooltip": "測定条件：8時間使用後の接触圧力測定",
+            "spo_before_value": 85,
+            "spo_after_value": 25,
+            "spo_unit": "kPa",
+            "spo_tile_note": "※個人差があります"
+          }
         }
       },
       "block_order": [
-        "checkbox_filter_kBTTP7",
-        "price_range_hA4py6"
+        "outcome_tile_reqr6H",
+        "outcome_tile_mkGAAw",
+        "outcome_tile_7haVdV"
       ],
-      "name": "Filter Product List",
+      "name": "Sales Problem Outcome",
       "settings": {
-        "eg_ffpl_collection": "完全オーダーメイドキーボード",
-        "eg_ffpl_products_per_page": 12,
-        "eg_ffpl_default_sort": "manual",
-        "eg_ffpl_load_more": "button",
-        "eg_ffpl_theme_color": "#1d1d1f",
-        "eg_ffpl_accent_color": "#0071e3",
-        "eg_ffpl_bg_color": "#ffffff",
-        "eg_ffpl_card_bg": "#f5f5f7"
+        "spo_heading": "エルゴノミクス設計の効果",
+        "spo_subtext": "人間工学に基づいた設計により、手首への負担を大幅に軽減",
+        "spo_heading_size": 36,
+        "spo_bg": "#ffffff",
+        "spo_text": "#1d1d1f",
+        "spo_heading_color": "#1d1d1f",
+        "spo_tile_bg": "#f5f5f7",
+        "spo_tile_border": "#e5e5ea",
+        "spo_before_color": "#ff3b30",
+        "spo_after_color": "#34c759",
+        "spo_padding_top": 64,
+        "spo_padding_bottom": 64
+      }
+    },
+    "sales_how_it_works_zV93UJ": {
+      "type": "sales-how-it-works",
+      "name": "Sales How It Works",
+      "settings": {
+        "eg_hiw_show_header": true,
+        "eg_hiw_kicker": "How It Works",
+        "eg_hiw_heading": "簡単3ステップで最適なキーボードが届く",
+        "eg_hiw_subtext": "専門知識不要。スマホと定規だけで、あなたにぴったりのエルゴノミクスキーボードを作ります。",
+        "eg_hiw_step1_title": "2D入力→自動計算",
+        "eg_hiw_step1_desc": "手のサイズと使い方を入力。AIが最適な角度・高さ・キー配置を自動計算します。",
+        "eg_hiw_step2_title": "到着後±レンジで中立にロック",
+        "eg_hiw_step2_desc": "届いたキーボードの角度を±10°範囲で微調整。最も快適な位置でロック完了。",
+        "eg_hiw_step3_title": "結果チェック→未達は無償再調整",
+        "eg_hiw_step3_desc": "1週間使用後、違和感があれば無償で再調整1回。完璧にフィットするまでサポートします。",
+        "eg_hiw_show_meta": true,
+        "eg_hiw_meta_duration_label": "所要時間",
+        "eg_hiw_meta_duration": "約5分",
+        "eg_hiw_meta_tools_label": "必要道具",
+        "eg_hiw_meta_tools": "定規・スマホ",
+        "eg_hiw_meta_completion_label": "完了率",
+        "eg_hiw_meta_completion": "98.7%",
+        "eg_hiw_meta_avg_time_label": "平均時間",
+        "eg_hiw_meta_avg_time": "4分32秒",
+        "eg_hiw_max_width": 1200,
+        "eg_hiw_padding_x_mobile": 32,
+        "eg_hiw_padding_x_desktop": 64,
+        "eg_hiw_padding_y": 80,
+        "eg_hiw_title_size": 40,
+        "eg_hiw_title_lh": 1.2,
+        "eg_hiw_bg": "#ffffff",
+        "eg_hiw_text": "#1d1d1f",
+        "eg_hiw_muted": "#6e6e73",
+        "eg_hiw_card_bg": "#f5f5f7",
+        "eg_hiw_badge_bg": "#1d1d1f",
+        "eg_hiw_badge_text": "#ffffff",
+        "eg_hiw_meta_bg": "#f5f5f7"
+      }
+    },
+    "sales_evidence_bar_yFHWQB": {
+      "type": "sales-evidence-bar",
+      "name": "Sales Evidence Bar",
+      "settings": {
+        "seb_max_width": 1400,
+        "seb_padding_x_mobile": 24,
+        "seb_padding_x_desktop": 64,
+        "seb_padding_y": 32,
+        "seb_value_size": 40,
+        "seb_bg": "#f5f5f7",
+        "seb_border_color": "#d2d2d7",
+        "seb_label_color": "#6e6e73",
+        "seb_value_color": "#1d1d1f",
+        "seb_tooltip_bg": "#e8e8ed",
+        "seb_tooltip_icon_color": "#6e6e73",
+        "seb_show_updated": true
+      }
+    },
+    "sales_configurator_preview_FqXW7m": {
+      "type": "sales-configurator-preview",
+      "name": "Sales Configurator",
+      "settings": {
+        "scp_product_id": "",
+        "scp_max_width": 1400,
+        "scp_padding_x_mobile": 24,
+        "scp_padding_x_desktop": 64,
+        "scp_padding_top": 80,
+        "scp_padding_bottom": 80,
+        "scp_bg": "#ffffff",
+        "scp_heading_color": "#1d1d1f",
+        "scp_text_color": "#1d1d1f",
+        "scp_muted_color": "#6e6e73",
+        "scp_border_color": "#d2d2d7",
+        "scp_accent_color": "#0071e3",
+        "scp_btn_bg": "#0071e3",
+        "scp_btn_text": "#ffffff"
+      }
+    },
+    "sales_compare_dYR6wA": {
+      "type": "sales-compare",
+      "blocks": {
+        "comparison_row_jbMgpi": {
+          "type": "comparison_row",
+          "settings": {
+            "eg_sc_row_label": "手首角誘導",
+            "eg_sc_col1_symbol": "none",
+            "eg_sc_col2_symbol": "excellent"
+          }
+        },
+        "comparison_row_y8Nfaq": {
+          "type": "comparison_row",
+          "settings": {
+            "eg_sc_row_label": "親指到達",
+            "eg_sc_col1_symbol": "good",
+            "eg_sc_col2_symbol": "excellent"
+          }
+        },
+        "comparison_row_D7GgRm": {
+          "type": "comparison_row",
+          "settings": {
+            "eg_sc_row_label": "局所圧",
+            "eg_sc_col1_symbol": "good",
+            "eg_sc_col2_symbol": "excellent"
+          }
+        }
+      },
+      "block_order": [
+        "comparison_row_jbMgpi",
+        "comparison_row_y8Nfaq",
+        "comparison_row_D7GgRm"
+      ],
+      "name": "Sales Compare",
+      "settings": {
+        "eg_sc_heading": "製品タイプ別比較",
+        "eg_sc_subtext": "一体型キーボードと左右分割オーダーメイドの特性を比較",
+        "eg_sc_col1_label": "一体型",
+        "eg_sc_col2_label": "左右分割オーダー",
+        "eg_sc_note": "※測定条件：成人男性（身長170cm、手の大きさ中程度）を基準。個人差により結果は異なる場合があります。",
+        "eg_sc_legend_show": true,
+        "eg_sc_padding_y": 80,
+        "eg_sc_padding_x_mobile": 20,
+        "eg_sc_padding_x_desktop": 64,
+        "eg_sc_max_width": 1200,
+        "eg_sc_heading_size": 36,
+        "eg_sc_bg": "#ffffff",
+        "eg_sc_heading_color": "#1d1d1f",
+        "eg_sc_text_color": "#1d1d1f",
+        "eg_sc_header_bg": "#f5f5f7",
+        "eg_sc_header_text": "#1d1d1f",
+        "eg_sc_row_even_bg": "#fafafa",
+        "eg_sc_border_color": "#e5e5e7",
+        "eg_sc_symbol_excellent_color": "#34c759",
+        "eg_sc_symbol_good_color": "#ff9500",
+        "eg_sc_symbol_none_color": "#8e8e93",
+        "eg_sc_note_color": "#86868b"
+      }
+    },
+    "sales_ctq_criteria_7htKJj": {
+      "type": "sales-ctq-criteria",
+      "blocks": {
+        "ctq_item_jC4VQH": {
+          "type": "ctq_item",
+          "settings": {
+            "eg_ctq_item_name": "橈尺偏位",
+            "eg_ctq_item_range": "5–15°",
+            "eg_ctq_item_note": "中立位基準"
+          }
+        },
+        "ctq_item_rkjRr4": {
+          "type": "ctq_item",
+          "settings": {
+            "eg_ctq_item_name": "背屈",
+            "eg_ctq_item_range": "0–10°",
+            "eg_ctq_item_note": "自然状態"
+          }
+        },
+        "ctq_item_pgpCnM": {
+          "type": "ctq_item",
+          "settings": {
+            "eg_ctq_item_name": "親指到達距離",
+            "eg_ctq_item_range": "X ≤ 85mm",
+            "eg_ctq_item_note": "キーボード中心から"
+          }
+        },
+        "ctq_item_P8prpP": {
+          "type": "ctq_item",
+          "settings": {
+            "eg_ctq_item_name": "掌屈角度",
+            "eg_ctq_item_range": "0–5°",
+            "eg_ctq_item_note": "タイピング時"
+          }
+        }
+      },
+      "block_order": [
+        "ctq_item_jC4VQH",
+        "ctq_item_rkjRr4",
+        "ctq_item_pgpCnM",
+        "ctq_item_P8prpP"
+      ],
+      "name": "Sales CTQ Criteria",
+      "settings": {
+        "eg_ctq_heading": "CTQ品質基準（抜粋）",
+        "eg_ctq_subheading": "各項目の合格基準範囲を満たした製品のみ出荷されます",
+        "eg_ctq_col1_label": "測定項目",
+        "eg_ctq_col2_label": "合格範囲",
+        "eg_ctq_col3_label": "備考",
+        "eg_ctq_pass_label": "合格",
+        "eg_ctq_pass_action": "→ 出荷",
+        "eg_ctq_fail_label": "未達",
+        "eg_ctq_fail_action": "→ 要再調整",
+        "eg_ctq_measurement_note_label": "※ 測定条件",
+        "eg_ctq_measurement_note": "室温23±2℃、湿度50±10%の環境下で、標準治具を用いて測定。3回測定の平均値を採用。",
+        "eg_ctq_pdf_url": "",
+        "eg_ctq_pdf_label": "詳細基準書（PDF）を見る",
+        "eg_ctq_bg": "#ffffff",
+        "eg_ctq_heading_color": "#1d1d1f",
+        "eg_ctq_table_header_bg": "#f5f5f7",
+        "eg_ctq_table_header_color": "#1d1d1f",
+        "eg_ctq_table_border_color": "#d2d2d7",
+        "eg_ctq_pass_color": "#30a14e",
+        "eg_ctq_fail_color": "#d73a49",
+        "eg_ctq_btn_bg": "#0071e3",
+        "eg_ctq_btn_color": "#ffffff",
+        "eg_ctq_padding_top": 60,
+        "eg_ctq_padding_bottom": 60
+      }
+    },
+    "sales_assurance_d7cTUG": {
+      "type": "sales-assurance",
+      "blocks": {
+        "faq_i3AD4F": {
+          "type": "faq",
+          "settings": {
+            "eg_sa_faq_question": "返品はできますか？",
+            "eg_sa_faq_answer": "<p>未使用品に限り、到着後7日以内であれば返品を承ります。詳細は返品ポリシーをご確認ください。</p>"
+          }
+        },
+        "faq_ckqHJp": {
+          "type": "faq",
+          "settings": {
+            "eg_sa_faq_question": "納期が遅れることはありますか？",
+            "eg_sa_faq_answer": "<p>受注生産のため、繁忙期や部材調達状況により遅れる場合があります。ご注文時に最新の納期目安をお知らせします。</p>"
+          }
+        },
+        "faq_EkNqwm": {
+          "type": "faq",
+          "settings": {
+            "eg_sa_faq_question": "角度調整に工具は必要ですか？",
+            "eg_sa_faq_answer": "<p>六角レンチ（付属）のみで調整可能です。特殊な工具は不要で、初めての方でも簡単に調整できます。</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_i3AD4F",
+        "faq_ckqHJp",
+        "faq_EkNqwm"
+      ],
+      "name": "Sales Assurance",
+      "settings": {
+        "eg_sa_heading": "安心してご購入いただける3つの保証",
+        "eg_sa_subtext": "ErgoGainは結果保証・サポート体制・納期実績で安心をお届けします",
+        "eg_sa_card1_title": "結果保証",
+        "eg_sa_card1_text": "CTQ未達時は無料で再調整（スペーサ追加・ネジ位置変更）。安心してお試しいただけます。",
+        "eg_sa_card1_note": "",
+        "eg_sa_card2_title": "オンラインサポート",
+        "eg_sa_card2_text": "角度合わせをオンラインで15分サポート。初めての方も安心して設定できます。",
+        "eg_sa_card2_note": "",
+        "eg_sa_card3_title": "リードタイム",
+        "eg_sa_leadtime_min": "7",
+        "eg_sa_leadtime_max": "14",
+        "eg_sa_card3_text": "7〜14営業日でお届け",
+        "eg_sa_show_stats": true,
+        "eg_sa_median_days": "9",
+        "eg_sa_p90_days": "12",
+        "eg_sa_card3_note": "",
+        "eg_sa_faq_heading": "よくある質問",
+        "eg_sa_padding_y": 64,
+        "eg_sa_padding_x_mobile": 20,
+        "eg_sa_padding_x_desktop": 40,
+        "eg_sa_max_width": 1200,
+        "eg_sa_bg": "#f5f5f7",
+        "eg_sa_card_bg": "#ffffff",
+        "eg_sa_fg": "#1d1d1f",
+        "eg_sa_accent": "#0071e3",
+        "eg_sa_border": "#d2d2d7"
       }
     }
   },
   "order": [
     "main",
     "related-products",
-    "ergolist_grid_TxdWT3",
-    "fixed_filters_product_list_XtqCWA"
+    "ergogain_hero_video_v2_LqWyPb",
+    "ergogain_order_tiles_xMEnDj",
+    "sales_problem_outcome_TehfxB",
+    "sales_how_it_works_zV93UJ",
+    "sales_evidence_bar_yFHWQB",
+    "sales_configurator_preview_FqXW7m",
+    "sales_compare_dYR6wA",
+    "sales_ctq_criteria_7htKJj",
+    "sales_assurance_d7cTUG"
   ]
 }
