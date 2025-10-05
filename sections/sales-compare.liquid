@@ -1,0 +1,422 @@
+{% comment %}
+  Sales Compare - 製品比較表セクション
+
+  特徴：
+  - 一体型 vs 左右分割オーダーの比較表
+  - 評価項目：手首角誘導、親指到達、局所圧
+  - 記号：○（優れている）/△（やや劣る）/–（該当なし）
+  - 測定条件注記表示
+  - レスポンシブ対応（モバイル横スクロール）
+{% endcomment %}
+
+<link rel="stylesheet" href="{{ 'sales-compare.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ 'sales-compare.css' | asset_url }}"></noscript>
+
+<style>
+  .eg-sc-section-{{ section.id }} {
+    background-color: {{ section.settings.eg_sc_bg }};
+    padding: {{ section.settings.eg_sc_padding_y }}px {{ section.settings.eg_sc_padding_x_mobile }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .eg-sc-section-{{ section.id }} {
+      padding: {{ section.settings.eg_sc_padding_y }}px {{ section.settings.eg_sc_padding_x_desktop }}px;
+    }
+  }
+
+  .eg-sc-section-{{ section.id }} .eg-sc-heading {
+    color: {{ section.settings.eg_sc_heading_color }};
+    font-size: {{ section.settings.eg_sc_heading_size }}px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .eg-sc-section-{{ section.id }} .eg-sc-heading {
+      font-size: calc({{ section.settings.eg_sc_heading_size }}px * 0.7);
+    }
+  }
+
+  .eg-sc-section-{{ section.id }} .eg-sc-subtext {
+    color: {{ section.settings.eg_sc_text_color }};
+  }
+
+  .eg-sc-section-{{ section.id }} .eg-sc-table th {
+    background-color: {{ section.settings.eg_sc_header_bg }};
+    color: {{ section.settings.eg_sc_header_text }};
+  }
+
+  .eg-sc-section-{{ section.id }} .eg-sc-table td {
+    color: {{ section.settings.eg_sc_text_color }};
+    border-color: {{ section.settings.eg_sc_border_color }};
+  }
+
+  .eg-sc-section-{{ section.id }} .eg-sc-table tbody tr:nth-child(even) {
+    background-color: {{ section.settings.eg_sc_row_even_bg }};
+  }
+
+  .eg-sc-section-{{ section.id }} .eg-sc-symbol--excellent {
+    color: {{ section.settings.eg_sc_symbol_excellent_color }};
+  }
+
+  .eg-sc-section-{{ section.id }} .eg-sc-symbol--good {
+    color: {{ section.settings.eg_sc_symbol_good_color }};
+  }
+
+  .eg-sc-section-{{ section.id }} .eg-sc-symbol--none {
+    color: {{ section.settings.eg_sc_symbol_none_color }};
+  }
+
+  .eg-sc-section-{{ section.id }} .eg-sc-note {
+    color: {{ section.settings.eg_sc_note_color }};
+  }
+</style>
+
+<section
+  class="eg-sc-section eg-sc-section-{{ section.id }}"
+  role="region"
+  aria-label="{{ section.settings.eg_sc_heading | escape }}"
+>
+  <div class="eg-sc-container">
+    {%- if section.settings.eg_sc_heading != blank -%}
+      <h2 class="eg-sc-heading">{{ section.settings.eg_sc_heading }}</h2>
+    {%- endif -%}
+
+    {%- if section.settings.eg_sc_subtext != blank -%}
+      <p class="eg-sc-subtext">{{ section.settings.eg_sc_subtext }}</p>
+    {%- endif -%}
+
+    <div class="eg-sc-table-wrapper">
+      <table class="eg-sc-table" role="table">
+        <thead>
+          <tr>
+            <th scope="col" class="eg-sc-table__header eg-sc-table__header--row">評価項目</th>
+            <th scope="col" class="eg-sc-table__header eg-sc-table__header--col1">
+              {{ section.settings.eg_sc_col1_label }}
+            </th>
+            <th scope="col" class="eg-sc-table__header eg-sc-table__header--col2">
+              {{ section.settings.eg_sc_col2_label }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'comparison_row' -%}
+              <tr>
+                <th scope="row" class="eg-sc-table__row-label">
+                  {{ block.settings.eg_sc_row_label }}
+                </th>
+                <td class="eg-sc-table__cell">
+                  <span class="eg-sc-symbol eg-sc-symbol--{{ block.settings.eg_sc_col1_symbol }}">
+                    {%- case block.settings.eg_sc_col1_symbol -%}
+                      {%- when 'excellent' -%}○
+                      {%- when 'good' -%}△
+                      {%- when 'none' -%}–
+                    {%- endcase -%}
+                  </span>
+                </td>
+                <td class="eg-sc-table__cell">
+                  <span class="eg-sc-symbol eg-sc-symbol--{{ block.settings.eg_sc_col2_symbol }}">
+                    {%- case block.settings.eg_sc_col2_symbol -%}
+                      {%- when 'excellent' -%}○
+                      {%- when 'good' -%}△
+                      {%- when 'none' -%}–
+                    {%- endcase -%}
+                  </span>
+                </td>
+              </tr>
+            {%- endif -%}
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+
+    {%- if section.settings.eg_sc_note != blank -%}
+      <div class="eg-sc-note-wrapper">
+        <p class="eg-sc-note">{{ section.settings.eg_sc_note }}</p>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.eg_sc_legend_show -%}
+      <div class="eg-sc-legend">
+        <p class="eg-sc-legend__title">記号の意味：</p>
+        <ul class="eg-sc-legend__list">
+          <li class="eg-sc-legend__item">
+            <span class="eg-sc-symbol eg-sc-symbol--excellent">○</span> = 優れている・良好
+          </li>
+          <li class="eg-sc-legend__item">
+            <span class="eg-sc-symbol eg-sc-symbol--good">△</span> = やや劣る・普通
+          </li>
+          <li class="eg-sc-legend__item">
+            <span class="eg-sc-symbol eg-sc-symbol--none">–</span> = 該当なし・劣る
+          </li>
+        </ul>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Sales Compare",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "コンテンツ"
+    },
+    {
+      "type": "text",
+      "id": "eg_sc_heading",
+      "label": "見出し",
+      "default": "製品タイプ別比較"
+    },
+    {
+      "type": "textarea",
+      "id": "eg_sc_subtext",
+      "label": "説明文",
+      "default": "一体型キーボードと左右分割オーダーメイドの特性を比較"
+    },
+    {
+      "type": "header",
+      "content": "列ラベル"
+    },
+    {
+      "type": "text",
+      "id": "eg_sc_col1_label",
+      "label": "列1（左）",
+      "default": "一体型"
+    },
+    {
+      "type": "text",
+      "id": "eg_sc_col2_label",
+      "label": "列2（右）",
+      "default": "左右分割オーダー"
+    },
+    {
+      "type": "header",
+      "content": "測定条件注記"
+    },
+    {
+      "type": "textarea",
+      "id": "eg_sc_note",
+      "label": "注記テキスト",
+      "default": "※測定条件：成人男性（身長170cm、手の大きさ中程度）を基準。個人差により結果は異なる場合があります。"
+    },
+    {
+      "type": "checkbox",
+      "id": "eg_sc_legend_show",
+      "label": "記号の凡例を表示",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "レイアウト・スタイル"
+    },
+    {
+      "type": "range",
+      "id": "eg_sc_padding_y",
+      "min": 40,
+      "max": 160,
+      "step": 10,
+      "unit": "px",
+      "label": "上下余白",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "eg_sc_padding_x_mobile",
+      "min": 16,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "label": "左右余白（モバイル）",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "eg_sc_padding_x_desktop",
+      "min": 32,
+      "max": 128,
+      "step": 8,
+      "unit": "px",
+      "label": "左右余白（デスクトップ）",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "eg_sc_max_width",
+      "min": 800,
+      "max": 1600,
+      "step": 100,
+      "unit": "px",
+      "label": "最大幅",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "eg_sc_heading_size",
+      "min": 24,
+      "max": 56,
+      "step": 2,
+      "unit": "px",
+      "label": "見出しサイズ",
+      "default": 36
+    },
+    {
+      "type": "header",
+      "content": "カラー設定"
+    },
+    {
+      "type": "color",
+      "id": "eg_sc_bg",
+      "label": "背景色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "eg_sc_heading_color",
+      "label": "見出し色",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "color",
+      "id": "eg_sc_text_color",
+      "label": "テキスト色",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "color",
+      "id": "eg_sc_header_bg",
+      "label": "テーブルヘッダー背景色",
+      "default": "#f5f5f7"
+    },
+    {
+      "type": "color",
+      "id": "eg_sc_header_text",
+      "label": "テーブルヘッダーテキスト色",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "color",
+      "id": "eg_sc_row_even_bg",
+      "label": "偶数行背景色",
+      "default": "#fafafa"
+    },
+    {
+      "type": "color",
+      "id": "eg_sc_border_color",
+      "label": "罫線色",
+      "default": "#e5e5e7"
+    },
+    {
+      "type": "color",
+      "id": "eg_sc_symbol_excellent_color",
+      "label": "記号○の色",
+      "default": "#34c759"
+    },
+    {
+      "type": "color",
+      "id": "eg_sc_symbol_good_color",
+      "label": "記号△の色",
+      "default": "#ff9500"
+    },
+    {
+      "type": "color",
+      "id": "eg_sc_symbol_none_color",
+      "label": "記号–の色",
+      "default": "#8e8e93"
+    },
+    {
+      "type": "color",
+      "id": "eg_sc_note_color",
+      "label": "注記テキスト色",
+      "default": "#86868b"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "comparison_row",
+      "name": "比較行",
+      "settings": [
+        {
+          "type": "text",
+          "id": "eg_sc_row_label",
+          "label": "評価項目名",
+          "default": "手首角誘導"
+        },
+        {
+          "type": "select",
+          "id": "eg_sc_col1_symbol",
+          "label": "列1の評価",
+          "options": [
+            {
+              "value": "excellent",
+              "label": "○（優れている）"
+            },
+            {
+              "value": "good",
+              "label": "△（やや劣る）"
+            },
+            {
+              "value": "none",
+              "label": "–（該当なし）"
+            }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "select",
+          "id": "eg_sc_col2_symbol",
+          "label": "列2の評価",
+          "options": [
+            {
+              "value": "excellent",
+              "label": "○（優れている）"
+            },
+            {
+              "value": "good",
+              "label": "△（やや劣る）"
+            },
+            {
+              "value": "none",
+              "label": "–（該当なし）"
+            }
+          ],
+          "default": "excellent"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sales Compare",
+      "blocks": [
+        {
+          "type": "comparison_row",
+          "settings": {
+            "eg_sc_row_label": "手首角誘導",
+            "eg_sc_col1_symbol": "none",
+            "eg_sc_col2_symbol": "excellent"
+          }
+        },
+        {
+          "type": "comparison_row",
+          "settings": {
+            "eg_sc_row_label": "親指到達",
+            "eg_sc_col1_symbol": "good",
+            "eg_sc_col2_symbol": "excellent"
+          }
+        },
+        {
+          "type": "comparison_row",
+          "settings": {
+            "eg_sc_row_label": "局所圧",
+            "eg_sc_col1_symbol": "good",
+            "eg_sc_col2_symbol": "excellent"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
