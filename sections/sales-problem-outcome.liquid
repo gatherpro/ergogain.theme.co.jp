@@ -1,0 +1,284 @@
+{% comment %}
+  Sales Problem Outcome - 3タイル構成
+  - 手首がまっすぐ（橈尺偏位）
+  - 親指が届く（修飾キー到達率）
+  - 長時間でも当たりが少ない（接触圧分散）
+  各タイルにBefore/Afterグラフとツールチップ
+{% endcomment %}
+
+<link rel="stylesheet" href="{{ 'sales-problem-outcome.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ 'sales-problem-outcome.css' | asset_url }}"></noscript>
+
+{%- style -%}
+.spo-{{ section.id }} {
+  background-color: {{ section.settings.spo_bg }};
+  color: {{ section.settings.spo_text }};
+  padding-top: {{ section.settings.spo_padding_top }}px;
+  padding-bottom: {{ section.settings.spo_padding_bottom }}px;
+}
+.spo-{{ section.id }} .spo__heading {
+  font-size: {{ section.settings.spo_heading_size }}px;
+  color: {{ section.settings.spo_heading_color }};
+}
+.spo-{{ section.id }} .spo__tile {
+  background-color: {{ section.settings.spo_tile_bg }};
+  border-color: {{ section.settings.spo_tile_border }};
+}
+.spo-{{ section.id }} .spo__bar--before { background-color: {{ section.settings.spo_before_color }}; }
+.spo-{{ section.id }} .spo__bar--after { background-color: {{ section.settings.spo_after_color }}; }
+{%- endstyle -%}
+
+<section class="spo spo-{{ section.id }}" data-spo>
+  <div class="spo__container page-width">
+    {%- if section.settings.spo_heading != blank -%}
+      <h2 class="spo__heading">{{ section.settings.spo_heading }}</h2>
+    {%- endif -%}
+    
+    {%- if section.settings.spo_subtext != blank -%}
+      <p class="spo__subtext">{{ section.settings.spo_subtext }}</p>
+    {%- endif -%}
+
+    <div class="spo__grid">
+      {%- for block in section.blocks -%}
+        <div class="spo__tile" {{ block.shopify_attributes }}>
+          <div class="spo__tile-header">
+            <h3 class="spo__tile-title">{{ block.settings.spo_tile_title }}</h3>
+            {%- if block.settings.spo_tile_tooltip != blank -%}
+              <button class="spo__info-btn" type="button" aria-label="詳細情報" data-tooltip="{{ block.settings.spo_tile_tooltip | escape }}">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M8 7v4M8 5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </button>
+            {%- endif -%}
+          </div>
+
+          <p class="spo__tile-desc">{{ block.settings.spo_tile_desc }}</p>
+
+          <div class="spo__chart">
+            <div class="spo__chart-row">
+              <span class="spo__chart-label">Before</span>
+              <div class="spo__bar-wrap">
+                <div class="spo__bar spo__bar--before" style="width: {{ block.settings.spo_before_value }}%"></div>
+              </div>
+              <span class="spo__chart-value">{{ block.settings.spo_before_value }}{{ block.settings.spo_unit }}</span>
+            </div>
+            <div class="spo__chart-row">
+              <span class="spo__chart-label">After</span>
+              <div class="spo__bar-wrap">
+                <div class="spo__bar spo__bar--after" style="width: {{ block.settings.spo_after_value }}%"></div>
+              </div>
+              <span class="spo__chart-value">{{ block.settings.spo_after_value }}{{ block.settings.spo_unit }}</span>
+            </div>
+          </div>
+
+          {%- if block.settings.spo_tile_note != blank -%}
+            <p class="spo__tile-note">{{ block.settings.spo_tile_note }}</p>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <div class="spo__tooltip" data-spo-tooltip role="tooltip" aria-hidden="true"></div>
+</section>
+
+<script src="{{ 'sales-problem-outcome.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Sales Problem Outcome",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "コンテンツ"
+    },
+    {
+      "type": "text",
+      "id": "spo_heading",
+      "label": "見出し",
+      "default": "エルゴノミクス設計の効果"
+    },
+    {
+      "type": "textarea",
+      "id": "spo_subtext",
+      "label": "サブテキスト",
+      "default": "人間工学に基づいた設計により、手首への負担を大幅に軽減"
+    },
+    {
+      "type": "header",
+      "content": "スタイル"
+    },
+    {
+      "type": "range",
+      "id": "spo_heading_size",
+      "min": 24,
+      "max": 56,
+      "step": 2,
+      "unit": "px",
+      "label": "見出しサイズ",
+      "default": 36
+    },
+    {
+      "type": "color",
+      "id": "spo_bg",
+      "label": "背景色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "spo_text",
+      "label": "テキスト色",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "color",
+      "id": "spo_heading_color",
+      "label": "見出し色",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "color",
+      "id": "spo_tile_bg",
+      "label": "タイル背景色",
+      "default": "#f5f5f7"
+    },
+    {
+      "type": "color",
+      "id": "spo_tile_border",
+      "label": "タイル枠線色",
+      "default": "#e5e5ea"
+    },
+    {
+      "type": "color",
+      "id": "spo_before_color",
+      "label": "Before カラー",
+      "default": "#ff3b30"
+    },
+    {
+      "type": "color",
+      "id": "spo_after_color",
+      "label": "After カラー",
+      "default": "#34c759"
+    },
+    {
+      "type": "range",
+      "id": "spo_padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "label": "上余白",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "spo_padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "label": "下余白",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "outcome_tile",
+      "name": "成果タイル",
+      "settings": [
+        {
+          "type": "text",
+          "id": "spo_tile_title",
+          "label": "タイトル",
+          "default": "手首がまっすぐ"
+        },
+        {
+          "type": "textarea",
+          "id": "spo_tile_desc",
+          "label": "説明",
+          "default": "橈尺偏位を5–15°に抑制"
+        },
+        {
+          "type": "textarea",
+          "id": "spo_tile_tooltip",
+          "label": "ツールチップ（測定条件）",
+          "default": "測定条件：8時間タイピング、手首角度測定器使用"
+        },
+        {
+          "type": "range",
+          "id": "spo_before_value",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "label": "Before 値",
+          "default": 75
+        },
+        {
+          "type": "range",
+          "id": "spo_after_value",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "label": "After 値",
+          "default": 15
+        },
+        {
+          "type": "text",
+          "id": "spo_unit",
+          "label": "単位",
+          "default": "°"
+        },
+        {
+          "type": "text",
+          "id": "spo_tile_note",
+          "label": "注釈",
+          "default": "※個人差があります"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sales Problem Outcome",
+      "blocks": [
+        {
+          "type": "outcome_tile",
+          "settings": {
+            "spo_tile_title": "手首がまっすぐ",
+            "spo_tile_desc": "橈尺偏位を5–15°に抑制",
+            "spo_tile_tooltip": "測定条件：8時間タイピング、手首角度測定器使用",
+            "spo_before_value": 75,
+            "spo_after_value": 15,
+            "spo_unit": "°"
+          }
+        },
+        {
+          "type": "outcome_tile",
+          "settings": {
+            "spo_tile_title": "親指が届く",
+            "spo_tile_desc": "修飾キー到達率↑",
+            "spo_tile_tooltip": "測定条件：親指での修飾キー操作成功率",
+            "spo_before_value": 45,
+            "spo_after_value": 95,
+            "spo_unit": "%"
+          }
+        },
+        {
+          "type": "outcome_tile",
+          "settings": {
+            "spo_tile_title": "長時間でも快適",
+            "spo_tile_desc": "接触圧分散",
+            "spo_tile_tooltip": "測定条件：8時間使用後の接触圧力測定",
+            "spo_before_value": 85,
+            "spo_after_value": 25,
+            "spo_unit": "kPa"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
