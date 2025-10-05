@@ -1,0 +1,403 @@
+{% comment %}
+  Sales Evidence Bar - 実績カウンターバー
+
+  特徴：
+  - 4つのカウンター表示（初期提案達成率、追加調整達成率、再現性、学習件数）
+  - metafields evidence.* 優先、無ければダミー値
+  - iツールチップで定義式/閾値表示
+  - 最終更新日表示
+{% endcomment %}
+
+{%- liquid
+  assign initial_rate = shop.metafields.evidence.initial_rate | default: 62
+  assign adjusted_rate = shop.metafields.evidence.adjusted_rate | default: 91
+  assign reproducibility = shop.metafields.evidence.reproducibility | default: 88
+  assign learning_count = shop.metafields.evidence.learning_count | default: 12408
+  assign last_updated = shop.metafields.evidence.last_updated
+  if last_updated
+    assign last_updated = last_updated | date: '%Y年%m月%d日'
+  endif
+-%}
+
+<style>
+  .seb-bar {
+    background-color: {{ section.settings.seb_bg }};
+    padding: {{ section.settings.seb_padding_y }}px {{ section.settings.seb_padding_x_mobile }}px;
+    border-top: 1px solid {{ section.settings.seb_border_color }};
+    border-bottom: 1px solid {{ section.settings.seb_border_color }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .seb-bar {
+      padding: {{ section.settings.seb_padding_y }}px {{ section.settings.seb_padding_x_desktop }}px;
+    }
+  }
+
+  .seb-bar__container {
+    max-width: {{ section.settings.seb_max_width }}px;
+    margin: 0 auto;
+  }
+
+  .seb-bar__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.4rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .seb-bar__grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3.2rem;
+    }
+  }
+
+  .seb-bar__item {
+    text-align: center;
+  }
+
+  .seb-bar__label-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .seb-bar__label {
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: {{ section.settings.seb_label_color }};
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .seb-bar__tooltip-trigger {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background-color: {{ section.settings.seb_tooltip_bg }};
+    color: {{ section.settings.seb_tooltip_icon_color }};
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: help;
+    border: none;
+    outline: none;
+  }
+
+  .seb-bar__tooltip-trigger:focus-visible {
+    outline: 2px solid {{ section.settings.seb_value_color }};
+    outline-offset: 2px;
+  }
+
+  .seb-bar__tooltip-trigger:hover .seb-bar__tooltip,
+  .seb-bar__tooltip-trigger:focus .seb-bar__tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .seb-bar__tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #1d1d1f;
+    color: #ffffff;
+    padding: 1.2rem 1.6rem;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    line-height: 1.5;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease;
+    z-index: 100;
+    pointer-events: none;
+  }
+
+  .seb-bar__tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #1d1d1f;
+  }
+
+  @media screen and (max-width: 749px) {
+    .seb-bar__tooltip {
+      white-space: normal;
+      max-width: 200px;
+      left: auto;
+      right: 0;
+      transform: none;
+    }
+
+    .seb-bar__tooltip::after {
+      left: auto;
+      right: 8px;
+      transform: none;
+    }
+  }
+
+  .seb-bar__value {
+    font-size: {{ section.settings.seb_value_size }}px;
+    font-weight: 700;
+    color: {{ section.settings.seb_value_color }};
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .seb-bar__value {
+      font-size: calc({{ section.settings.seb_value_size }}px * 0.8);
+    }
+  }
+
+  .seb-bar__updated {
+    text-align: center;
+    font-size: 1.2rem;
+    color: {{ section.settings.seb_label_color }};
+    margin-top: 2rem;
+    opacity: 0.7;
+  }
+
+  @media screen and (min-width: 750px) {
+    .seb-bar__updated {
+      margin-top: 2.4rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .seb-bar__tooltip {
+      transition: none;
+    }
+  }
+</style>
+
+<section class="seb-bar" role="region" aria-label="実績データ">
+  <div class="seb-bar__container">
+    <div class="seb-bar__grid">
+
+      {%- comment -%} 初期提案達成率 {%- endcomment -%}
+      <div class="seb-bar__item">
+        <div class="seb-bar__label-wrapper">
+          <span class="seb-bar__label">初期提案達成</span>
+          <button class="seb-bar__tooltip-trigger" aria-label="初期提案達成率の定義">
+            i
+            <span class="seb-bar__tooltip">
+              初回提案で要件達成した案件数 ÷ 全案件数<br>
+              閾値: 50%以上
+            </span>
+          </button>
+        </div>
+        <p class="seb-bar__value">{{ initial_rate }}%</p>
+      </div>
+
+      {%- comment -%} 追加調整0-2回達成率 {%- endcomment -%}
+      <div class="seb-bar__item">
+        <div class="seb-bar__label-wrapper">
+          <span class="seb-bar__label">調整0-2回達成</span>
+          <button class="seb-bar__tooltip-trigger" aria-label="追加調整達成率の定義">
+            i
+            <span class="seb-bar__tooltip">
+              0-2回の調整で達成した案件数 ÷ 全案件数<br>
+              閾値: 85%以上
+            </span>
+          </button>
+        </div>
+        <p class="seb-bar__value">{{ adjusted_rate }}%</p>
+      </div>
+
+      {%- comment -%} 再現性 {%- endcomment -%}
+      <div class="seb-bar__item">
+        <div class="seb-bar__label-wrapper">
+          <span class="seb-bar__label">再現性</span>
+          <button class="seb-bar__tooltip-trigger" aria-label="再現性の定義">
+            i
+            <span class="seb-bar__tooltip">
+              同条件で同じ結果を出せた回数 ÷ 試行回数<br>
+              閾値: 80%以上
+            </span>
+          </button>
+        </div>
+        <p class="seb-bar__value">{{ reproducibility }}%</p>
+      </div>
+
+      {%- comment -%} 学習件数 {%- endcomment -%}
+      <div class="seb-bar__item">
+        <div class="seb-bar__label-wrapper">
+          <span class="seb-bar__label">学習件数</span>
+          <button class="seb-bar__tooltip-trigger" aria-label="学習件数の定義">
+            i
+            <span class="seb-bar__tooltip">
+              AIが学習したデータ件数<br>
+              更新頻度: 毎日
+            </span>
+          </button>
+        </div>
+        <p class="seb-bar__value" data-count="{{ learning_count }}">{{ learning_count }}</p>
+      </div>
+
+    </div>
+
+    {%- if section.settings.seb_show_updated -%}
+      <p class="seb-bar__updated" data-updated="{{ last_updated }}">
+        最終更新: <span class="seb-bar__updated-date">{{ last_updated | default: '読み込み中...' }}</span>
+      </p>
+    {%- endif -%}
+  </div>
+</section>
+
+<script>
+  (function() {
+    // カンマ区切り数値
+    const countEl = document.querySelector('[data-count]');
+    if (countEl) {
+      const count = parseInt(countEl.getAttribute('data-count'));
+      countEl.textContent = count.toLocaleString('ja-JP');
+    }
+
+    // 最終更新日
+    const updatedEl = document.querySelector('[data-updated]');
+    if (updatedEl) {
+      const storedDate = updatedEl.getAttribute('data-updated');
+      if (!storedDate || storedDate === '') {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const dateEl = updatedEl.querySelector('.seb-bar__updated-date');
+        if (dateEl) {
+          dateEl.textContent = year + '年' + month + '月' + day + '日';
+        }
+      }
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Sales Evidence Bar",
+  "settings": [
+    {
+      "type": "header",
+      "content": "レイアウト"
+    },
+    {
+      "type": "range",
+      "id": "seb_max_width",
+      "min": 1000,
+      "max": 2400,
+      "step": 100,
+      "unit": "px",
+      "label": "最大幅",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "seb_padding_x_mobile",
+      "min": 16,
+      "max": 80,
+      "step": 8,
+      "unit": "px",
+      "label": "左右余白（モバイル）",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "seb_padding_x_desktop",
+      "min": 24,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "label": "左右余白（デスクトップ）",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "seb_padding_y",
+      "min": 20,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "上下余白",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "タイポグラフィ"
+    },
+    {
+      "type": "range",
+      "id": "seb_value_size",
+      "min": 28,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "label": "数値サイズ",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "カラー"
+    },
+    {
+      "type": "color",
+      "id": "seb_bg",
+      "label": "背景色",
+      "default": "#f5f5f7"
+    },
+    {
+      "type": "color",
+      "id": "seb_border_color",
+      "label": "ボーダー色",
+      "default": "#d2d2d7"
+    },
+    {
+      "type": "color",
+      "id": "seb_label_color",
+      "label": "ラベル色",
+      "default": "#6e6e73"
+    },
+    {
+      "type": "color",
+      "id": "seb_value_color",
+      "label": "数値色",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "color",
+      "id": "seb_tooltip_bg",
+      "label": "ツールチップアイコン背景色",
+      "default": "#e8e8ed"
+    },
+    {
+      "type": "color",
+      "id": "seb_tooltip_icon_color",
+      "label": "ツールチップアイコン色",
+      "default": "#6e6e73"
+    },
+    {
+      "type": "header",
+      "content": "表示オプション"
+    },
+    {
+      "type": "checkbox",
+      "id": "seb_show_updated",
+      "label": "最終更新日を表示",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sales Evidence Bar"
+    }
+  ]
+}
+{% endschema %}

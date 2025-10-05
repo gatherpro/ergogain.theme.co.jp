@@ -1,0 +1,325 @@
+{% comment %}
+  Sales Hero - 中立位置特化型ヒーローセクション
+
+  使い方：
+  1. 管理画面 > オンラインストア > テーマ > カスタマイズ
+  2. 「セクションを追加」> 「Sales Hero」を選択
+  3. 見出し、画像、CTAを設定
+
+  機能：
+  - 真俯瞰/45°画像を<picture>でAVIF/WEBP/PNG対応
+  - LCP最適化（fetchpriority="high", eager loading）
+  - 信頼バッジ3点（14日調整/CTQ結果保証/日本製）
+  - 達成率表示（hero_neutral_rate）
+  - A/B切替機能（見出し/サブ/CTA）
+  - モーダル起動CTA（event=config_open）
+{% endcomment %}
+
+{{ 'sales-hero.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sales-hero.js' | asset_url }}" defer></script>
+
+{%- style -%}
+  #eg-sales-hero-{{ section.id }} {
+    --eg-sh-padding-y: {{ section.settings.eg_sh_padding_y }}px;
+    --eg-sh-fg: {{ section.settings.eg_sh_fg }};
+    --eg-sh-bg: {{ section.settings.eg_sh_bg }};
+    --eg-sh-neutral-rate: {{ section.settings.eg_sh_neutral_rate }};
+  }
+{%- endstyle -%}
+
+<section
+  id="eg-sales-hero-{{ section.id }}"
+  class="eg-sh"
+  role="region"
+  aria-label="セールスヒーロー"
+  data-ab-variant="{{ section.settings.eg_sh_ab_variant }}"
+>
+  <div class="eg-sh__container">
+
+    {%- comment -%} Left: Text Content {%- endcomment -%}
+    <div class="eg-sh__content">
+
+      {%- comment -%} Catch (A/B切替可能) {%- endcomment -%}
+      <h1 class="eg-sh__catch">
+        {%- if section.settings.eg_sh_ab_variant == 'b' and section.settings.eg_sh_catch_b != blank -%}
+          {{ section.settings.eg_sh_catch_b }}
+        {%- else -%}
+          {{ section.settings.eg_sh_catch_a | default: 'あなたの"中立"に合わせる、左右分割' }}
+        {%- endif -%}
+      </h1>
+
+      {%- comment -%} Sub (A/B切替可能) {%- endcomment -%}
+      <p class="eg-sh__sub">
+        {%- if section.settings.eg_sh_ab_variant == 'b' and section.settings.eg_sh_sub_b != blank -%}
+          {{ section.settings.eg_sh_sub_b }}
+        {%- else -%}
+          {{ section.settings.eg_sh_sub_a | default: '2D計測だけで最適角度を自動提案。到着後は±調整で手首中立域へ。' }}
+        {%- endif -%}
+      </p>
+
+      {%- comment -%} 達成率バッジ {%- endcomment -%}
+      {%- if section.settings.eg_sh_show_rate -%}
+        <div class="eg-sh__rate" aria-label="手首中立達成率 {{ section.settings.eg_sh_neutral_rate }}%">
+          <svg class="eg-sh__rate-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M10 0L12.2451 6.90983H19.5106L13.6327 11.1803L15.8779 18.0902L10 13.8197L4.12215 18.0902L6.36729 11.1803L0.489435 6.90983H7.75486L10 0Z" fill="currentColor"/>
+          </svg>
+          <span class="eg-sh__rate-text">中立達成率 <strong>{{ section.settings.eg_sh_neutral_rate }}%</strong></span>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} CTAs {%- endcomment -%}
+      <div class="eg-sh__ctas">
+        {%- comment -%} Primary CTA (A/B切替可能) {%- endcomment -%}
+        <button
+          type="button"
+          class="eg-sh__cta eg-sh__cta--primary"
+          data-config-open
+          aria-label="サイズ入力で提案を見る"
+        >
+          {%- if section.settings.eg_sh_ab_variant == 'b' and section.settings.eg_sh_cta_primary_b != blank -%}
+            {{ section.settings.eg_sh_cta_primary_b }}
+          {%- else -%}
+            {{ section.settings.eg_sh_cta_primary_a | default: 'サイズ入力で提案を見る' }}
+          {%- endif -%}
+        </button>
+
+        {%- comment -%} Secondary CTA {%- endcomment -%}
+        {%- if section.settings.eg_sh_cta_secondary_text != blank -%}
+          <a
+            href="{{ section.settings.eg_sh_cta_secondary_link | default: '#configurator' }}"
+            class="eg-sh__cta eg-sh__cta--secondary"
+          >
+            {{ section.settings.eg_sh_cta_secondary_text }}
+          </a>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Trust Badges {%- endcomment -%}
+      <div class="eg-sh__badges">
+        <div class="eg-sh__badge">
+          <svg class="eg-sh__badge-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="eg-sh__badge-text">14日間調整サポート</span>
+        </div>
+
+        <div class="eg-sh__badge">
+          <svg class="eg-sh__badge-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M9 11L12 14L22 4M21 12V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="eg-sh__badge-text">CTQ結果保証</span>
+        </div>
+
+        <div class="eg-sh__badge">
+          <svg class="eg-sh__badge-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="currentColor"/>
+            <path d="M12 6L14 10L18 11L15 14L16 18L12 16L8 18L9 14L6 11L10 10L12 6Z" fill="currentColor"/>
+          </svg>
+          <span class="eg-sh__badge-text">日本製</span>
+        </div>
+      </div>
+
+    </div>
+
+    {%- comment -%} Right: Hero Image (Picture with AVIF/WEBP/PNG) {%- endcomment -%}
+    <div class="eg-sh__media">
+      {%- if section.settings.eg_sh_image != blank -%}
+        <picture class="eg-sh__picture">
+          {%- comment -%} AVIF {%- endcomment -%}
+          {%- if section.settings.eg_sh_image_avif != blank -%}
+            <source
+              srcset="{{ section.settings.eg_sh_image_avif | image_url: width: 1200 }}"
+              type="image/avif"
+            >
+          {%- endif -%}
+
+          {%- comment -%} WEBP {%- endcomment -%}
+          {%- if section.settings.eg_sh_image_webp != blank -%}
+            <source
+              srcset="{{ section.settings.eg_sh_image_webp | image_url: width: 1200 }}"
+              type="image/webp"
+            >
+          {%- endif -%}
+
+          {%- comment -%} PNG/JPG (Fallback) {%- endcomment -%}
+          <img
+            src="{{ section.settings.eg_sh_image | image_url: width: 1200 }}"
+            alt="{{ section.settings.eg_sh_image.alt | default: '左右分割キーボード真俯瞰画像' | escape }}"
+            width="1200"
+            height="{{ 1200 | divided_by: section.settings.eg_sh_image.aspect_ratio | ceil }}"
+            loading="eager"
+            fetchpriority="high"
+            class="eg-sh__img"
+          >
+        </picture>
+      {%- else -%}
+        <div class="eg-sh__placeholder">
+          {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+      {%- endif -%}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Sales Hero",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "A/Bテスト設定"
+    },
+    {
+      "type": "select",
+      "id": "eg_sh_ab_variant",
+      "label": "A/B切替",
+      "options": [
+        {
+          "value": "a",
+          "label": "パターンA"
+        },
+        {
+          "value": "b",
+          "label": "パターンB"
+        }
+      ],
+      "default": "a"
+    },
+    {
+      "type": "header",
+      "content": "パターンA（デフォルト）"
+    },
+    {
+      "type": "text",
+      "id": "eg_sh_catch_a",
+      "label": "キャッチコピー A",
+      "default": "あなたの\"中立\"に合わせる、左右分割"
+    },
+    {
+      "type": "textarea",
+      "id": "eg_sh_sub_a",
+      "label": "サブテキスト A",
+      "default": "2D計測だけで最適角度を自動提案。到着後は±調整で手首中立域へ。"
+    },
+    {
+      "type": "text",
+      "id": "eg_sh_cta_primary_a",
+      "label": "主要CTA A",
+      "default": "サイズ入力で提案を見る"
+    },
+    {
+      "type": "header",
+      "content": "パターンB"
+    },
+    {
+      "type": "text",
+      "id": "eg_sh_catch_b",
+      "label": "キャッチコピー B",
+      "default": ""
+    },
+    {
+      "type": "textarea",
+      "id": "eg_sh_sub_b",
+      "label": "サブテキスト B",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "eg_sh_cta_primary_b",
+      "label": "主要CTA B",
+      "default": ""
+    },
+    {
+      "type": "header",
+      "content": "補助CTA（共通）"
+    },
+    {
+      "type": "text",
+      "id": "eg_sh_cta_secondary_text",
+      "label": "補助CTAテキスト",
+      "default": "3分でわかる"
+    },
+    {
+      "type": "url",
+      "id": "eg_sh_cta_secondary_link",
+      "label": "補助CTAリンク",
+      "default": "#configurator"
+    },
+    {
+      "type": "header",
+      "content": "達成率表示"
+    },
+    {
+      "type": "checkbox",
+      "id": "eg_sh_show_rate",
+      "label": "達成率を表示",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "eg_sh_neutral_rate",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "中立達成率",
+      "default": 78
+    },
+    {
+      "type": "header",
+      "content": "画像設定（LCP最適化）"
+    },
+    {
+      "type": "image_picker",
+      "id": "eg_sh_image",
+      "label": "メイン画像（PNG/JPG）"
+    },
+    {
+      "type": "image_picker",
+      "id": "eg_sh_image_webp",
+      "label": "WEBP画像（任意）",
+      "info": "WEBP対応ブラウザで優先表示"
+    },
+    {
+      "type": "image_picker",
+      "id": "eg_sh_image_avif",
+      "label": "AVIF画像（任意）",
+      "info": "AVIF対応ブラウザで優先表示（最軽量）"
+    },
+    {
+      "type": "header",
+      "content": "スタイル設定"
+    },
+    {
+      "type": "range",
+      "id": "eg_sh_padding_y",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "label": "上下余白",
+      "default": 80
+    },
+    {
+      "type": "color",
+      "id": "eg_sh_fg",
+      "label": "テキスト色",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "eg_sh_bg",
+      "label": "背景色",
+      "default": "#FFFFFF"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sales Hero"
+    }
+  ]
+}
+{% endschema %}
