@@ -144,11 +144,11 @@
         "eg_order_full_title": "フルオーダー",
         "eg_order_full_summary": "完全カスタマイズ可能。あなただけのキーボードを。",
         "eg_order_full_price": 3980000,
-        "eg_order_full_link": "",
+        "eg_order_full_link": "shopify://products/エルゴゲイン-分割エルゴノミクス-メカニカルキーボード-有線-2-4ghzレシーバー対応",
         "eg_order_semi_title": "セミオーダー",
         "eg_order_semi_summary": "厳選されたプリセットから選択。手軽にカスタマイズ。",
         "eg_order_semi_price": 1980000,
-        "eg_order_semi_link": "",
+        "eg_order_semi_link": "shopify://products/キーボード1",
         "eg_order_padding_y": 64,
         "eg_order_fg": "#000000",
         "eg_order_bg": "#ffffff"
