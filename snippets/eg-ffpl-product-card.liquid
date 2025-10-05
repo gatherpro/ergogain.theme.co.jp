@@ -145,12 +145,12 @@
           -%}
           <button
             type="button"
-            class="eg-ffpl__size-btn{% if forloop.first %} active{% endif %}"
+            class="eg-ffpl__size-btn"
             data-size="{{ value | escape }}"
             data-variant-id="{% if is_available %}{{ variant_for_size.id }}{% endif %}"
             {% unless is_available %}disabled{% endunless %}
             aria-label="サイズ {{ value }}"
-            aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+            aria-pressed="false"
           >
             {{ value }}
           </button>
@@ -215,13 +215,13 @@
           -%}
           <button
             type="button"
-            class="eg-ffpl__color-swatch{% if forloop.first %} active{% endif %}"
+            class="eg-ffpl__color-swatch"
             style="background-color: {{ color_code }};"
             data-color="{{ value | escape }}"
             data-image-src="{{ color_image | image_url: width: 600 }}"
             {% unless is_available %}disabled{% endunless %}
             aria-label="カラー {{ value }}"
-            aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+            aria-pressed="false"
             title="{{ value }}"
           ></button>
         {%- endfor -%}
@@ -246,10 +246,13 @@
     class="eg-ffpl__add-to-cart"
     data-variant-id="{{ first_available_variant.id }}"
     data-product-id="{{ product.id }}"
-    {% unless first_available_variant.available %}disabled{% endunless %}
+    data-has-size-option="{% if size_option %}true{% else %}false{% endif %}"
+    {% if size_option or first_available_variant.available == false %}disabled{% endif %}
     aria-label="カートに追加: {{ product.title }}"
   >
-    {%- if first_available_variant.available -%}
+    {%- if size_option -%}
+      サイズを選択
+    {%- elsif first_available_variant.available -%}
       カートに追加
     {%- else -%}
       在庫切れ

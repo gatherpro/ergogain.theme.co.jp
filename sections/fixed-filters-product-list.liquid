@@ -1146,8 +1146,12 @@
         const sizeButtons = card.querySelectorAll('.eg-ffpl__size-btn');
         sizeButtons.forEach(btn => {
           btn.addEventListener('click', function() {
-            sizeButtons.forEach(b => b.classList.remove('active'));
+            sizeButtons.forEach(b => {
+              b.classList.remove('active');
+              b.setAttribute('aria-pressed', 'false');
+            });
             this.classList.add('active');
+            this.setAttribute('aria-pressed', 'true');
             updateAddToCartButton(card);
           });
         });
@@ -1156,8 +1160,12 @@
         const colorSwatches = card.querySelectorAll('.eg-ffpl__color-swatch');
         colorSwatches.forEach(swatch => {
           swatch.addEventListener('click', function() {
-            colorSwatches.forEach(s => s.classList.remove('active'));
+            colorSwatches.forEach(s => {
+              s.classList.remove('active');
+              s.setAttribute('aria-pressed', 'false');
+            });
             this.classList.add('active');
+            this.setAttribute('aria-pressed', 'true');
 
             // Swap image
             const newImageSrc = this.dataset.imageSrc;
@@ -1221,19 +1229,71 @@
     }
 
     function updateAddToCartButton(card) {
-      // Update variant ID based on selected size/color
-      // This is a simplified version - full implementation would query Shopify variants
       const addToCartBtn = card.querySelector('.eg-ffpl__add-to-cart');
+      if (!addToCartBtn) return;
+
+      const hasSizeOption = addToCartBtn.dataset.hasSizeOption === 'true';
       const activeSize = card.querySelector('.eg-ffpl__size-btn.active');
       const activeColor = card.querySelector('.eg-ffpl__color-swatch.active');
 
-      // Check if selected variant is available
-      // In real implementation, check variant.available from product data
-      const isAvailable = true; // Placeholder
+      // Get variant data from hidden JSON
+      const variantDataEl = card.querySelector('[data-product-variants]');
+      let selectedVariant = null;
 
-      if (addToCartBtn) {
-        addToCartBtn.disabled = !isAvailable;
-        addToCartBtn.textContent = isAvailable ? 'カートに追加' : '在庫切れ';
+      if (variantDataEl) {
+        try {
+          const variantData = JSON.parse(variantDataEl.textContent);
+          const variants = variantData.variants;
+
+          // Find matching variant based on selected options
+          selectedVariant = variants.find(v => {
+            let matches = true;
+
+            if (activeSize) {
+              const sizeValue = activeSize.dataset.size;
+              matches = matches && (v.option1 === sizeValue || v.option2 === sizeValue || v.option3 === sizeValue);
+            }
+
+            if (activeColor) {
+              const colorValue = activeColor.dataset.color;
+              matches = matches && (v.option1 === colorValue || v.option2 === colorValue || v.option3 === colorValue);
+            }
+
+            return matches;
+          });
+
+          // If no exact match, try first available variant with selected size
+          if (!selectedVariant && activeSize) {
+            const sizeValue = activeSize.dataset.size;
+            selectedVariant = variants.find(v =>
+              (v.option1 === sizeValue || v.option2 === sizeValue || v.option3 === sizeValue) && v.available
+            );
+          }
+        } catch (e) {
+          console.error('Failed to parse variant data:', e);
+        }
+      }
+
+      // Update button state
+      if (hasSizeOption && !activeSize) {
+        // Size option exists but not selected
+        addToCartBtn.disabled = true;
+        addToCartBtn.textContent = 'サイズを選択';
+      } else if (selectedVariant) {
+        // Variant found
+        addToCartBtn.dataset.variantId = selectedVariant.id;
+        addToCartBtn.disabled = !selectedVariant.available;
+        addToCartBtn.textContent = selectedVariant.available ? 'カートに追加' : '在庫切れ';
+      } else {
+        // Fallback: use button's existing variant ID
+        const variantId = addToCartBtn.dataset.variantId;
+        if (variantId && !hasSizeOption) {
+          addToCartBtn.disabled = false;
+          addToCartBtn.textContent = 'カートに追加';
+        } else {
+          addToCartBtn.disabled = true;
+          addToCartBtn.textContent = hasSizeOption ? 'サイズを選択' : '在庫切れ';
+        }
       }
     }
 
