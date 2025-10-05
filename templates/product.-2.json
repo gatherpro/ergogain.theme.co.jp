@@ -115,11 +115,44 @@
         "eg_grid_padding_top": 60,
         "eg_grid_padding_bottom": 60
       }
+    },
+    "fixed_filters_product_list_XtqCWA": {
+      "type": "fixed-filters-product-list",
+      "blocks": {
+        "checkbox_filter_kBTTP7": {
+          "type": "checkbox_filter",
+          "settings": {
+            "eg_ffpl_filter_label": "ブランド",
+            "eg_ffpl_filter_key": "Brand",
+            "eg_ffpl_filter_values": "Apple, Dell, HP, Lenovo"
+          }
+        },
+        "price_range_hA4py6": {
+          "type": "price_range",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "checkbox_filter_kBTTP7",
+        "price_range_hA4py6"
+      ],
+      "name": "Filter Product List",
+      "settings": {
+        "eg_ffpl_collection": "完全オーダーメイドキーボード",
+        "eg_ffpl_products_per_page": 12,
+        "eg_ffpl_default_sort": "manual",
+        "eg_ffpl_load_more": "button",
+        "eg_ffpl_theme_color": "#1d1d1f",
+        "eg_ffpl_accent_color": "#0071e3",
+        "eg_ffpl_bg_color": "#ffffff",
+        "eg_ffpl_card_bg": "#f5f5f7"
+      }
     }
   },
   "order": [
     "main",
     "related-products",
-    "ergolist_grid_TxdWT3"
+    "ergolist_grid_TxdWT3",
+    "fixed_filters_product_list_XtqCWA"
   ]
 }
