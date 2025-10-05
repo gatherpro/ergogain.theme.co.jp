@@ -1,0 +1,719 @@
+{% comment %}
+  Sales Configurator Preview - キーボード設定プレビュー
+
+  特徴：
+  - 左：入力フォーム（HL/PW/PL/OS）
+  - 右：計算結果ライブ表示 + 簡易SVG
+  - ダミー計算式でパラメータ算出
+  - 提案理由を表示
+  - カートへ保存（line_item.properties）
+  - イベント発火：size_input_complete, proposal_view, add_to_cart
+{% endcomment %}
+
+<style>
+  .scp-config {
+    background-color: {{ section.settings.scp_bg }};
+    padding-top: {{ section.settings.scp_padding_top }}px;
+    padding-bottom: {{ section.settings.scp_padding_bottom }}px;
+  }
+
+  .scp-config__container {
+    max-width: {{ section.settings.scp_max_width }}px;
+    margin: 0 auto;
+    padding: 0 {{ section.settings.scp_padding_x_mobile }}px;
+  }
+
+  @media screen and (min-width: 990px) {
+    .scp-config__container {
+      padding: 0 {{ section.settings.scp_padding_x_desktop }}px;
+    }
+  }
+
+  .scp-config__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+
+  @media screen and (min-width: 990px) {
+    .scp-config__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+    }
+  }
+
+  .scp-config__section-title {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: {{ section.settings.scp_heading_color }};
+    margin: 0 0 2.4rem 0;
+    letter-spacing: -0.01em;
+  }
+
+  .scp-config__form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .scp-config__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .scp-config__label {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: {{ section.settings.scp_text_color }};
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .scp-config__label-abbr {
+    font-size: 1.2rem;
+    color: {{ section.settings.scp_muted_color }};
+    font-weight: 400;
+  }
+
+  .scp-config__input,
+  .scp-config__select {
+    padding: 1.2rem 1.6rem;
+    font-size: 1.6rem;
+    border: 1px solid {{ section.settings.scp_border_color }};
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: {{ section.settings.scp_text_color }};
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .scp-config__input:focus,
+  .scp-config__select:focus {
+    border-color: {{ section.settings.scp_accent_color }};
+  }
+
+  .scp-config__input::placeholder {
+    color: {{ section.settings.scp_muted_color }};
+  }
+
+  .scp-config__preview {
+    background-color: #f5f5f7;
+    border-radius: 12px;
+    padding: 2.4rem;
+  }
+
+  .scp-config__params {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.6rem;
+    margin-bottom: 2.4rem;
+  }
+
+  .scp-config__param {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .scp-config__param-label {
+    font-size: 1.2rem;
+    color: {{ section.settings.scp_muted_color }};
+    font-weight: 500;
+  }
+
+  .scp-config__param-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: {{ section.settings.scp_heading_color }};
+  }
+
+  .scp-config__param-formula {
+    font-size: 1rem;
+    font-family: 'Courier New', monospace;
+    color: {{ section.settings.scp_muted_color }};
+    margin-top: 0.2rem;
+  }
+
+  .scp-config__svg-wrapper {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .scp-config__svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .scp-config__reason {
+    background-color: rgba(0, 113, 227, 0.1);
+    border-left: 4px solid {{ section.settings.scp_accent_color }};
+    padding: 1.2rem 1.6rem;
+    border-radius: 4px;
+    margin-bottom: 2rem;
+  }
+
+  .scp-config__reason-label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: {{ section.settings.scp_accent_color }};
+    margin: 0 0 0.4rem 0;
+  }
+
+  .scp-config__reason-text {
+    font-size: 1.4rem;
+    color: {{ section.settings.scp_text_color }};
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .scp-config__btn {
+    width: 100%;
+    padding: 1.6rem 3.2rem;
+    font-size: 1.6rem;
+    font-weight: 600;
+    background-color: {{ section.settings.scp_btn_bg }};
+    color: {{ section.settings.scp_btn_text }};
+    border: none;
+    border-radius: 980px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+  }
+
+  .scp-config__btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .scp-config__btn:focus-visible {
+    outline: 2px solid {{ section.settings.scp_accent_color }};
+    outline-offset: 4px;
+  }
+
+  .scp-config__btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scp-config__btn {
+      transition: none;
+    }
+    .scp-config__btn:hover {
+      transform: none;
+    }
+  }
+</style>
+
+<section class="scp-config" data-scp-section>
+  <div class="scp-config__container">
+    <div class="scp-config__grid">
+
+      {%- comment -%} 左：入力フォーム {%- endcomment -%}
+      <div class="scp-config__input-area">
+        <h2 class="scp-config__section-title">手のサイズを入力</h2>
+
+        <form class="scp-config__form" data-scp-form>
+          <div class="scp-config__field">
+            <label class="scp-config__label" for="scp-hl">
+              手の長さ
+              <span class="scp-config__label-abbr">(HL: Hand Length)</span>
+            </label>
+            <input
+              type="number"
+              id="scp-hl"
+              name="hand_length"
+              class="scp-config__input"
+              placeholder="例: 185"
+              min="150"
+              max="220"
+              step="1"
+              data-scp-input="hl"
+              required
+            >
+          </div>
+
+          <div class="scp-config__field">
+            <label class="scp-config__label" for="scp-pw">
+              手のひら幅
+              <span class="scp-config__label-abbr">(PW: Palm Width)</span>
+            </label>
+            <input
+              type="number"
+              id="scp-pw"
+              name="palm_width"
+              class="scp-config__input"
+              placeholder="例: 84"
+              min="70"
+              max="110"
+              step="1"
+              data-scp-input="pw"
+              required
+            >
+          </div>
+
+          <div class="scp-config__field">
+            <label class="scp-config__label" for="scp-pl">
+              手のひら長さ
+              <span class="scp-config__label-abbr">(PL: Palm Length)</span>
+            </label>
+            <input
+              type="number"
+              id="scp-pl"
+              name="palm_length"
+              class="scp-config__input"
+              placeholder="例: 105"
+              min="85"
+              max="130"
+              step="1"
+              data-scp-input="pl"
+              required
+            >
+          </div>
+
+          <div class="scp-config__field">
+            <label class="scp-config__label" for="scp-os">
+              使用OS
+              <span class="scp-config__label-abbr">(OS: Operating System)</span>
+            </label>
+            <select
+              id="scp-os"
+              name="os"
+              class="scp-config__select"
+              data-scp-input="os"
+              required
+            >
+              <option value="">選択してください</option>
+              <option value="windows">Windows</option>
+              <option value="mac">macOS</option>
+              <option value="linux">Linux</option>
+            </select>
+          </div>
+        </form>
+      </div>
+
+      {%- comment -%} 右：プレビュー {%- endcomment -%}
+      <div class="scp-config__preview-area">
+        <h2 class="scp-config__section-title">提案パラメータ</h2>
+
+        <div class="scp-config__preview" data-scp-preview>
+          <div class="scp-config__params">
+            <div class="scp-config__param">
+              <span class="scp-config__param-label">分割距離</span>
+              <span class="scp-config__param-value" data-param="split-distance">-</span>
+              <span class="scp-config__param-formula">PW * 0.8 + 15</span>
+            </div>
+
+            <div class="scp-config__param">
+              <span class="scp-config__param-label">分割角</span>
+              <span class="scp-config__param-value" data-param="split-angle">-</span>
+              <span class="scp-config__param-formula">6 + (PW-84)*0.2</span>
+            </div>
+
+            <div class="scp-config__param">
+              <span class="scp-config__param-label">テンティング</span>
+              <span class="scp-config__param-value" data-param="tenting">-</span>
+              <span class="scp-config__param-formula">12 + (PL-105)*0.15</span>
+            </div>
+
+            <div class="scp-config__param">
+              <span class="scp-config__param-label">列角</span>
+              <span class="scp-config__param-value" data-param="column-angle">-</span>
+              <span class="scp-config__param-formula">(HL-185)*0.08 + 5</span>
+            </div>
+
+            <div class="scp-config__param">
+              <span class="scp-config__param-label">親指位置 X</span>
+              <span class="scp-config__param-value" data-param="thumb-x">-</span>
+              <span class="scp-config__param-formula">PW * 0.5 - 20</span>
+            </div>
+
+            <div class="scp-config__param">
+              <span class="scp-config__param-label">親指位置 Y</span>
+              <span class="scp-config__param-value" data-param="thumb-y">-</span>
+              <span class="scp-config__param-formula">PL * 0.4 + 10</span>
+            </div>
+
+            <div class="scp-config__param">
+              <span class="scp-config__param-label">親指回転</span>
+              <span class="scp-config__param-value" data-param="thumb-rotation">-</span>
+              <span class="scp-config__param-formula">(PW-84)*0.5 + 25</span>
+            </div>
+          </div>
+
+          <div class="scp-config__svg-wrapper">
+            <svg class="scp-config__svg" viewBox="0 0 400 200" data-scp-svg>
+              <!-- 左半分のキーボード -->
+              <rect x="50" y="60" width="100" height="80" fill="#e0e0e0" stroke="#999" stroke-width="2" rx="8" data-svg-part="left-half"/>
+              <!-- 右半分のキーボード -->
+              <rect x="250" y="60" width="100" height="80" fill="#e0e0e0" stroke="#999" stroke-width="2" rx="8" data-svg-part="right-half"/>
+              <!-- 分割距離の線 -->
+              <line x1="150" y1="100" x2="250" y2="100" stroke="#0071e3" stroke-width="2" stroke-dasharray="5,5" data-svg-part="split-line"/>
+              <!-- 親指クラスタ（左） -->
+              <circle cx="120" cy="160" r="15" fill="#0071e3" opacity="0.7" data-svg-part="thumb-left"/>
+              <!-- 親指クラスタ（右） -->
+              <circle cx="280" cy="160" r="15" fill="#0071e3" opacity="0.7" data-svg-part="thumb-right"/>
+              <!-- 中心線 -->
+              <line x1="200" y1="40" x2="200" y2="180" stroke="#ccc" stroke-width="1" stroke-dasharray="3,3"/>
+            </svg>
+          </div>
+
+          <div class="scp-config__reason" data-scp-reason style="display: none;">
+            <p class="scp-config__reason-label">提案理由</p>
+            <p class="scp-config__reason-text" data-reason-text>-</p>
+          </div>
+
+          <button
+            type="button"
+            class="scp-config__btn"
+            data-scp-submit
+            disabled
+          >
+            この設定でカートに追加
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  const section = document.querySelector('[data-scp-section]');
+  if (!section) return;
+
+  const inputs = {
+    hl: section.querySelector('[data-scp-input="hl"]'),
+    pw: section.querySelector('[data-scp-input="pw"]'),
+    pl: section.querySelector('[data-scp-input="pl"]'),
+    os: section.querySelector('[data-scp-input="os"]')
+  };
+
+  const params = {
+    splitDistance: section.querySelector('[data-param="split-distance"]'),
+    splitAngle: section.querySelector('[data-param="split-angle"]'),
+    tenting: section.querySelector('[data-param="tenting"]'),
+    columnAngle: section.querySelector('[data-param="column-angle"]'),
+    thumbX: section.querySelector('[data-param="thumb-x"]'),
+    thumbY: section.querySelector('[data-param="thumb-y"]'),
+    thumbRotation: section.querySelector('[data-param="thumb-rotation"]')
+  };
+
+  const reasonBox = section.querySelector('[data-scp-reason]');
+  const reasonText = section.querySelector('[data-reason-text]');
+  const submitBtn = section.querySelector('[data-scp-submit]');
+  const svg = section.querySelector('[data-scp-svg]');
+
+  let calculatedData = null;
+
+  // 計算ロジック
+  function calculate() {
+    const hl = parseFloat(inputs.hl.value);
+    const pw = parseFloat(inputs.pw.value);
+    const pl = parseFloat(inputs.pl.value);
+    const os = inputs.os.value;
+
+    if (!hl || !pw || !pl || !os) return null;
+
+    const splitDistance = Math.round(pw * 0.8 + 15);
+    const splitAngle = (6 + (pw - 84) * 0.2).toFixed(1);
+    const tenting = (12 + (pl - 105) * 0.15).toFixed(1);
+    const columnAngle = ((hl - 185) * 0.08 + 5).toFixed(1);
+    const thumbX = Math.round(pw * 0.5 - 20);
+    const thumbY = Math.round(pl * 0.4 + 10);
+    const thumbRotation = Math.round((pw - 84) * 0.5 + 25);
+
+    return {
+      hl, pw, pl, os,
+      splitDistance,
+      splitAngle,
+      tenting,
+      columnAngle,
+      thumbX,
+      thumbY,
+      thumbRotation
+    };
+  }
+
+  // 提案理由生成
+  function generateReason(data) {
+    if (!data) return '';
+
+    const { pw, pl, os } = data;
+    let reason = `手のひら幅${pw}mm、長さ${pl}mmに最適化。`;
+
+    if (pw > 90) {
+      reason += '広めの分割で快適性向上。';
+    } else if (pw < 80) {
+      reason += 'コンパクトな分割で効率的。';
+    }
+
+    if (os === 'mac') {
+      reason += 'macOSキーマップ最適化。';
+    } else if (os === 'windows') {
+      reason += 'Windowsキーマップ最適化。';
+    }
+
+    return reason;
+  }
+
+  // SVG更新
+  function updateSVG(data) {
+    if (!data || !svg) return;
+
+    const leftHalf = svg.querySelector('[data-svg-part="left-half"]');
+    const rightHalf = svg.querySelector('[data-svg-part="right-half"]');
+    const splitLine = svg.querySelector('[data-svg-part="split-line"]');
+    const thumbLeft = svg.querySelector('[data-svg-part="thumb-left"]');
+
+    // 分割距離を反映
+    const splitGap = data.splitDistance * 0.8; // スケール調整
+    if (leftHalf && rightHalf && splitLine) {
+      leftHalf.setAttribute('x', 150 - splitGap - 100);
+      rightHalf.setAttribute('x', 150 + splitGap);
+      splitLine.setAttribute('x1', 150 - splitGap);
+      splitLine.setAttribute('x2', 150 + splitGap);
+    }
+
+    // 親指位置を反映
+    if (thumbLeft) {
+      const thumbXPos = 120 + (data.thumbX - 22) * 0.5;
+      const thumbYPos = 160 + (data.thumbY - 52) * 0.5;
+      thumbLeft.setAttribute('cx', thumbXPos);
+      thumbLeft.setAttribute('cy', thumbYPos);
+    }
+  }
+
+  // 表示更新
+  function updatePreview() {
+    const data = calculate();
+    calculatedData = data;
+
+    if (!data) {
+      submitBtn.disabled = true;
+      reasonBox.style.display = 'none';
+      return;
+    }
+
+    params.splitDistance.textContent = `${data.splitDistance}mm`;
+    params.splitAngle.textContent = `${data.splitAngle}°`;
+    params.tenting.textContent = `${data.tenting}°`;
+    params.columnAngle.textContent = `${data.columnAngle}°`;
+    params.thumbX.textContent = `${data.thumbX}mm`;
+    params.thumbY.textContent = `${data.thumbY}mm`;
+    params.thumbRotation.textContent = `${data.thumbRotation}°`;
+
+    const reason = generateReason(data);
+    reasonText.textContent = reason;
+    reasonBox.style.display = 'block';
+
+    updateSVG(data);
+
+    submitBtn.disabled = false;
+
+    // イベント発火: size_input_complete
+    window.dispatchEvent(new CustomEvent('size_input_complete', { detail: data }));
+  }
+
+  // 入力イベント
+  Object.values(inputs).forEach(input => {
+    input.addEventListener('input', updatePreview);
+    input.addEventListener('change', updatePreview);
+  });
+
+  // proposal_view イベント（初期表示時）
+  if (inputs.hl.value && inputs.pw.value && inputs.pl.value && inputs.os.value) {
+    updatePreview();
+    window.dispatchEvent(new CustomEvent('proposal_view', { detail: calculatedData }));
+  }
+
+  // カートに追加
+  submitBtn.addEventListener('click', async function() {
+    if (!calculatedData) return;
+
+    const productId = {{ section.settings.scp_product_id | default: 'null' }};
+    if (!productId) {
+      alert('商品IDが設定されていません');
+      return;
+    }
+
+    const properties = {
+      _configuration: JSON.stringify(calculatedData),
+      '手の長さ': `${calculatedData.hl}mm`,
+      '手のひら幅': `${calculatedData.pw}mm`,
+      '手のひら長さ': `${calculatedData.pl}mm`,
+      'OS': calculatedData.os,
+      '分割距離': `${calculatedData.splitDistance}mm`,
+      '分割角': `${calculatedData.splitAngle}°`,
+      'テンティング': `${calculatedData.tenting}°`
+    };
+
+    try {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'カートに追加中...';
+
+      const response = await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: [{
+            id: productId,
+            quantity: 1,
+            properties: properties
+          }]
+        })
+      });
+
+      if (response.ok) {
+        // イベント発火: add_to_cart
+        window.dispatchEvent(new CustomEvent('add_to_cart', { detail: calculatedData }));
+
+        // カートページへリダイレクト
+        window.location.href = '/cart';
+      } else {
+        throw new Error('カートへの追加に失敗しました');
+      }
+    } catch (error) {
+      alert(error.message);
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'この設定でカートに追加';
+    }
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Sales Configurator",
+  "settings": [
+    {
+      "type": "header",
+      "content": "商品設定"
+    },
+    {
+      "type": "text",
+      "id": "scp_product_id",
+      "label": "商品バリアントID",
+      "info": "カートに追加する商品のバリアントID"
+    },
+    {
+      "type": "header",
+      "content": "レイアウト"
+    },
+    {
+      "type": "range",
+      "id": "scp_max_width",
+      "min": 1000,
+      "max": 2400,
+      "step": 100,
+      "unit": "px",
+      "label": "最大幅",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "scp_padding_x_mobile",
+      "min": 16,
+      "max": 80,
+      "step": 8,
+      "unit": "px",
+      "label": "左右余白（モバイル）",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "scp_padding_x_desktop",
+      "min": 24,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "label": "左右余白（デスクトップ）",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "scp_padding_top",
+      "min": 40,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "label": "上余白",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "scp_padding_bottom",
+      "min": 40,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "label": "下余白",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "カラー"
+    },
+    {
+      "type": "color",
+      "id": "scp_bg",
+      "label": "背景色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "scp_heading_color",
+      "label": "見出し色",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "color",
+      "id": "scp_text_color",
+      "label": "テキスト色",
+      "default": "#1d1d1f"
+    },
+    {
+      "type": "color",
+      "id": "scp_muted_color",
+      "label": "補足テキスト色",
+      "default": "#6e6e73"
+    },
+    {
+      "type": "color",
+      "id": "scp_border_color",
+      "label": "ボーダー色",
+      "default": "#d2d2d7"
+    },
+    {
+      "type": "color",
+      "id": "scp_accent_color",
+      "label": "アクセント色",
+      "default": "#0071e3"
+    },
+    {
+      "type": "color",
+      "id": "scp_btn_bg",
+      "label": "ボタン背景色",
+      "default": "#0071e3"
+    },
+    {
+      "type": "color",
+      "id": "scp_btn_text",
+      "label": "ボタンテキスト色",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sales Configurator"
+    }
+  ]
+}
+{% endschema %}
