@@ -247,11 +247,14 @@
     data-variant-id="{{ first_available_variant.id }}"
     data-product-id="{{ product.id }}"
     data-has-size-option="{% if size_option %}true{% else %}false{% endif %}"
-    {% if size_option or first_available_variant.available == false %}disabled{% endif %}
+    data-has-color-option="{% if color_option %}true{% else %}false{% endif %}"
+    {% if size_option or color_option or first_available_variant.available == false %}disabled{% endif %}
     aria-label="カートに追加: {{ product.title }}"
   >
     {%- if size_option -%}
       サイズを選択
+    {%- elsif color_option -%}
+      カラーを選択
     {%- elsif first_available_variant.available -%}
       カートに追加
     {%- else -%}

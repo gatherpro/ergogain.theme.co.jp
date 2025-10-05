@@ -434,31 +434,51 @@
   .eg-ffpl__color-swatches {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 10px;
   }
 
   .eg-ffpl__color-swatch {
-    width: 28px;
-    height: 28px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    border: 2px solid var(--eg-ffpl-border);
+    border: 2.5px solid var(--eg-ffpl-border);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    background-size: cover;
+    background-position: center;
   }
 
-  .eg-ffpl__color-swatch:hover {
-    transform: scale(1.1);
+  .eg-ffpl__color-swatch:hover:not(:disabled) {
+    transform: scale(1.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
   .eg-ffpl__color-swatch.active {
     border-color: var(--eg-ffpl-accent);
     box-shadow: 0 0 0 2px var(--eg-ffpl-bg), 0 0 0 4px var(--eg-ffpl-accent);
+    transform: scale(1.1);
+  }
+
+  .eg-ffpl__color-swatch.active:hover {
+    transform: scale(1.2);
   }
 
   .eg-ffpl__color-swatch:disabled {
-    opacity: 0.3;
+    opacity: 0.25;
     cursor: not-allowed;
+    position: relative;
+  }
+
+  .eg-ffpl__color-swatch:disabled::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1.5px;
+    height: 120%;
+    background: rgba(0, 0, 0, 0.4);
+    transform: translate(-50%, -50%) rotate(45deg);
   }
 
   /* Add to Cart */
@@ -472,17 +492,26 @@
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    transition: opacity 0.2s;
+    transition: all 0.2s;
     margin-top: 8px;
+    position: relative;
   }
 
   .eg-ffpl__add-to-cart:hover:not(:disabled) {
     opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
   }
 
   .eg-ffpl__add-to-cart:disabled {
-    opacity: 0.4;
+    background: var(--eg-ffpl-border);
+    color: var(--eg-ffpl-theme);
+    opacity: 0.6;
     cursor: not-allowed;
+  }
+
+  .eg-ffpl__add-to-cart:active:not(:disabled) {
+    transform: translateY(0);
   }
 
   .eg-ffpl__add-to-cart--loading {
@@ -1275,24 +1304,43 @@
       }
 
       // Update button state
+      const hasColorOption = addToCartBtn.dataset.hasColorOption === 'true';
+
+      // Check if required options are selected
       if (hasSizeOption && !activeSize) {
-        // Size option exists but not selected
         addToCartBtn.disabled = true;
         addToCartBtn.textContent = 'サイズを選択';
+      } else if (hasColorOption && !activeColor) {
+        addToCartBtn.disabled = true;
+        addToCartBtn.textContent = 'カラーを選択';
       } else if (selectedVariant) {
-        // Variant found
+        // Variant found - update image and button
         addToCartBtn.dataset.variantId = selectedVariant.id;
         addToCartBtn.disabled = !selectedVariant.available;
         addToCartBtn.textContent = selectedVariant.available ? 'カートに追加' : '在庫切れ';
+
+        // Update main image if variant has featured image
+        if (selectedVariant.featured_image) {
+          const mainImg = card.querySelector('.eg-ffpl__card-image:not(.eg-ffpl__card-image--hover)');
+          if (mainImg) {
+            mainImg.src = selectedVariant.featured_image;
+          }
+        }
       } else {
         // Fallback: use button's existing variant ID
         const variantId = addToCartBtn.dataset.variantId;
-        if (variantId && !hasSizeOption) {
+        if (variantId && !hasSizeOption && !hasColorOption) {
           addToCartBtn.disabled = false;
           addToCartBtn.textContent = 'カートに追加';
         } else {
           addToCartBtn.disabled = true;
-          addToCartBtn.textContent = hasSizeOption ? 'サイズを選択' : '在庫切れ';
+          if (hasSizeOption) {
+            addToCartBtn.textContent = 'サイズを選択';
+          } else if (hasColorOption) {
+            addToCartBtn.textContent = 'カラーを選択';
+          } else {
+            addToCartBtn.textContent = '在庫切れ';
+          }
         }
       }
     }
