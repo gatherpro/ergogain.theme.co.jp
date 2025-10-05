@@ -102,47 +102,60 @@
         "padding_bottom": 28
       }
     },
-    "ergolist_grid_adhPie": {
-      "type": "ergolist-grid",
-      "name": "ErgoList Grid",
+    "fixed_filters_product_list_MLafwQ": {
+      "type": "fixed-filters-product-list",
+      "blocks": {
+        "checkbox_filter_mJDcKW": {
+          "type": "checkbox_filter",
+          "settings": {
+            "eg_ffpl_filter_label": "キー数",
+            "eg_ffpl_filter_key": "key count",
+            "eg_ffpl_filter_values": "32,42,44"
+          }
+        },
+        "price_range_NjFN3P": {
+          "type": "price_range",
+          "settings": {}
+        },
+        "checkbox_filter_pYJTw9": {
+          "type": "checkbox_filter",
+          "settings": {
+            "eg_ffpl_filter_label": "種別",
+            "eg_ffpl_filter_key": "Type",
+            "eg_ffpl_filter_values": "一体型,左右分割"
+          }
+        },
+        "checkbox_filter_bJB4cw": {
+          "type": "checkbox_filter",
+          "settings": {
+            "eg_ffpl_filter_label": "トラックボール",
+            "eg_ffpl_filter_key": "trackball",
+            "eg_ffpl_filter_values": "有,無"
+          }
+        }
+      },
+      "block_order": [
+        "checkbox_filter_mJDcKW",
+        "price_range_NjFN3P",
+        "checkbox_filter_pYJTw9",
+        "checkbox_filter_bJB4cw"
+      ],
+      "name": "Filter Product List",
       "settings": {
-        "eg_grid_heading": "製品一覧",
-        "eg_grid_collection": "",
-        "eg_grid_per_page": 12,
-        "eg_grid_enable_filters": true,
-        "eg_grid_enable_sort": true,
-        "eg_grid_enable_quickview": true,
-        "eg_grid_padding_top": 60,
-        "eg_grid_padding_bottom": 60
-      }
-    },
-    "ergogain_hero_video_hDaNqn": {
-      "type": "ergogain-hero-video",
-      "name": "ErgoGain Hero Video",
-      "settings": {
-        "kicker": "New Release",
-        "heading": "ErgoGain Keyboard",
-        "subtext": "人間工学に基づいた設計と、こだわりの素材が織りなす極上の打鍵感。あなたの手元に、唯一無二の相棒を。",
-        "compare_link": "",
-        "media_type": "video",
-        "video": "",
-        "layout": "split",
-        "max_width": 1400,
-        "padding_x_mobile": 32,
-        "padding_x_desktop": 64,
-        "padding_y": 96,
-        "title_size": 40,
-        "title_lh": 1.2,
-        "fg": "#1d1d1f",
-        "muted": "#6e6e73",
-        "bg": "#ffffff"
+        "eg_ffpl_collection": "完全オーダーメイドキーボード",
+        "eg_ffpl_products_per_page": 12,
+        "eg_ffpl_default_sort": "manual",
+        "eg_ffpl_load_more": "button",
+        "eg_ffpl_theme_color": "#1d1d1f",
+        "eg_ffpl_accent_color": "#0071e3",
+        "eg_ffpl_bg_color": "#ffffff",
+        "eg_ffpl_card_bg": "#f5f5f7"
       }
     }
   },
   "order": [
     "main",
     "related-products",
-    "ergolist_grid_adhPie",
-    "ergogain_hero_video_hDaNqn"
+    "fixed_filters_product_list_MLafwQ"
   ]
 }
