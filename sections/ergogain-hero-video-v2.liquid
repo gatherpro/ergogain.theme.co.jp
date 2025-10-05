@@ -14,7 +14,7 @@
     background-color: {{ section.settings.eghv2_bg }};
     padding-top: {{ section.settings.eghv2_padding_top }}px;
     padding-bottom: {{ section.settings.eghv2_padding_bottom }}px;
-    text-align: center;
+    text-align: {{ section.settings.eghv2_text_align }};
   }
 
   .eghv2-hero__container {
@@ -153,6 +153,7 @@
       transform: none;
     }
   }
+/* テキスト位置による調整 */  .eghv2-hero[style*="left"] .eghv2-hero__subtext {    margin-left: 0;    margin-right: auto;  }  .eghv2-hero[style*="left"] .eghv2-hero__cta {    justify-content: flex-start;  }  .eghv2-hero[style*="right"] .eghv2-hero__subtext {    margin-left: auto;    margin-right: 0;  }  .eghv2-hero[style*="right"] .eghv2-hero__cta {    justify-content: flex-end;  }  /* ブロックテキスト */  .eghv2-hero__blocks {    display: flex;    flex-direction: column;    gap: 2.4rem;    margin-bottom: 3.2rem;  }  .eghv2-hero__block {    max-width: {{ section.settings.eghv2_subtext_max_width }}px;  }  .eghv2-hero[style*="left"] .eghv2-hero__block {    margin-left: 0;    margin-right: auto;  }  .eghv2-hero[style*="center"] .eghv2-hero__block {    margin-left: auto;    margin-right: auto;  }  .eghv2-hero[style*="right"] .eghv2-hero__block {    margin-left: auto;    margin-right: 0;  }  .eghv2-hero__block-heading {    font-size: 2.4rem;    font-weight: 600;    color: {{ section.settings.eghv2_heading_color }};    margin: 0 0 1rem 0;    letter-spacing: -0.01em;  }  @media screen and (max-width: 749px) {    .eghv2-hero__block-heading {      font-size: 2rem;    }  }  .eghv2-hero__block-text {    font-size: 1.8rem;    line-height: 1.6;    color: {{ section.settings.eghv2_subtext_color }};    margin: 0;  }  @media screen and (max-width: 749px) {    .eghv2-hero__block-text {      font-size: 1.6rem;    }  }
 </style>
 
 <section
@@ -176,6 +177,7 @@
         <p class="eghv2-hero__subtext">{{ section.settings.eghv2_subtext }}</p>
       {%- endif -%}
 
+{%- comment -%} ブロックテキスト {%- endcomment -%}      {%- if section.blocks.size > 0 -%}        <div class="eghv2-hero__blocks">          {%- for block in section.blocks -%}            <div class="eghv2-hero__block" {{ block.shopify_attributes }}>              {%- if block.settings.block_heading != blank -%}                <h2 class="eghv2-hero__block-heading">{{ block.settings.block_heading }}</h2>              {%- endif -%}              {%- if block.settings.block_text != blank -%}                <p class="eghv2-hero__block-text">{{ block.settings.block_text }}</p>              {%- endif -%}            </div>          {%- endfor -%}        </div>      {%- endif -%}
       {%- if section.settings.eghv2_primary_label != blank and section.settings.eghv2_primary_link != blank -%}
         <div class="eghv2-hero__cta">
           <a
@@ -240,6 +242,26 @@
     {
       "type": "header",
       "content": "テキストコンテンツ"
+    },
+    {
+      "type": "select",
+      "id": "eghv2_text_align",
+      "label": "テキスト位置",
+      "options": [
+        {
+          "value": "left",
+          "label": "左揃え"
+        },
+        {
+          "value": "center",
+          "label": "中央揃え"
+        },
+        {
+          "value": "right",
+          "label": "右揃え"
+        }
+      ],
+      "default": "center"
     },
     {
       "type": "text",
@@ -491,6 +513,24 @@
       "id": "eghv2_bg",
       "label": "背景色",
       "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text_block",
+      "name": "テキストブロック",
+      "settings": [
+        {
+          "type": "text",
+          "id": "block_heading",
+          "label": "見出し"
+        },
+        {
+          "type": "textarea",
+          "id": "block_text",
+          "label": "テキスト"
+        }
+      ]
     }
   ],
   "presets": [
