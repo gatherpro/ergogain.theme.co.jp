@@ -1,0 +1,39 @@
+/* ============================================
+   UI Counter Styles
+   - IntersectionObserver animated counter
+   - Intl.NumberFormat support
+   ============================================ */
+
+.eg-ui-counter {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+.eg-ui-counter__value {
+  font-weight: 700;
+  font-size: inherit;
+  color: inherit;
+  display: inline-block;
+}
+
+/* Animation state */
+.eg-ui-counter[data-counting="true"] .eg-ui-counter__value {
+  animation: eg-counter-pulse 0.1s ease;
+}
+
+@keyframes eg-counter-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .eg-ui-counter__value {
+    animation: none !important;
+  }
+}

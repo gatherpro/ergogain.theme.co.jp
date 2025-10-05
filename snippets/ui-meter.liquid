@@ -1,0 +1,83 @@
+{% comment %}
+  UI Meter - Progress Meter Component
+
+  使い方:
+  {% render 'ui-meter',
+    value: 75,
+    max: 100,
+    label: 'Completion',
+    color: 'primary',
+    show_percentage: true
+  %}
+
+  機能:
+  - プログレスバー（<meter>要素のカスタムスタイル版）
+  - アニメーション対応
+  - パーセンテージ表示オプション
+  - アクセシビリティ対応
+{% endcomment %}
+
+{%- liquid
+  assign value = value | default: 50
+  assign max = max | default: 100
+  assign min = min | default: 0
+  assign low = low | default: 33
+  assign high = high | default: 66
+  assign optimum = optimum | default: 100
+  assign label = label | default: 'Progress'
+  assign color = color | default: 'primary'
+  assign show_percentage = show_percentage | default: true
+  assign meter_id = id | default: 'meter-' | append: 'generated-id'
+
+  assign percentage = value | times: 100.0 | divided_by: max | round
+-%}
+
+<link rel="stylesheet" href="{{ 'ui-meter.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ 'ui-meter.css' | asset_url }}"></noscript>
+
+<div class="eg-ui-meter-wrapper">
+  {%- if label != blank -%}
+    <div class="eg-ui-meter__header">
+      <label for="{{ meter_id }}" class="eg-ui-meter__label">
+        {{ label }}
+      </label>
+      {%- if show_percentage -%}
+        <span class="eg-ui-meter__percentage">{{ percentage }}%</span>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div
+    class="eg-ui-meter eg-ui-meter--{{ color }}"
+    role="progressbar"
+    aria-valuenow="{{ value }}"
+    aria-valuemin="{{ min }}"
+    aria-valuemax="{{ max }}"
+    aria-label="{{ label }}"
+    data-eg-meter
+  >
+    <div class="eg-ui-meter__track">
+      <div
+        class="eg-ui-meter__fill"
+        style="width: 0%;"
+        data-meter-target-width="{{ percentage }}"
+      ></div>
+    </div>
+  </div>
+
+  <!-- Native meter for fallback (hidden by CSS) -->
+  <meter
+    id="{{ meter_id }}"
+    class="eg-ui-meter__native"
+    min="{{ min }}"
+    max="{{ max }}"
+    low="{{ low }}"
+    high="{{ high }}"
+    optimum="{{ optimum }}"
+    value="{{ value }}"
+  >
+    {{ percentage }}%
+  </meter>
+</div>
+
+<script src="{{ 'ui-meter.js' | asset_url }}" defer></script>

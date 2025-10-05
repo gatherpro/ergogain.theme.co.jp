@@ -1,0 +1,83 @@
+/* ============================================
+   UI Icon Check Styles
+   - SVG checkmark icon
+   - Optional animation
+   - Accessible with title
+   ============================================ */
+
+.eg-ui-icon-check {
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.eg-ui-icon-check__path {
+  transition: stroke-dashoffset 0.3s ease;
+}
+
+/* Animated variant */
+.eg-ui-icon-check--animated .eg-ui-icon-check__circle {
+  stroke-dasharray: 63;
+  stroke-dashoffset: 63;
+  animation: eg-icon-check-circle 0.6s ease forwards;
+}
+
+.eg-ui-icon-check--animated .eg-ui-icon-check__path {
+  stroke-dasharray: 15;
+  stroke-dashoffset: 15;
+  animation: eg-icon-check-path 0.4s ease 0.3s forwards;
+}
+
+@keyframes eg-icon-check-circle {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes eg-icon-check-path {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Color variants */
+.eg-ui-icon-check--success {
+  color: #34c759;
+}
+
+.eg-ui-icon-check--primary {
+  color: #0071e3;
+}
+
+.eg-ui-icon-check--warning {
+  color: #ff9500;
+}
+
+.eg-ui-icon-check--error {
+  color: #ff3b30;
+}
+
+/* Size variants */
+.eg-ui-icon-check--small {
+  width: 16px;
+  height: 16px;
+}
+
+.eg-ui-icon-check--medium {
+  width: 24px;
+  height: 24px;
+}
+
+.eg-ui-icon-check--large {
+  width: 32px;
+  height: 32px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .eg-ui-icon-check--animated .eg-ui-icon-check__circle,
+  .eg-ui-icon-check--animated .eg-ui-icon-check__path {
+    animation: none !important;
+    stroke-dashoffset: 0;
+  }
+}

@@ -1,0 +1,52 @@
+{% comment %}
+  UI Counter - IntersectionObserver + Intl.NumberFormat
+
+  使い方:
+  {% render 'ui-counter',
+    start: 0,
+    end: 1234567,
+    duration: 2000,
+    prefix: '¥',
+    suffix: '円',
+    locale: 'ja-JP'
+  %}
+
+  機能:
+  - IntersectionObserverで画面に入ったらカウント開始
+  - Intl.NumberFormatで数値フォーマット（カンマ区切りなど）
+  - カスタマイズ可能な開始/終了値、速度、接頭辞/接尾辞
+{% endcomment %}
+
+{%- liquid
+  assign counter_id = id | default: 'counter-' | append: 'generated-id'
+  assign start = start | default: 0
+  assign end = end | default: 100
+  assign duration = duration | default: 2000
+  assign prefix = prefix | default: ''
+  assign suffix = suffix | default: ''
+  assign locale = locale | default: 'ja-JP'
+  assign separator = separator | default: 'true'
+-%}
+
+<link rel="stylesheet" href="{{ 'ui-counter.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ 'ui-counter.css' | asset_url }}"></noscript>
+
+<div
+  class="eg-ui-counter"
+  data-eg-counter
+  data-start="{{ start }}"
+  data-end="{{ end }}"
+  data-duration="{{ duration }}"
+  data-prefix="{{ prefix }}"
+  data-suffix="{{ suffix }}"
+  data-locale="{{ locale }}"
+  data-separator="{{ separator }}"
+  role="status"
+  aria-live="polite"
+>
+  <span class="eg-ui-counter__value" data-counter-value>
+    {{ prefix }}{{ end }}{{ suffix }}
+  </span>
+</div>
+
+<script src="{{ 'ui-counter.js' | asset_url }}" defer></script>

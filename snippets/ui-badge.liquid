@@ -1,0 +1,33 @@
+{% comment %}
+  UI Badge - Status Badge Component
+
+  使い方:
+  {% render 'ui-badge',
+    text: 'New',
+    variant: 'primary',
+    size: 'medium'
+  %}
+
+  機能:
+  - 角丸2xl (rounded-2xl)
+  - 影sm (shadow-sm)
+  - 複数のバリエーション（primary, success, warning, error, info）
+  - サイズオプション（small, medium, large）
+{% endcomment %}
+
+{%- liquid
+  assign text = text | default: 'Badge'
+  assign variant = variant | default: 'primary'
+  assign size = size | default: 'medium'
+  assign custom_class = class | default: ''
+-%}
+
+<link rel="stylesheet" href="{{ 'ui-badge.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ 'ui-badge.css' | asset_url }}"></noscript>
+
+<span
+  class="eg-ui-badge eg-ui-badge--{{ variant }} eg-ui-badge--{{ size }} {{ custom_class }}"
+  role="status"
+>
+  {{ text }}
+</span>

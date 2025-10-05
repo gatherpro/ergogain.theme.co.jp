@@ -1,0 +1,64 @@
+{% comment %}
+  UI Icon Check - Checkmark Icon with Title
+
+  使い方:
+  {% render 'ui-icon-check',
+    size: 24,
+    color: '#34c759',
+    title: 'Completed'
+  %}
+
+  機能:
+  - SVGチェックマークアイコン
+  - カスタマイズ可能なサイズと色
+  - title属性でアクセシビリティ対応
+  - アニメーション対応（オプション）
+{% endcomment %}
+
+{%- liquid
+  assign size = size | default: 24
+  assign color = color | default: 'currentColor'
+  assign title = title | default: 'Check'
+  assign animated = animated | default: false
+  assign icon_id = id | default: 'icon-check-' | append: 'generated-id'
+-%}
+
+<link rel="stylesheet" href="{{ 'ui-icon-check.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ 'ui-icon-check.css' | asset_url }}"></noscript>
+
+<svg
+  class="eg-ui-icon-check{% if animated %} eg-ui-icon-check--animated{% endif %}"
+  width="{{ size }}"
+  height="{{ size }}"
+  viewBox="0 0 24 24"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  role="img"
+  aria-labelledby="{{ icon_id }}"
+>
+  <title id="{{ icon_id }}">{{ title }}</title>
+
+  <!-- Circle background (optional) -->
+  {% if animated %}
+  <circle
+    class="eg-ui-icon-check__circle"
+    cx="12"
+    cy="12"
+    r="10"
+    stroke="{{ color }}"
+    stroke-width="2"
+    fill="none"
+  />
+  {% endif %}
+
+  <!-- Checkmark path -->
+  <path
+    class="eg-ui-icon-check__path"
+    d="M7 12.5L10.5 16L17 9"
+    stroke="{{ color }}"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+</svg>

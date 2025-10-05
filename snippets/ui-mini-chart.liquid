@@ -1,0 +1,143 @@
+{% comment %}
+  UI Mini Chart - SVG Bar/Meter Chart
+
+  使い方:
+  {% render 'ui-mini-chart',
+    type: 'bar',
+    value: 75,
+    max: 100,
+    color: '#0071e3',
+    height: 80,
+    label: 'Progress'
+  %}
+
+  機能:
+  - SVG棒グラフ
+  - SVGメーターグラフ
+  - アニメーション対応
+  - アクセシビリティ対応（role, aria-label）
+{% endcomment %}
+
+{%- liquid
+  assign chart_type = type | default: 'bar'
+  assign value = value | default: 50
+  assign max = max | default: 100
+  assign color = color | default: '#0071e3'
+  assign bg_color = bg_color | default: '#e5e5e7'
+  assign height = height | default: 60
+  assign width = width | default: 200
+  assign label = label | default: 'Chart'
+  assign chart_id = id | default: 'chart-' | append: 'generated-id'
+
+  assign percentage = value | times: 100.0 | divided_by: max | round
+-%}
+
+<link rel="stylesheet" href="{{ 'ui-mini-chart.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ 'ui-mini-chart.css' | asset_url }}"></noscript>
+
+{% if chart_type == 'bar' %}
+  <div
+    class="eg-ui-mini-chart eg-ui-mini-chart--bar"
+    role="img"
+    aria-label="{{ label }}: {{ percentage }}%"
+    data-eg-chart
+  >
+    <svg
+      width="{{ width }}"
+      height="{{ height }}"
+      viewBox="0 0 {{ width }} {{ height }}"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <!-- Background -->
+      <rect
+        x="0"
+        y="0"
+        width="{{ width }}"
+        height="{{ height }}"
+        fill="{{ bg_color }}"
+        rx="4"
+      />
+
+      <!-- Value bar -->
+      <rect
+        class="eg-ui-mini-chart__bar"
+        x="0"
+        y="0"
+        width="0"
+        height="{{ height }}"
+        fill="{{ color }}"
+        rx="4"
+        data-chart-target-width="{{ percentage | times: width | divided_by: 100 }}"
+      />
+    </svg>
+
+    <span class="eg-ui-mini-chart__label">{{ label }}: {{ percentage }}%</span>
+  </div>
+
+{% elsif chart_type == 'meter' %}
+  {%- assign radius = 40 -%}
+  {%- assign circumference = radius | times: 2 | times: 3.14159 -%}
+  {%- assign offset = circumference | times: percentage | divided_by: 100 -%}
+  {%- assign stroke_offset = circumference | minus: offset -%}
+
+  <div
+    class="eg-ui-mini-chart eg-ui-mini-chart--meter"
+    role="img"
+    aria-label="{{ label }}: {{ percentage }}%"
+    data-eg-chart
+  >
+    <svg
+      width="100"
+      height="100"
+      viewBox="0 0 100 100"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <!-- Background circle -->
+      <circle
+        cx="50"
+        cy="50"
+        r="{{ radius }}"
+        stroke="{{ bg_color }}"
+        stroke-width="8"
+        fill="none"
+      />
+
+      <!-- Value circle -->
+      <circle
+        class="eg-ui-mini-chart__meter"
+        cx="50"
+        cy="50"
+        r="{{ radius }}"
+        stroke="{{ color }}"
+        stroke-width="8"
+        fill="none"
+        stroke-linecap="round"
+        stroke-dasharray="{{ circumference }}"
+        stroke-dashoffset="{{ circumference }}"
+        transform="rotate(-90 50 50)"
+        data-chart-target-offset="{{ stroke_offset }}"
+      />
+
+      <!-- Center text -->
+      <text
+        x="50"
+        y="50"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        font-size="18"
+        font-weight="700"
+        fill="currentColor"
+      >
+        {{ percentage }}%
+      </text>
+    </svg>
+
+    <span class="eg-ui-mini-chart__label">{{ label }}</span>
+  </div>
+{% endif %}
+
+<script src="{{ 'ui-mini-chart.js' | asset_url }}" defer></script>

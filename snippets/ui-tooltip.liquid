@@ -1,0 +1,53 @@
+{% comment %}
+  UI Tooltip - アクセシブルなツールチップコンポーネント
+
+  使い方:
+  {% render 'ui-tooltip',
+    id: 'unique-id',
+    trigger_text: 'ホバーしてください',
+    tooltip_text: 'ツールチップの内容'
+  %}
+
+  機能:
+  - aria-describedby でアクセシビリティ対応
+  - role="tooltip"
+  - Escキーで閉じる
+  - 外クリックで閉じる
+  - フォーカス輪郭表示
+{% endcomment %}
+
+{%- liquid
+  assign tooltip_id = id | default: 'tooltip-' | append: 'generated-id'
+  assign trigger_text = trigger_text | default: 'Hover me'
+  assign tooltip_text = tooltip_text | default: 'Tooltip content'
+  assign position = position | default: 'top'
+-%}
+
+<link rel="stylesheet" href="{{ 'ui-tooltip.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ 'ui-tooltip.css' | asset_url }}"></noscript>
+
+<div class="eg-ui-tooltip-wrapper">
+  <button
+    type="button"
+    class="eg-ui-tooltip__trigger"
+    aria-describedby="{{ tooltip_id }}"
+    data-eg-tooltip-trigger="{{ tooltip_id }}"
+  >
+    {{ trigger_text }}
+  </button>
+
+  <div
+    id="{{ tooltip_id }}"
+    role="tooltip"
+    class="eg-ui-tooltip eg-ui-tooltip--{{ position }}"
+    data-eg-tooltip
+    hidden
+  >
+    <div class="eg-ui-tooltip__content">
+      {{ tooltip_text }}
+    </div>
+    <div class="eg-ui-tooltip__arrow"></div>
+  </div>
+</div>
+
+<script src="{{ 'ui-tooltip.js' | asset_url }}" defer></script>

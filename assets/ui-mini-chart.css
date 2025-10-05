@@ -1,0 +1,56 @@
+/* ============================================
+   UI Mini Chart Styles
+   - SVG Bar Chart
+   - SVG Meter Chart
+   - Animated appearance
+   ============================================ */
+
+.eg-ui-mini-chart {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.eg-ui-mini-chart svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Bar Chart */
+.eg-ui-mini-chart--bar svg {
+  border-radius: 0.4rem;
+  overflow: hidden;
+}
+
+.eg-ui-mini-chart__bar {
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Meter Chart */
+.eg-ui-mini-chart__meter {
+  transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Label */
+.eg-ui-mini-chart__label {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+  text-align: center;
+  max-width: 200px;
+}
+
+/* Screen reader only */
+.eg-ui-mini-chart[role="img"] {
+  position: relative;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .eg-ui-mini-chart__bar,
+  .eg-ui-mini-chart__meter {
+    transition: none !important;
+  }
+}

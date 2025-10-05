@@ -1,0 +1,152 @@
+/* ============================================
+   UI Tooltip Styles
+   - Accessible tooltip with ARIA support
+   - Esc/Click outside to close
+   - Focus visible outline
+   ============================================ */
+
+.eg-ui-tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.eg-ui-tooltip__trigger {
+  cursor: help;
+  background: transparent;
+  border: none;
+  border-bottom: 1px dotted currentColor;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  transition: opacity 0.2s ease;
+}
+
+.eg-ui-tooltip__trigger:hover {
+  opacity: 0.7;
+}
+
+/* Focus visible outline */
+.eg-ui-tooltip__trigger:focus-visible {
+  outline: 2px solid #0071e3;
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.eg-ui-tooltip {
+  position: absolute;
+  z-index: 9999;
+  padding: 0.8rem 1.2rem;
+  background-color: #1d1d1f;
+  color: #ffffff;
+  font-size: 1.4rem;
+  line-height: 1.4;
+  border-radius: 0.6rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 280px;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.eg-ui-tooltip[hidden] {
+  display: none;
+}
+
+.eg-ui-tooltip:not([hidden]) {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+/* Positions */
+.eg-ui-tooltip--top {
+  bottom: calc(100% + 0.8rem);
+  left: 50%;
+  transform: translateX(-50%) scale(0.95);
+}
+
+.eg-ui-tooltip--top:not([hidden]) {
+  transform: translateX(-50%) scale(1);
+}
+
+.eg-ui-tooltip--bottom {
+  top: calc(100% + 0.8rem);
+  left: 50%;
+  transform: translateX(-50%) scale(0.95);
+}
+
+.eg-ui-tooltip--bottom:not([hidden]) {
+  transform: translateX(-50%) scale(1);
+}
+
+.eg-ui-tooltip--left {
+  right: calc(100% + 0.8rem);
+  top: 50%;
+  transform: translateY(-50%) scale(0.95);
+}
+
+.eg-ui-tooltip--left:not([hidden]) {
+  transform: translateY(-50%) scale(1);
+}
+
+.eg-ui-tooltip--right {
+  left: calc(100% + 0.8rem);
+  top: 50%;
+  transform: translateY(-50%) scale(0.95);
+}
+
+.eg-ui-tooltip--right:not([hidden]) {
+  transform: translateY(-50%) scale(1);
+}
+
+/* Arrow */
+.eg-ui-tooltip__arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.eg-ui-tooltip--top .eg-ui-tooltip__arrow {
+  bottom: -0.6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0.6rem 0.6rem 0 0.6rem;
+  border-color: #1d1d1f transparent transparent transparent;
+}
+
+.eg-ui-tooltip--bottom .eg-ui-tooltip__arrow {
+  top: -0.6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 0.6rem 0.6rem 0.6rem;
+  border-color: transparent transparent #1d1d1f transparent;
+}
+
+.eg-ui-tooltip--left .eg-ui-tooltip__arrow {
+  right: -0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 0.6rem 0 0.6rem 0.6rem;
+  border-color: transparent transparent transparent #1d1d1f;
+}
+
+.eg-ui-tooltip--right .eg-ui-tooltip__arrow {
+  left: -0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 0.6rem 0.6rem 0.6rem 0;
+  border-color: transparent #1d1d1f transparent transparent;
+}
+
+.eg-ui-tooltip__content {
+  margin: 0;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .eg-ui-tooltip {
+    transition: none;
+  }
+}
