@@ -204,7 +204,7 @@
         "spo_heading": "エルゴノミクス設計の効果",
         "spo_subtext": "人間工学に基づいた設計により、手首への負担を大幅に軽減",
         "spo_heading_size": 36,
-        "spo_bg": "#ffffff",
+        "spo_bg": "#f9eac5",
         "spo_text": "#1d1d1f",
         "spo_heading_color": "#1d1d1f",
         "spo_tile_bg": "#f5f5f7",
@@ -244,51 +244,13 @@
         "eg_hiw_padding_y": 80,
         "eg_hiw_title_size": 40,
         "eg_hiw_title_lh": 1.2,
-        "eg_hiw_bg": "#ffffff",
+        "eg_hiw_bg": "#f9eac5",
         "eg_hiw_text": "#1d1d1f",
         "eg_hiw_muted": "#6e6e73",
         "eg_hiw_card_bg": "#f5f5f7",
         "eg_hiw_badge_bg": "#1d1d1f",
         "eg_hiw_badge_text": "#ffffff",
         "eg_hiw_meta_bg": "#f5f5f7"
-      }
-    },
-    "sales_evidence_bar_yFHWQB": {
-      "type": "sales-evidence-bar",
-      "name": "Sales Evidence Bar",
-      "settings": {
-        "seb_max_width": 1400,
-        "seb_padding_x_mobile": 24,
-        "seb_padding_x_desktop": 64,
-        "seb_padding_y": 32,
-        "seb_value_size": 40,
-        "seb_bg": "#f5f5f7",
-        "seb_border_color": "#d2d2d7",
-        "seb_label_color": "#6e6e73",
-        "seb_value_color": "#1d1d1f",
-        "seb_tooltip_bg": "#e8e8ed",
-        "seb_tooltip_icon_color": "#6e6e73",
-        "seb_show_updated": true
-      }
-    },
-    "sales_configurator_preview_FqXW7m": {
-      "type": "sales-configurator-preview",
-      "name": "Sales Configurator",
-      "settings": {
-        "scp_product_id": "",
-        "scp_max_width": 1400,
-        "scp_padding_x_mobile": 24,
-        "scp_padding_x_desktop": 64,
-        "scp_padding_top": 80,
-        "scp_padding_bottom": 80,
-        "scp_bg": "#ffffff",
-        "scp_heading_color": "#1d1d1f",
-        "scp_text_color": "#1d1d1f",
-        "scp_muted_color": "#6e6e73",
-        "scp_border_color": "#d2d2d7",
-        "scp_accent_color": "#0071e3",
-        "scp_btn_bg": "#0071e3",
-        "scp_btn_text": "#ffffff"
       }
     },
     "sales_compare_dYR6wA": {
@@ -337,7 +299,7 @@
         "eg_sc_padding_x_desktop": 64,
         "eg_sc_max_width": 1200,
         "eg_sc_heading_size": 36,
-        "eg_sc_bg": "#ffffff",
+        "eg_sc_bg": "#f9eac5",
         "eg_sc_heading_color": "#1d1d1f",
         "eg_sc_text_color": "#1d1d1f",
         "eg_sc_header_bg": "#f5f5f7",
@@ -407,7 +369,7 @@
         "eg_ctq_measurement_note": "室温23±2℃、湿度50±10%の環境下で、標準治具を用いて測定。3回測定の平均値を採用。",
         "eg_ctq_pdf_url": "",
         "eg_ctq_pdf_label": "詳細基準書（PDF）を見る",
-        "eg_ctq_bg": "#ffffff",
+        "eg_ctq_bg": "#f9eac5",
         "eg_ctq_heading_color": "#1d1d1f",
         "eg_ctq_table_header_bg": "#f5f5f7",
         "eg_ctq_table_header_color": "#1d1d1f",
@@ -488,8 +450,6 @@
     "ergogain_order_tiles_xMEnDj",
     "sales_problem_outcome_TehfxB",
     "sales_how_it_works_zV93UJ",
-    "sales_evidence_bar_yFHWQB",
-    "sales_configurator_preview_FqXW7m",
     "sales_compare_dYR6wA",
     "sales_ctq_criteria_7htKJj",
     "sales_assurance_d7cTUG"
