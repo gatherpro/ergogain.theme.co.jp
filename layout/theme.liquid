@@ -333,6 +333,14 @@
     }
   }
 </style>
+ {% if template == 'index' %}
+  <script>
+    // Shopifyのホームページから自動的にNext.jsサイトにリダイレクト
+    if (window.location.hostname === 'shop.ergogain.co.jp' && window.location.pathname === '/') {
+      window.location.href = 'https://ergogain.co.jp/ergonomics';
+    }
+  </script>
+  {% endif %}
   </head>
 
   <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
